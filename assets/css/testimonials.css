@@ -1,0 +1,200 @@
+/* ==========================================================================
+   THE NIGHT CLUB — Testimonials page
+
+   Loaded ONLY by pages/testimonials.html, after tokens/theme/base/site/public.
+
+   The page currently shows an honest empty state (no testimonial data source
+   exists in the project). The `.tm-card` / `.tm-grid` rules below are the
+   editorial card component that real stories will use; they are dormant until
+   a future phase emits that markup (see the contract comment in the HTML).
+   ========================================================================== */
+
+/* ---- Empty state: an editorial panel, not an error box --------------------- */
+
+.tm-empty {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--space-16);
+  align-items: center;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: var(--space-16);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 32px;
+  background:
+    radial-gradient(700px 320px at 12% 0%, rgba(124, 58, 237, 0.16), transparent 70%),
+    linear-gradient(180deg, rgba(20, 15, 36, 0.85), rgba(10, 7, 20, 0.92));
+  overflow: hidden;
+}
+.tm-empty[hidden] { display: none; }
+
+/* Decorative quote card — purely visual, hidden from assistive tech. */
+.tm-empty-visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-8) var(--space-10);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, rgba(139, 92, 246, 0.14), rgba(139, 92, 246, 0.03));
+  transform: rotate(-2deg);
+  box-shadow: var(--shadow-float);
+}
+.tm-quote-mark {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 5rem;
+  line-height: 0.7;
+  height: 2.4rem;
+  color: var(--color-accent-600);
+  opacity: 0.85;
+}
+.tm-empty-line {
+  display: block;
+  height: 10px;
+  width: 92%;
+  border-radius: var(--radius-full);
+  background: rgba(196, 181, 253, 0.16);
+}
+.tm-empty-line-lg { width: 100%; }
+.tm-empty-line-sm { width: 58%; }
+
+.tm-empty-copy .pub-eyebrow { margin-bottom: var(--space-4); }
+.tm-sub-left { margin-left: 0; margin-right: 0; max-width: 46ch; }
+.tm-empty-copy .link-arrow,
+.tm-stories .link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--color-border-soft);
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), gap var(--dur-fast) var(--ease-out);
+}
+.tm-empty-copy .link-arrow:hover { color: var(--color-text); border-color: var(--color-accent-600); gap: var(--space-3); }
+
+/* "What a story will include" cards render as a list of cards. */
+.tm-format { list-style: none; margin: 0; padding: 0; }
+
+/* ---- Real-story card (dormant until data exists) ---------------------------- */
+
+.tm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+  align-items: start;
+}
+.tm-grid[hidden] { display: none; }
+
+.tm-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin: 0;
+  padding: var(--space-8);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(23, 17, 42, 0.75), rgba(15, 10, 28, 0.75));
+  transition: border-color var(--dur-base) var(--ease-out);
+}
+.tm-card:hover { border-color: var(--color-border-strong); }
+.tm-quote { margin: 0; }
+.tm-quote p {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+.tm-author { display: flex; align-items: center; gap: var(--space-4); margin-top: auto; }
+.tm-avatar {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface-2);
+}
+.tm-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.tm-who { display: flex; flex-direction: column; min-width: 0; }
+.tm-name { font-size: var(--font-size-base); font-weight: 600; }
+.tm-meta,
+.tm-course { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+.tm-course { color: var(--color-lavender); }
+
+/* ---- Responsive ------------------------------------------------------------- */
+
+@media (max-width: 960px) {
+  .tm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tm-empty { grid-template-columns: 1fr; gap: var(--space-10); padding: var(--space-12) var(--space-8); }
+  .tm-empty-visual { max-width: 360px; }
+}
+@media (max-width: 640px) {
+  .tm-grid { grid-template-columns: 1fr; }
+  .tm-empty { padding: var(--space-8) var(--space-5); border-radius: var(--radius-xl); }
+  .tm-empty-visual { padding: var(--space-6) var(--space-6) var(--space-8); }
+}
+
+/* ==========================================================================
+   Phase 4 — Testimonials page. Additive; existing tm-* rules untouched.
+   ========================================================================== */
+.tm-h2 { font-size: clamp(1.6rem, 3vw, 2.25rem); margin: 0 0 var(--space-8); }
+.tm-intro-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: var(--space-16); align-items: start; }
+.tm-intro-copy p { margin: 0 0 var(--space-5); color: var(--color-text-muted); font-size: 1.0625rem; line-height: 1.8; max-width: 62ch; }
+.tm-intro-copy a, .tm-course a { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
+
+/* featured: large editorial quote, deliberately unlike the grid */
+.tm-featured-fig { margin: 0; padding: var(--space-10) 0 var(--space-10) var(--space-8); border-left: 2px solid var(--color-accent-600); }
+.tm-featured-quote { margin: 0 0 var(--space-8); }
+.tm-featured-quote p { margin: 0; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.6rem, 3.6vw, 2.75rem); line-height: 1.3; color: var(--color-text); max-width: 32ch; }
+
+/* card extras (avatar fallback is text, never a generated photo) */
+.tm-avatar-text { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: var(--color-lavender); background: var(--color-accent-50); }
+.tm-meta { display: block; }
+.tm-course a:hover { color: var(--color-text); }
+
+/* filter chips (only rendered when the data supports them) */
+.tm-filter { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8); }
+.tm-chip { padding: var(--space-2) var(--space-4); border: 1px solid var(--color-border-soft); border-radius: var(--radius-full); background: transparent; color: var(--color-text-muted); font: inherit; font-size: var(--font-size-sm); cursor: pointer; transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out); }
+.tm-chip:hover { border-color: var(--color-border-strong); color: var(--color-text); }
+.tm-chip[aria-pressed="true"] { border-color: var(--color-accent-600); color: var(--color-text); background: var(--color-accent-50); }
+.tm-chip:focus-visible { outline: 2px solid var(--color-accent-600); outline-offset: 3px; }
+.tm-more { text-align: center; margin: var(--space-10) 0 0; }
+
+/* long-form */
+.tm-story { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: var(--space-10); padding: var(--space-10) 0; border-top: 1px solid var(--color-border-soft); }
+.tm-story-body p { margin: 0 0 var(--space-5); color: var(--color-text-muted); font-size: 1.0625rem; line-height: 1.8; max-width: 62ch; }
+
+/* courses with stories */
+.tm-course-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+.tm-course-link { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); padding: var(--space-5); border: 1px solid var(--color-border-soft); border-radius: var(--radius-lg); transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.tm-course-link:hover, .tm-course-link:focus-visible { border-color: var(--color-border-strong); transform: translateY(-2px); }
+.tm-course-link small { color: var(--color-text-muted); white-space: nowrap; }
+
+/* loading / error */
+.tm-state-text { text-align: center; color: var(--color-text-muted); margin: var(--space-10) 0; }
+.tm-error { text-align: center; padding: var(--space-12) 0; }
+.tm-error p { color: var(--color-text-muted); margin: 0 0 var(--space-6); }
+
+.tm-stories[hidden], .tm-featured[hidden], .tm-longform[hidden] { display: none; }
+@media (max-width: 768px) { .tm-intro-grid, .tm-story { grid-template-columns: 1fr; gap: var(--space-6); } .tm-course-list { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .tm-course-list { grid-template-columns: 1fr; } .tm-featured-fig { padding-left: var(--space-5); } }
+@media (prefers-reduced-motion: reduce) { .tm-chip, .tm-course-link { transition: none; } .tm-course-link:hover { transform: none; } }
+
+/* Phase 4b — themes, share prompt, program tag */
+.tm-program { display: inline-block; width: fit-content; margin-top: var(--space-1); padding: .1rem .6rem; border: 1px solid rgba(217,185,106,.4); border-radius: var(--radius-full); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #d9b96a; }
+.tm-themes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 var(--space-12); }
+.tm-themes li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); padding: var(--space-5) 0; border-bottom: 1px solid var(--color-border-soft); }
+.tm-themes span { font-size: clamp(1.2rem, 2.4vw, 1.75rem); letter-spacing: -0.01em; }
+.tm-themes small { color: var(--color-text-muted); white-space: nowrap; }
+.tm-share { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); flex-wrap: wrap; padding: var(--space-10); border: 1px solid var(--color-border-strong); border-radius: var(--radius-xl); background: linear-gradient(160deg, rgba(124,58,237,.14), rgba(20,15,36,.5)); }
+.tm-share > div { max-width: 62ch; }
+.tm-share .tm-h2 { margin-bottom: var(--space-4); }
+.tm-share p { margin: 0; color: var(--color-text-muted); line-height: 1.75; }
+@media (max-width: 760px) { .tm-themes { grid-template-columns: 1fr; } .tm-share { padding: var(--space-6); } }

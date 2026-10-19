@@ -1,0 +1,246 @@
+/* ==========================================================================
+   THE KNIGHT CLUB — Buttons (site-wide)
+   SINGLE SOURCE OF TRUTH for every .btn-primary / .btn-outline / .btn-ghost
+   on every page (public dark, public light, student Night/Day).
+
+   To change a button anywhere on the site, edit ONLY this file.
+   No other stylesheet may declare background/color/gradient/box-shadow/
+   transform for .btn, .btn-primary, .btn-outline or .btn-ghost — see the
+   "DO NOT ADD BUTTON COLOUR RULES ELSEWHERE" note at the bottom.
+
+   Variants : .btn-primary  .btn-outline  .btn-ghost
+   Sizes    : .btn-sm  (default)  .btn-lg      Modifier: .btn-block
+   Static only — no hover lift, scale, or shine-sweep. Hover changes colour
+   only, matching what every page already shows.
+
+   Theming is done with --bx-* variables so one set of rules serves:
+     - public Dark  (default)
+     - public Light (html[data-site-theme="light"])
+     - student Night/Day (html[data-theme], reuses --btn-grad-* tokens)
+   Selectors use `html body .btn.btn-x` (specificity (0,2,2)) and are loaded
+   last, so they win over base.css's plain fallback with no !important
+   needed for colour. The pill border-radius rule still needs !important:
+   page files set competing radii on 2-class selectors (e.g. .home-page
+   .btn-lg, specificity (0,2,0)) which would otherwise outrank
+   `html body .btn-lg` (0,1,2).
+   ========================================================================== */
+
+/* ---------- 1. Theme variables ---------- */
+:root {
+  /* Public site — Dark (default) */
+  --bx-from: #7c3aed;
+  --bx-via: #9d5fff;
+  --bx-to: #a78bfa;
+  --bx-from-h: #6d28d9;
+  --bx-via-h: #8b45ff;
+  --bx-to-h: #c4b5fd;
+  --bx-glow: 124, 58, 237;
+  --bx-ring: rgba(190, 150, 255, 0.7);
+
+  --bx-o-bg: rgba(14, 11, 28, 0.50);
+  --bx-o-bg-h: rgba(124, 58, 237, 0.10);
+  --bx-o-bd: rgba(167, 139, 250, 0.35);
+  --bx-o-bd-h: #a78bfa;
+  --bx-o-fg: var(--color-text, #f5f3fb);
+  --bx-o-fg-h: var(--color-text, #f5f3fb);
+
+  --bx-g-fg: var(--color-text-muted, #a79fc0);
+  --bx-g-fg-h: var(--color-text, #f5f3fb);
+  --bx-g-bd: rgba(167, 139, 250, 0.30);
+  --bx-g-bd-h: #a78bfa;
+}
+
+/* Public site — Light */
+html[data-site-theme="light"] {
+  --bx-from: #3B2265;
+  --bx-via: #3B2265;
+  --bx-to: #6D3DF5;
+  --bx-from-h: #6D3DF5;
+  --bx-via-h: #A23DE0;
+  --bx-to-h: #E8399B;
+  --bx-glow: 109, 61, 245;
+  --bx-ring: rgba(109, 61, 245, 0.6);
+
+  --bx-o-bg: rgba(255, 255, 255, 0.7);
+  --bx-o-bg-h: #ffffff;
+  --bx-o-bd: rgba(109, 61, 245, 0.35);
+  --bx-o-bd-h: #6D3DF5;
+  --bx-o-fg: #3B2265;
+  --bx-o-fg-h: #6D3DF5;
+
+  --bx-g-fg: #3B2265;
+  --bx-g-fg-h: #6D3DF5;
+  --bx-g-bd: transparent;
+  --bx-g-bd-h: transparent;
+}
+
+/* Student area — follows the existing --btn-grad-* tokens (Night/Day) */
+html[data-theme] {
+  --bx-from: var(--btn-grad-from, #7c3aed);
+  --bx-via: var(--btn-grad-from, #7c3aed);
+  --bx-to: var(--btn-grad-to, #a855f7);
+  --bx-from-h: var(--btn-grad-from-hover, #8b45f0);
+  --bx-via-h: var(--btn-grad-from-hover, #8b45f0);
+  --bx-to-h: var(--btn-grad-to-hover, #b968f8);
+  --bx-glow: 124, 58, 237;
+  --bx-ring: rgba(124, 58, 237, 0.5);
+
+  --bx-o-bg: transparent;
+  --bx-o-bg-h: var(--tint-3, rgba(255, 255, 255, 0.05));
+  --bx-o-bd: var(--color-border, #2b2347);
+  --bx-o-bd-h: var(--accent-text, #a78bfa);
+  --bx-o-fg: var(--color-text, #f5f3fb);
+  --bx-o-fg-h: var(--color-text, #f5f3fb);
+
+  --bx-g-fg: var(--accent-text, #a78bfa);
+  --bx-g-fg-h: var(--accent-text-strong, #c4b5fd);
+  --bx-g-bd: transparent;
+  --bx-g-bd-h: transparent;
+}
+html[data-theme="light"] {
+  --bx-o-bg: var(--color-surface, #fff);
+  --bx-o-bg-h: var(--accent-a10, rgba(124, 58, 237, 0.08));
+  --bx-o-bd: var(--input-border, #8f86ac);
+  --bx-o-bd-h: var(--accent-text, #6d28d9);
+}
+
+/* ---------- 2. Shape, size (low specificity on purpose, so header pill
+        buttons / hero sizes defined elsewhere still apply) ---------- */
+.btn {
+  position: relative;
+  gap: 0.55rem;
+  min-height: 44px;
+  border-radius: var(--radius-full, 999px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-lg {
+  min-height: 54px;
+  border-radius: var(--radius-full, 999px);
+  font-size: 1.02rem;
+}
+.btn-sm {
+  min-height: 40px;
+  border-radius: var(--radius-full, 999px);
+}
+
+/* ---------- 2b. ALL buttons are fully round (pill).
+        because page files set 10-14px radii at higher specificity
+        (.pub-page .btn-lg, .home-page .btn-lg, .cart-clear-btn ...). ---------- */
+html body .btn,
+html body .btn-sm,
+html body .btn-lg,
+html body .cart-clear-btn,
+html body .cart-checkout-btn,
+html body .coupon-apply-btn,
+html body .coupon-remove-btn,
+html body .cc-page-btn,
+html body .oc-sticky-btn {
+  border-radius: 999px !important;
+}
+
+/* ---------- 3. Primary ---------- */
+html body .btn.btn-primary {
+  background: linear-gradient(135deg, var(--bx-from) 0%, var(--bx-via) 50%, var(--bx-to) 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 4px 24px rgba(var(--bx-glow), 0.45);
+}
+
+/* ---------- 4. Outline ---------- */
+html body .btn.btn-outline {
+  background: var(--bx-o-bg);
+  color: var(--bx-o-fg);
+  border: 1px solid var(--bx-o-bd);
+}
+
+/* ---------- 5. Ghost (text-style) ---------- */
+html body .btn.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--bx-g-bd);
+  color: var(--bx-g-fg);
+}
+
+/* ---------- 6. Hover — colour change only, no movement ---------- */
+html body .btn.btn-primary:hover {
+  background: linear-gradient(135deg, var(--bx-from-h) 0%, var(--bx-via-h) 50%, var(--bx-to-h) 100%);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(var(--bx-glow), 0.6);
+}
+html body .btn.btn-outline:hover {
+  background: var(--bx-o-bg-h);
+  color: var(--bx-o-fg-h);
+  border-color: var(--bx-o-bd-h);
+}
+html body .btn.btn-ghost:hover {
+  color: var(--bx-g-fg-h);
+  border-color: var(--bx-g-bd-h);
+}
+
+/* ---------- 7. Keyboard focus ---------- */
+html body .btn:focus-visible {
+  outline: 2px solid var(--bx-ring);
+  outline-offset: 3px;
+}
+
+/* ---------- 8. Disabled / loading ---------- */
+html body .btn[disabled],
+html body .btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn.is-loading {
+  cursor: progress;
+}
+
+/* ---------- 9. Panel overrides (Light public site only) ----------
+   Buttons inside the dark panels (.club-panel, .cta-panel, .pub-cta-panel,
+   .feature-panel) keep a bright, readable look instead of the page's
+   normal Light button colours. Moved here from site.css. ---------- */
+html[data-site-theme="light"] .club-panel .btn.btn-primary,
+html[data-site-theme="light"] .cta-panel .btn.btn-primary,
+html[data-site-theme="light"] .pub-cta-panel .btn.btn-primary,
+html[data-site-theme="light"] .feature-panel .btn.btn-primary {
+  background: linear-gradient(120deg, #6D3DF5 0%, #A23DE0 60%, #E8399B 100%);
+  box-shadow: 0 10px 30px -8px rgba(162, 61, 224, 0.7);
+}
+html[data-site-theme="light"] .club-panel .btn.btn-outline,
+html[data-site-theme="light"] .cta-panel .btn.btn-outline,
+html[data-site-theme="light"] .pub-cta-panel .btn.btn-outline,
+html[data-site-theme="light"] .feature-panel .btn.btn-outline {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(232, 210, 240, 0.45);
+  color: #fff;
+}
+html[data-site-theme="light"] .club-panel .btn.btn-outline:hover,
+html[data-site-theme="light"] .cta-panel .btn.btn-outline:hover,
+html[data-site-theme="light"] .pub-cta-panel .btn.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: #fff;
+}
+
+/* ==========================================================================
+   DO NOT ADD BUTTON COLOUR RULES ELSEWHERE
+   base.css keeps a plain, unstyled .btn/.btn-primary/.btn-outline fallback
+   for browsers without CSS or during a flash of unstyled content — leave it
+   as-is, it never wins against this file. Every other stylesheet (site.css,
+   theme-futuristic.css, home.css, public.css, student.css, student-theme.css)
+   must NOT declare background/color/border/box-shadow/transform for .btn,
+   .btn-primary, .btn-outline or .btn-ghost. If a button needs a one-off
+   look in a specific panel (e.g. a CTA banner), scope it narrowly to that
+   panel's class and keep it here, in its own numbered section, not in the
+   panel's own stylesheet.
+
+   SAME RULE APPLIES TO JS: no page-specific script (e.g. home.js,
+   scroll-animations.js, hero-bg.js) may attach mousemove/hover-driven
+   transforms, GSAP tweens, or any animation to .btn/.btn-primary/
+   .btn-outline/.btn-ghost. Buttons stay static everywhere — the only
+   motion allowed is base.css's :active press (translateY(1px)) and the
+   colour-only :hover already defined below. This keeps every page,
+   including the homepage, visually and behaviourally identical.
+   ========================================================================== */

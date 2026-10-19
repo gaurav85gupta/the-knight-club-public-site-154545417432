@@ -1,0 +1,769 @@
+/* ==========================================================================
+   THE KNIGHT CLUB — Course Detail Page (course.html)
+
+   Loaded by course.html, after public.css/courses.css/theme-futuristic.css.
+   Namespace: cd- for everything specific to this page. Reuses existing
+   shared primitives (.pub-hero, .cc-h2, .cc-section-head, .pub-eyebrow,
+   .course-grid/.course-card from the Related Courses block) rather than
+   duplicating them, matching Phase R2's shared-CSS-ownership rule.
+
+   Colours/spacing/motion come from tokens.css only, so Dark and Light
+   both work without extra overrides here beyond the few surface flips
+   called out below.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. PAGE-LEVEL ATMOSPHERE (mirrors courses.css section 0)
+   -------------------------------------------------------------------------- */
+
+.course-page {
+  background: var(--color-bg);
+  overflow-x: clip;
+}
+.course-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   1. LOADING STATE
+   ========================================================================== */
+
+@keyframes cd-sk-shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+.course-page .skeleton {
+  background: linear-gradient(90deg, rgba(139, 69, 255, 0.06) 25%, rgba(139, 69, 255, 0.13) 50%, rgba(139, 69, 255, 0.06) 75%);
+  background-size: 800px 100%;
+  animation: cd-sk-shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+.cd-loading { padding: calc(var(--pub-header-height) + var(--space-12)) 0 var(--space-16); }
+.cd-sk-title { height: 40px; width: 65%; margin-top: var(--space-5); border-radius: var(--radius-md); max-width: 560px; }
+.cd-sk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--space-10);
+  margin-top: var(--space-10);
+}
+.cd-sk-body { display: flex; flex-direction: column; gap: var(--space-4); }
+.cd-sk-line { height: 14px; border-radius: var(--radius-sm); }
+.cd-sk-block { height: 220px; border-radius: var(--radius-lg); margin-top: var(--space-4); }
+.cd-sk-card { height: 420px; border-radius: var(--radius-xl); }
+
+@media (max-width: 960px) {
+  .cd-sk-grid { grid-template-columns: 1fr; }
+  .cd-sk-card { height: 280px; }
+}
+
+/* ==========================================================================
+   2. ERROR / NOT-FOUND STATE
+   ========================================================================== */
+
+.cd-state-panel {
+  max-width: 540px;
+  margin: calc(var(--pub-header-height) + var(--space-16)) auto var(--space-24);
+  padding: var(--space-10);
+  text-align: center;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-xl);
+  background: var(--color-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.cd-state-panel h3 { margin: 0 0 var(--space-3); font-size: 1.4rem; letter-spacing: -0.02em; }
+.cd-state-panel p { margin: 0 0 var(--space-6); color: var(--color-text-muted); line-height: 1.6; }
+
+/* ==========================================================================
+   3. HERO
+   ========================================================================== */
+
+.cd-hero {
+  text-align: left;
+  padding-bottom: var(--space-10);
+}
+
+.cd-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.cd-hero-bg::before {
+  content: '';
+  position: absolute;
+  top: -220px;
+  left: 50%;
+  width: 1100px;
+  height: 640px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 0%, rgba(139, 69, 255, 0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 35% 28% at 20% 55%, rgba(80, 40, 180, 0.07) 0%, transparent 60%);
+}
+
+.cd-breadcrumbs {
+  margin: 0 0 var(--space-5);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.cd-breadcrumbs a { color: var(--color-text-muted); text-decoration: none; transition: color 150ms var(--ease-out); }
+.cd-breadcrumbs a:hover { color: var(--color-lavender); }
+.cd-crumb-sep { margin: 0 var(--space-1); color: var(--color-border-strong); }
+.cd-breadcrumbs #crumb-title {
+  color: var(--color-text);
+  font-weight: 500;
+  display: inline-block;
+  max-width: 28ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+.cd-title {
+  margin: 0 0 var(--space-4);
+  max-width: 24ch;
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  color: #f3effa;
+  text-shadow: 0 0 60px rgba(139, 69, 255, 0.25);
+}
+
+.cd-short-desc {
+  margin: 0 0 var(--space-6);
+  max-width: 640px;
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.cd-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.cd-meta-row strong { color: var(--color-text); font-weight: 600; }
+.cd-meta-row .dot { color: var(--color-border-strong); }
+
+/* Category / level badges rendered into #detail-meta-top */
+#detail-meta-top .course-card-meta { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4); }
+#detail-meta-top .badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-lavender);
+  background: rgba(139, 69, 255, 0.12);
+  border: 1px solid rgba(139, 69, 255, 0.35);
+}
+#detail-meta-top .badge-muted {
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  border-color: var(--color-border-soft);
+}
+
+/* ==========================================================================
+   4. LAYOUT GRID — body + sticky buy card
+   ========================================================================== */
+
+.cd-section { position: relative; padding-bottom: var(--space-20, var(--space-16)); }
+
+.cd-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.cd-body { display: flex; flex-direction: column; gap: var(--space-10); min-width: 0; }
+
+.cd-block { max-width: 72ch; }
+.cd-h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.cd-h2::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 1.1em;
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, var(--color-accent-300), var(--color-cyan));
+}
+.cd-prose {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+/* -------- Outcomes / requirements lists -------- */
+
+.cd-outcome-list,
+.cd-requirement-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+.cd-outcome-list li,
+.cd-requirement-list li {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-glass);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.cd-outcome-list li:hover,
+.cd-requirement-list li:hover {
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
+}
+.cd-outcome-list li::before {
+  content: '';
+  flex: none;
+  width: 18px; height: 18px;
+  margin-top: 0.15em;
+  border-radius: 50%;
+  background: rgba(139, 69, 255, 0.14);
+  border: 1px solid rgba(139, 69, 255, 0.4);
+}
+.cd-outcome-list li::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--space-4) + 5px); top: calc(var(--space-3) + 0.62em);
+  width: 8px; height: 5px;
+  border-left: 2px solid var(--color-lavender);
+  border-bottom: 2px solid var(--color-lavender);
+  transform: rotate(-45deg);
+}
+.cd-requirement-list li::before {
+  content: '';
+  flex: none;
+  width: 6px; height: 6px;
+  margin-top: 0.62em;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+}
+
+@media (max-width: 560px) {
+  .cd-outcome-list,
+  .cd-requirement-list { grid-template-columns: 1fr; }
+}
+
+/* -------- Curriculum -------- */
+
+.cd-curriculum-summary {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.cd-curriculum-list { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.curriculum-module {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background: var(--color-glass);
+  overflow: hidden;
+  transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+.curriculum-module:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 16px 36px -24px rgba(124, 58, 237, 0.45);
+  transform: translateY(-1px);
+}
+.curriculum-module.is-open {
+  border-color: var(--color-border-strong);
+}
+
+.curriculum-module-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.curriculum-module-header:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: -2px; }
+.module-title { font-weight: 700; letter-spacing: -0.01em; }
+.module-sub { font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: 400; }
+.curriculum-module-header .chevron {
+  flex: none;
+  color: var(--color-text-muted);
+  transition: transform 220ms var(--ease-out);
+}
+.curriculum-module.is-open .chevron { transform: rotate(180deg); color: var(--color-lavender); }
+
+.curriculum-lessons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 260ms var(--ease-out);
+}
+.curriculum-lessons > * { overflow: hidden; }
+.curriculum-module.is-open .curriculum-lessons { grid-template-rows: 1fr; }
+.curriculum-lessons::before { content: ''; display: block; height: 0; }
+
+/* Use max-height fallback behaviour via grid-rows above; list itself needs
+   an inner wrapper for overflow — achieved by styling <li> directly since
+   the module structure keeps <ul> as the direct animated grid track. */
+.curriculum-lessons li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
+  font-size: var(--font-size-sm);
+  min-height: 0;
+}
+.curriculum-module:not(.is-open) .curriculum-lessons li { visibility: hidden; }
+
+.lesson-left {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--color-text);
+  text-decoration: none;
+}
+a.lesson-left:hover { color: var(--color-lavender); }
+.lesson-left span:not(.badge) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lesson-type-icon { flex: none; color: var(--color-text-muted); opacity: 0.7; }
+.lesson-right { flex: none; color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.lesson-left .badge {
+  flex: none;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+  background: rgba(139, 69, 255, 0.14);
+  border: 1px solid rgba(139, 69, 255, 0.35);
+}
+
+/* -------- Tags -------- */
+
+.cd-tag-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.cd-tag-row .badge-muted {
+  display: inline-flex;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-soft);
+}
+
+/* ==========================================================================
+   5. BUY / ENROLLMENT CARD
+   ========================================================================== */
+
+.cd-buy-card {
+  position: sticky;
+  top: calc(var(--pub-header-height) + var(--space-4));
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(165deg, rgba(28, 18, 58, 0.92) 0%, rgba(15, 10, 30, 0.96) 100%);
+  border: 1px solid rgba(139, 69, 255, 0.22);
+  box-shadow: 0 32px 70px -30px rgba(0, 0, 0, 0.85), 0 0 50px -24px rgba(139, 69, 255, 0.35);
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.cd-buy-card:hover {
+  border-color: rgba(139, 69, 255, 0.4);
+  box-shadow: 0 36px 80px -28px rgba(0, 0, 0, 0.85), 0 0 60px -18px rgba(139, 69, 255, 0.45);
+}
+
+.cd-buy-thumb {
+  aspect-ratio: 16 / 10;
+  margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) var(--space-5);
+  width: calc(100% + var(--space-6) * 2);
+  overflow: hidden;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--color-surface-2);
+}
+.cd-buy-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.cd-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+.cd-price-current {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff, #d4c0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cd-price-original {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.cd-alert { margin-bottom: var(--space-4); }
+.alert {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+.alert[hidden] { display: none; }
+.alert-error   { background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.35); color: #fca5a5; }
+.alert-success { background: rgba(52, 211, 153, 0.1); border-color: rgba(52, 211, 153, 0.35); color: #6ee7b7; }
+.alert-info    { background: var(--color-surface-alt); border-color: var(--color-border-soft); color: var(--color-text); }
+
+.cd-buy-card .btn-block { width: 100%; justify-content: center; }
+.cd-buy-card .btn + .btn,
+.cd-buy-card .btn + a.btn,
+.cd-buy-card a.btn + .btn,
+.cd-buy-card a.btn + a.btn { margin-top: var(--space-3); }
+
+.cd-spinner,
+.spinner {
+  display: none;
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  animation: cd-spin 700ms linear infinite;
+}
+.is-loading .spinner { display: inline-block; }
+.is-loading .label { opacity: 0.85; }
+@keyframes cd-spin { to { transform: rotate(360deg); } }
+
+.cd-secure-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.cd-secure-note svg { flex: none; color: var(--color-lavender); opacity: 0.8; }
+
+/* ==========================================================================
+   6. RELATED COURSES SECTION
+   ========================================================================== */
+
+.cd-related { padding-top: var(--space-4); }
+.cd-related .cc-section-head { max-width: none; }
+
+/* ==========================================================================
+   7. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .cd-hero { padding-top: calc(var(--pub-header-height) + var(--space-10)); }
+  .cd-grid { grid-template-columns: 1fr; gap: var(--space-10); }
+  .cd-buy-card { position: static; max-width: 440px; }
+}
+
+@media (max-width: 768px) {
+  .course-grid { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+}
+
+@media (max-width: 640px) {
+  .cd-section { padding-bottom: var(--space-12); }
+  .cd-body { gap: var(--space-8); }
+}
+
+@media (max-width: 480px) {
+  .cd-hero { padding-top: calc(var(--pub-header-height) + var(--space-6)); padding-bottom: var(--space-6); }
+  .cd-title { font-size: clamp(1.8rem, 9vw, 2.4rem); }
+  .cd-short-desc { font-size: var(--font-size-base); }
+  .cd-buy-card { max-width: none; padding: var(--space-5); }
+  .cd-price-current { font-size: 1.6rem; }
+  .cc-section-head .cc-h2 { font-size: 1.5rem; }
+  .course-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   8. LIGHT THEME
+   ========================================================================== */
+
+html[data-site-theme="light"] .cd-title { color: var(--color-text); text-shadow: none; }
+html[data-site-theme="light"] .cd-hero-bg::before {
+  background:
+    radial-gradient(ellipse 55% 50% at 50% 0%, rgba(109, 61, 245, 0.10) 0%, transparent 70%);
+}
+html[data-site-theme="light"] .cd-state-panel { background: #ffffff; }
+
+html[data-site-theme="light"] #detail-meta-top .badge {
+  color: var(--color-accent-600);
+  background: rgba(109, 61, 245, 0.08);
+  border-color: rgba(109, 61, 245, 0.3);
+}
+html[data-site-theme="light"] #detail-meta-top .badge-muted {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border-color: var(--color-border-soft);
+}
+
+html[data-site-theme="light"] .curriculum-module {
+  background: #ffffff;
+  border-color: var(--color-border-soft);
+}
+html[data-site-theme="light"] .curriculum-module:hover { border-color: var(--color-border-strong); }
+html[data-site-theme="light"] .lesson-left .badge {
+  background: rgba(109, 61, 245, 0.08);
+  border-color: rgba(109, 61, 245, 0.3);
+  color: var(--color-accent-600);
+}
+
+html[data-site-theme="light"] .cd-buy-card {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.18);
+  box-shadow: 0 24px 56px -28px rgba(28, 21, 48, 0.3);
+}
+html[data-site-theme="light"] .cd-buy-card:hover {
+  border-color: rgba(109, 61, 245, 0.4);
+  box-shadow: 0 30px 64px -26px rgba(28, 21, 48, 0.4);
+}
+html[data-site-theme="light"] .cd-price-current {
+  background: linear-gradient(135deg, #1C1530, #6D3DF5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-site-theme="light"] .cd-price-original { color: var(--color-text-muted); }
+html[data-site-theme="light"] .cd-secure-note { color: var(--color-text-muted); }
+html[data-site-theme="light"] .cd-secure-note svg { color: var(--color-accent-600); }
+html[data-site-theme="light"] .cd-buy-thumb { background: var(--color-surface-alt); }
+html[data-site-theme="light"] .alert-error   { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+html[data-site-theme="light"] .alert-success { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); color: #047857; }
+html[data-site-theme="light"] .alert-info    { background: var(--color-surface-alt); border-color: var(--color-border); color: var(--color-text); }
+
+html[data-site-theme="light"] .cd-tag-row .badge-muted {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border-soft);
+}
+
+/* ==========================================================================
+   9. REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .course-page *,
+  .course-page *::before,
+  .course-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   10. RELATED COURSES CARD GRID (unchanged from original — scope: the
+   Related Courses block rendered by course-detail.js, #related-list
+   /.course-card and its children). Colours/spacing from tokens.css,
+   matching the .hc-card language used on the homepage featured-courses
+   grid for visual consistency.
+   ========================================================================== */
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-6);
+}
+
+.course-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, var(--color-surface-2), var(--color-surface));
+  border: 1px solid var(--color-border-soft);
+  overflow: hidden;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: transform 280ms var(--ease-out), border-color 280ms var(--ease-out), box-shadow 280ms var(--ease-out);
+}
+.course-card:focus-visible {
+  color: var(--color-text);
+  border-color: rgba(139, 69, 255, 0.7);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(139, 69, 255, 0.3);
+}
+
+/* Corner-accent + hover shine sweep — matches .cc-card on the courses page */
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60px; height: 60px;
+  background: linear-gradient(225deg, rgba(139, 69, 255, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 280ms var(--ease-out);
+}
+.course-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.025) 50%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0;
+  transition: opacity 280ms var(--ease-out);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: var(--radius-xl);
+}
+
+@media (hover: hover) {
+  .course-card:hover {
+    color: var(--color-text);
+    transform: translateY(-8px);
+    border-color: rgba(139, 69, 255, 0.45);
+    box-shadow:
+      0 0 0 1px rgba(139, 69, 255, 0.1) inset,
+      0 40px 80px -24px rgba(0, 0, 0, 0.9),
+      0 0 60px -20px rgba(139, 69, 255, 0.4);
+  }
+  .course-card:hover::before { opacity: 2; }
+  .course-card:hover::after { opacity: 1; }
+  .course-card:hover .course-card-thumb img,
+  .course-card:hover .thumb-fallback { transform: scale(1.07); }
+  .course-card:hover .course-card-title { color: var(--color-lavender); }
+  .course-card:hover .price-current { filter: drop-shadow(0 0 14px rgba(139, 69, 255, 0.45)); }
+}
+
+.course-card-thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--color-surface-2);
+}
+.course-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 520ms var(--ease-out);
+}
+
+.thumb-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-lavender);
+  font-weight: 800;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), var(--color-surface-2));
+  transition: transform 520ms var(--ease-out);
+}
+
+.course-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  flex: 1;
+}
+
+.course-card-meta { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.badge {
+  display: inline-flex;
+  padding: 0.22rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-lavender);
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+.course-card-title {
+  margin: var(--space-1) 0 0;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 280ms var(--ease-out);
+}
+
+.course-card-instructor {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.course-card-footer {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.price-current { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; transition: filter 280ms var(--ease-out); }
+.price-original { font-size: var(--font-size-sm); color: var(--color-text-muted); text-decoration: line-through; }
+
+html[data-site-theme="light"] .course-card {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+  box-shadow: 0 14px 34px -22px rgba(28, 21, 48, 0.35);
+}
+html[data-site-theme="light"] .course-card:hover {
+  border-color: rgba(109, 61, 245, 0.45);
+  box-shadow: 0 26px 50px -24px rgba(109, 61, 245, 0.5);
+}
+html[data-site-theme="light"] .thumb-fallback {
+  background: linear-gradient(135deg, #f0ebff, #ffffff);
+  color: #6D3DF5;
+}

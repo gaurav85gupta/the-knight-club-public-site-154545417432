@@ -1,0 +1,368 @@
+/* ==========================================================================
+   THE KNIGHT CLUB — About page styles
+   Loaded by pages/about.html (and pages/contact.html for shared .ct-* bits).
+   All about-specific selectors use .ab-* or .about-page.
+   All founder selectors use .founder-v2-* (shared with home.css for index.html).
+   ========================================================================== */
+
+/* ---- Base ----------------------------------------------------------------- */
+.about-page { --gold: #d9b96a; overflow-x: clip; }
+
+/* The hero's "Meet the Founder" link (and any direct #founder deep link)
+   jumps straight to this section; without this the floating pub-header
+   overlaps the top ~16px of its eyebrow label. Same convention as
+   .ct-form-section in contact.css / .cc-skills in courses.css. */
+#founder { scroll-margin-top: var(--space-6); } /* header offset is global: css/1-base/scroll.css */
+
+/* ---- Shared layout helpers ----------------------------------------------- */
+.ab-title-left { text-align: left; }
+.ab-sub-left   { margin-left: 0; margin-right: 0; max-width: 40ch; }
+.ab-list, .ct-cards { list-style: none; margin: 0; padding: 0; }
+.ab-list > li  { margin: 0; }
+.ab-eyebrow-center { justify-content: center; }
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.about-page .ab-hero .pub-hero-bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(167,139,250,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167,139,250,.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, #000, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, #000, transparent 75%);
+}
+
+.ab-hero-inner { display: flex; justify-content: center; }
+.ab-hero-text  { max-width: 680px; }
+
+.ab-hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+/* ==========================================================================
+   STORY — two-column editorial
+   ========================================================================== */
+.ab-story {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: var(--space-16);
+  align-items: start;
+}
+
+.ab-story-left { position: sticky; top: 120px; }
+
+.ab-story-heading {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: var(--space-4) 0 0;
+  color: var(--color-text);
+}
+
+.ab-prose-lead {
+  margin: 0 0 var(--space-5);
+  color: var(--color-text);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  max-width: 60ch;
+}
+
+.ab-prose-body {
+  margin: 0 0 var(--space-5);
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 60ch;
+}
+
+/* Narrative bridge pill-trail */
+.ab-story-bridge {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-scrim-soft);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.ab-bridge-arrow { color: var(--color-accent-600); font-size: 1rem; }
+
+/* ==========================================================================
+   PHILOSOPHY SPLIT — sticky intro + numbered list
+   ========================================================================== */
+.ab-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--space-16);
+  align-items: start;
+}
+.ab-split-intro { position: sticky; top: 120px; }
+
+/* ==========================================================================
+   BRAND STATEMENT — full-width
+   ========================================================================== */
+.ab-statement {
+  position: relative;
+  padding: var(--space-24) 0;
+  text-align: center;
+  background: radial-gradient(ellipse 70% 80% at 50% 0%, rgba(124,58,237,.22), transparent 70%);
+  border-block: 1px solid var(--color-border-soft);
+}
+
+.ab-statement-title {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: var(--space-4) 0 var(--space-16);
+}
+
+.ab-statement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-8);
+  text-align: left;
+}
+.ab-statement-grid > div {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-strong);
+}
+.ab-statement-grid h3 { margin: 0 0 var(--space-2); font-size: 1.05rem; }
+.ab-statement-grid p  { margin: 0; color: var(--color-text-muted); line-height: 1.7; }
+.ab-statement a,
+.ab-note a,
+.ab-club a:not(.btn) { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
+
+/* ==========================================================================
+   LEARNING LOOP — 4-step horizontal on desktop
+   ========================================================================== */
+.ab-loop {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-8);
+}
+.ab-loop li {
+  position: relative;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-strong);
+}
+.ab-loop li::before {
+  content: "";
+  position: absolute; top: -4px; left: 0;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--color-accent-600);
+  box-shadow: 0 0 12px var(--color-accent-500);
+}
+.ab-loop span { font-size: var(--font-size-sm); letter-spacing: .14em; color: var(--gold); }
+.ab-loop h3   { margin: var(--space-2) 0; font-size: 1.4rem; }
+.ab-loop p    { margin: 0; color: var(--color-text-muted); line-height: 1.7; }
+
+/* ==========================================================================
+   AUDIENCE (WHO)
+   ========================================================================== */
+.ab-split-flip { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); }
+.ab-split-flip .ab-split-intro { order: 2; }
+
+.ab-who {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-8) var(--space-6);
+}
+.ab-who li  { padding-top: var(--space-4); border-top: 1px solid var(--color-border-soft); }
+.ab-who h3  { margin: 0 0 var(--space-2); font-size: 1.15rem; }
+.ab-who p   { margin: 0; color: var(--color-text-muted); line-height: 1.7; }
+
+/* ==========================================================================
+   FOUNDER V2 — ScaleToSky-inspired (home + About shared)
+   Base rules now live in public.css (loaded by both home.css and about.css)
+   — consolidated here as part of R1 foundation fix A to remove the
+   near-duplicate block that used to exist in both files. Add page-specific
+   .founder-v2-* overrides below only if About genuinely needs to diverge
+   from the shared base.
+   ========================================================================== */
+
+/* ==========================================================================
+   APPROACH CARDS — numbered 2×2 grid
+   ========================================================================== */
+.ab-diff-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.ab-diff-card {
+  position: relative;
+  padding: var(--space-8) var(--space-8) var(--space-8) calc(var(--space-8) + 0.5rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface-alt);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.ab-diff-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 8px 32px -12px rgba(124, 58, 237, 0.3);
+}
+
+.ab-diff-num {
+  display: block;
+  margin-bottom: var(--space-4);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--color-accent-600);
+}
+
+.ab-diff-card h3 { margin: 0 0 var(--space-3); font-size: 1.1rem; }
+.ab-diff-card p  { margin: 0; color: var(--color-text-muted); line-height: 1.7; font-size: 0.95rem; }
+
+/* ==========================================================================
+   VALUES — 4-column numbered rail
+   ========================================================================== */
+.ab-values-section { background: var(--color-surface-alt); }
+
+.ab-values-header { margin-bottom: var(--space-12); text-align: center; }
+.ab-values-header .pub-title { margin-top: var(--space-2); }
+
+.ab-values {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-8);
+}
+.ab-values li {
+  position: relative;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-strong);
+}
+.ab-values li::before {
+  content: "";
+  position: absolute; top: -4px; left: 0;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--color-accent-600);
+  box-shadow: 0 0 12px var(--color-accent-500);
+}
+.ab-values span { font-size: var(--font-size-sm); letter-spacing: .14em; color: var(--gold); }
+.ab-values h3   { margin: var(--space-2) 0; font-size: 1.4rem; }
+.ab-values p    { margin: 0; color: var(--color-text-muted); line-height: 1.7; }
+
+/* ==========================================================================
+   COURSE BRIDGE — philosophy → courses
+   ========================================================================== */
+.ab-journey {
+  list-style: none; margin: 0 0 var(--space-10); padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3);
+}
+.ab-journey li {
+  padding: .6rem 1.1rem;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-full);
+  color: var(--color-lavender);
+}
+.ab-journey li + li::before { content: "→"; margin-right: var(--space-3); color: var(--color-accent-700); }
+.ab-center { text-align: center; margin: 0; }
+
+/* ==========================================================================
+   1% CLUB CONTEXT
+   ========================================================================== */
+.ab-club {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-8); flex-wrap: wrap;
+  padding: var(--space-10);
+  border: 1px solid var(--color-border-strong); border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, rgba(124,58,237,.16), rgba(20,15,36,.5));
+}
+.ab-club > div { max-width: 60ch; }
+.ab-club-title { margin: 0 0 var(--space-3); font-size: 1.6rem; }
+.ab-club p     { margin: 0 0 var(--space-4); color: var(--color-text-muted); line-height: 1.7; }
+.ab-club p:last-child { margin-bottom: 0; }
+.ab-club-eq    { font-size: 0.9rem; font-weight: 600; color: var(--color-text-muted); letter-spacing: 0.02em; }
+.ab-club-eq strong { color: var(--color-lavender); }
+
+/* ==========================================================================
+   BRAND PROMISE — closing statement
+   ========================================================================== */
+.ab-promise-inner { max-width: 820px; }
+.ab-promise-title {
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  margin: 0 0 var(--space-8); letter-spacing: -0.02em;
+}
+.ab-promise-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); text-align: left; }
+.ab-promise-list li {
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border-soft);
+  color: var(--color-text-muted); line-height: 1.6;
+}
+.ab-promise-list strong { color: var(--color-text); margin-right: var(--space-2); }
+
+/* ==========================================================================
+   SHARED SMALL BITS
+   ========================================================================== */
+.ab-note { margin: var(--space-6) 0 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.ab-note a, .ab-statement a { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+/* 1024px — loop / values to 2 columns */
+@media (max-width: 1024px) {
+  .ab-loop, .ab-values { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 768px — stacking */
+@media (max-width: 768px) {
+  .ab-story          { grid-template-columns: 1fr; gap: var(--space-8); }
+  .ab-story-left     { position: static; }
+  .ab-split          { grid-template-columns: 1fr; gap: var(--space-8); }
+  .ab-split-intro    { position: static; }
+  .ab-split-flip     { grid-template-columns: 1fr; }
+  .ab-split-flip .ab-split-intro { order: 0; }
+  .ab-statement      { padding: var(--space-16) 0; }
+  .ab-statement-grid { grid-template-columns: 1fr; }
+  .ab-diff-cards     { grid-template-columns: 1fr; }
+  /* .founder-v2-panel / .founder-v2-card tablet stacking now in public.css */
+}
+
+/* 480px — single column everything */
+@media (max-width: 480px) {
+  .ab-loop, .ab-values, .ab-who { grid-template-columns: 1fr; }
+  .ab-club           { padding: var(--space-6); flex-direction: column; align-items: flex-start; }
+  .ab-journey        { flex-direction: column; align-items: stretch; }
+  .ab-journey li     { text-align: center; }
+  .ab-journey li + li::before { content: "↓"; display: block; margin: 0 0 var(--space-1); }
+  /* .founder-v2-traits single-column collapse now in public.css (640px) */
+  .ab-hero-actions   { flex-direction: column; align-items: flex-start; }
+  .ab-story-bridge   { flex-direction: column; gap: var(--space-1); }
+  .ab-bridge-arrow   { transform: rotate(90deg); }
+}
+
+/* ==========================================================================
+   LIGHT THEME OVERRIDES
+   ========================================================================== */
+html[data-site-theme="light"] .ab-statement {
+  background: radial-gradient(ellipse 70% 80% at 50% 0%, rgba(109,61,245,.12), transparent 70%);
+}
+
+html[data-site-theme="light"] .ab-story-bridge {
+  background: rgba(240, 230, 250, 0.6);
+}
+
+html[data-site-theme="light"] .ab-diff-card {
+  background: var(--color-surface);
+}
+
+html[data-site-theme="light"] .ab-values-section {
+  background: var(--color-surface-alt);
+}
+
+html[data-site-theme="light"] .ab-club {
+  background: linear-gradient(160deg, rgba(109,61,245,.12), rgba(162,61,224,.08));
+}
+

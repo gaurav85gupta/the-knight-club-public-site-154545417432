@@ -1,0 +1,24 @@
+/* ==========================================================================
+   Coolvetica Heavy Compressed — Self-hosted @font-face
+   Drop your .woff2 / .woff font files into assets/fonts/ and this file
+   will load them correctly. Used only for h1 headings site-wide via
+   var(--font-family-h1).
+
+   Expected files (place in assets/fonts/):
+     coolvetica-heavy-compressed.woff2   ← preferred (smallest, modern browsers)
+     coolvetica-heavy-compressed.woff    ← fallback (older browsers)
+
+   HOW TO GET THE FILES:
+     - If you own the font: export from your font manager as woff/woff2
+     - Convert from .otf/.ttf at: https://cloudconvert.com/otf-to-woff2
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Coolvetica';
+  src:
+    url('./coolvetica-heavy-compressed.woff2') format('woff2'),
+    url('./coolvetica-heavy-compressed.woff')  format('woff');
+  font-weight: normal;
+  font-style:  normal;
+  font-display: swap;   /* show fallback instantly, swap when loaded */
+}

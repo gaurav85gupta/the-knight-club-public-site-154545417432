@@ -1,0 +1,346 @@
+/* THE KNIGHT CLUB — 1% Club page. Loaded only by pages/one-percent-club.html after public.css. */
+
+/* =========================================================================
+   CLUB PAGE BASE
+   ========================================================================= */
+.club-page{--cream:#f4efe6;--disp:var(--font-family-h1);--serif:'Cormorant Garamond',Garamond,serif}
+.club-page h1,.club-page h2{font-family:var(--disp);letter-spacing:-.035em;color:var(--cream)}
+
+/* =========================================================================
+   HIDDEN ATTRIBUTE FIX
+   CSS display properties on view classes must never override the HTML
+   [hidden] attribute set by showView(). Without this, .oc-view-loading's
+   display:flex wins over hidden=true and the spinner stays visible even
+   after data loads successfully.
+   ========================================================================= */
+.oc-view-loading[hidden],
+.oc-view-error[hidden],
+.oc-view-selection[hidden],
+.oc-view-review[hidden],
+.oc-view-member[hidden]{display:none!important}
+
+/* =========================================================================
+   VIEW: LOADING
+   ========================================================================= */
+.oc-view-loading{display:flex;align-items:center;justify-content:center;min-height:60vh;padding:var(--space-16) var(--space-4)}
+.oc-spinner-wrap{display:flex;flex-direction:column;align-items:center;gap:var(--space-4)}
+.oc-spinner{width:44px;height:44px;border-radius:50%;border:3px solid var(--color-border-strong);border-top-color:var(--color-accent-500);animation:oc-spin 0.8s linear infinite}
+.oc-spinner-label{color:var(--color-text-muted);font-size:1rem}
+@keyframes oc-spin{to{transform:rotate(360deg)}}
+
+/* =========================================================================
+   VIEW: ERROR
+   ========================================================================= */
+.oc-view-error{padding:var(--space-24) var(--space-4)}
+.oc-error-wrap{max-width:560px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--space-4)}
+.oc-error-icon{color:var(--color-accent-700);opacity:.7}
+.oc-error-title{margin:0;font-size:clamp(1.6rem,3.5vw,2.2rem);color:var(--cream)}
+.oc-error-msg{margin:0;color:var(--color-text-muted);font-size:1rem;line-height:1.6}
+.oc-error-wrap .btn+.btn{margin-top:0}
+
+/* =========================================================================
+   VIEW: EXISTING MEMBER
+   ========================================================================= */
+.oc-view-member{padding:var(--space-24) var(--space-4)}
+.oc-member-wrap{max-width:560px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--space-4)}
+.oc-member-icon{color:var(--color-lavender);animation:oc-reveal 0.8s var(--ease-out) both}
+.oc-member-title{margin:0;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--cream)}
+.oc-member-lead{margin:0;color:var(--color-text-muted);font-size:1.1rem;line-height:1.65}
+
+/* =========================================================================
+   HERO — Selection view
+   ========================================================================= */
+/* .oc-hero now composes with the shared .pub-hero (see public.css) for its
+   position/isolation/margin-top/overflow/padding skeleton — this file only
+   supplies the 1% Club-specific border. */
+.oc-hero{border-bottom:1px solid var(--color-border-soft)}
+.oc-hero-bg{position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 70% at 78% 30%,rgba(124,58,237,.42),transparent 70%),radial-gradient(40% 50% at 10% 90%,rgba(76,29,149,.35),transparent 70%),linear-gradient(rgba(167,139,250,.06) 1px,transparent 1px) 0 0/72px 72px,linear-gradient(90deg,rgba(167,139,250,.06) 1px,transparent 1px) 0 0/72px 72px;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent);animation:oc-drift 18s ease-in-out infinite alternate}
+.oc-mark{position:absolute;z-index:-1;right:-2vw;top:50%;transform:translateY(-46%);font:800 clamp(14rem,34vw,32rem)/.8 var(--disp);letter-spacing:-.08em;color:transparent;-webkit-text-stroke:1px rgba(196,181,253,.34);animation:oc-reveal 1.4s var(--ease-out) both;pointer-events:none;user-select:none}
+.oc-hero-in{position:relative}
+.oc-kicker{margin:0 0 var(--space-6);color:var(--color-lavender);font-size:.85rem;letter-spacing:.14em;text-transform:uppercase}
+.oc-hero h1{margin:0 0 var(--space-6);max-width:15ch;font-size:clamp(2.6rem,7vw,5.6rem);line-height:1;font-weight:800}
+.oc-h1-name{display:block;margin-bottom:var(--space-3);font:italic 500 clamp(1.6rem,3.4vw,2.6rem)/1.1 var(--serif);letter-spacing:0;color:var(--color-lavender)}
+.oc-h1-line{display:block}
+.oc-lead{max-width:52ch;color:var(--color-text-muted);font-size:1.2rem;line-height:1.65}
+.oc-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-8)}
+
+/* Hero meta (price + rule) — opacity raised from .55 to .78 so the glass
+   panel keeps solid contrast at the brightest point of the oc-drift
+   animation behind it, instead of relying on blur alone. */
+.oc-hero-meta{
+  --oc-meta-muted: #b8aedd;
+  --oc-meta-lavender: #c9b8ff;
+  --oc-meta-price: var(--cream);
+  --oc-meta-border: rgba(167,139,250,0.30);
+  --oc-meta-divider: rgba(167,139,250,0.30);
+  --oc-meta-bg: rgba(14,10,26,.86);
+  --oc-meta-shadow: none;
+  display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-4);margin-top:var(--space-8);padding:var(--space-4) var(--space-5);border:1px solid var(--oc-meta-border);border-radius:var(--radius-lg);background:var(--oc-meta-bg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);width:fit-content;box-shadow:var(--oc-meta-shadow)
+}
+/* Light public theme: the dark chip reads as a mismatched, disconnected
+   block against this page's white/lavender hero. Swap to a white card with
+   a visible violet border + soft shadow instead, so it still stands out
+   but belongs to the page. */
+html[data-site-theme="light"] .oc-hero-meta{
+  --oc-meta-muted: #6F6A78;
+  --oc-meta-lavender: #6D3DF5;
+  --oc-meta-price: #1C1530;
+  --oc-meta-border: rgba(109,61,245,0.28);
+  --oc-meta-divider: rgba(109,61,245,0.28);
+  --oc-meta-bg: #ffffff;
+  --oc-meta-shadow: 0 10px 30px -12px rgba(109,61,245,0.25);
+}
+.oc-hero-price-wrap{display:flex;flex-direction:column;gap:var(--space-1)}
+.oc-hero-price-label{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--oc-meta-muted)}
+.oc-hero-price-group{display:flex;align-items:baseline;gap:var(--space-2)}
+.oc-hero-compare-price{font-size:1rem;color:var(--oc-meta-muted);text-decoration:line-through}
+/* Price given more visual weight — was 1.7rem, easily lost under a headline
+   that runs up to 5.6rem; this is the hero's key commercial number. */
+.oc-hero-price{font:700 2.3rem/1 var(--disp);color:var(--oc-meta-price)}
+.oc-hero-divider{width:1px;height:36px;background:var(--oc-meta-divider);align-self:center}
+.oc-hero-rule-wrap{display:flex;flex-direction:column;gap:var(--space-1)}
+.oc-hero-rule-label{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--oc-meta-muted)}
+.oc-hero-rule{font:700 1.15rem/1.2 var(--disp);color:var(--oc-meta-lavender)}
+
+/* =========================================================================
+   STICKY SELECTION BAR  (mobile/desktop)
+   ========================================================================= */
+.oc-sticky{position:fixed;bottom:0;left:0;right:0;z-index:90;background:var(--color-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--color-border-strong);padding:var(--space-3) var(--space-4);display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);transform:translateY(100%);transition:transform var(--dur-base) var(--ease-out)}
+.oc-sticky.is-visible{transform:translateY(0)}
+.oc-sticky-left{display:flex;flex-direction:column;gap:2px}
+.oc-sticky-label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted)}
+#oc-sticky-count{font:700 1.1rem/1 var(--disp);color:var(--cream)}
+#oc-sticky-count.is-full{color:var(--color-lavender)}
+.oc-sticky-btn{white-space:nowrap;flex-shrink:0}
+
+/* =========================================================================
+   SECTIONS
+   ========================================================================= */
+.oc-sec{padding:var(--space-16) 0}
+.oc-alt{background:linear-gradient(180deg,rgba(23,17,42,.7),rgba(10,7,20,0));border-top:1px solid var(--color-border-soft)}
+.club-page h2{margin:0 0 var(--space-5);font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.05;font-weight:800}
+.club-page .oc-h2b{margin-top:0}
+.oc-p{max-width:60ch;color:var(--color-text-muted);font-size:1.08rem;line-height:1.75}
+.oc-p strong{color:var(--cream)}
+.oc-p a,.oc-note a{color:var(--color-lavender);border-bottom:1px solid var(--color-border-strong)}
+.oc-narrow{margin-bottom:var(--space-10)}
+.oc-note{max-width:60ch;margin-top:var(--space-5);padding-left:var(--space-4);border-left:1px solid var(--color-border-strong);color:var(--color-text-muted);font-size:.95rem}
+.oc-split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-16);align-items:start}
+.oc-what-center{text-align:center;max-width:70ch;margin:0 auto}
+.oc-what-center .oc-p-center{max-width:none;margin-left:auto;margin-right:auto}
+.oc-split-photo{grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);align-items:start}
+.oc-photo{width:100%;height:auto;border-radius:var(--radius-xl);border:1px solid var(--color-border-strong);box-shadow:var(--shadow-float)}
+.oc-flow{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-8);color:var(--color-text-muted)}
+.oc-flow b{font:800 2.6rem/1 var(--disp);color:var(--cream);margin-right:.3rem}
+.oc-flow i{flex:1;max-width:120px;height:1px;background:linear-gradient(90deg,var(--color-border-strong),var(--color-accent-600))}
+
+/* =========================================================================
+   COURSE PICKER BAR + COUNTER
+   ========================================================================= */
+.oc-picker-bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-5);align-items:baseline}
+.oc-picker-right{display:flex;gap:var(--space-2);align-items:center}
+.oc-count{margin:0;font:700 1.4rem var(--disp);color:var(--cream)}
+.oc-count.is-full{color:var(--color-lavender)}
+.oc-preview{margin:0;color:var(--color-text-muted);font-size:.9rem}
+
+/* =========================================================================
+   COURSE GRID + CARDS
+   ========================================================================= */
+.oc-courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--space-4)}
+.oc-state{grid-column:1/-1;padding:var(--space-8);border:1px dashed var(--color-border-strong);border-radius:var(--radius-lg);color:var(--color-text-muted);text-align:center}
+.oc-course{display:flex;flex-direction:column;overflow:hidden;background:var(--color-surface);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);transition:border-color var(--dur-base),box-shadow var(--dur-base);cursor:pointer}
+.oc-course:hover{border-color:var(--color-border-strong)}
+.oc-course.is-on{border-color:var(--color-accent-600);box-shadow:var(--glow-soft)}
+.oc-thumb{aspect-ratio:16/9;background:linear-gradient(135deg,var(--color-accent-100),var(--color-bg));display:grid;place-items:center;font:800 2rem var(--disp);color:var(--color-lavender);overflow:hidden}
+.oc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.oc-thumb-initials{font:800 2rem/1 var(--disp);color:var(--color-lavender)}
+.oc-cbody{display:flex;flex-direction:column;flex:1;padding:var(--space-4)}
+.oc-ctitle{margin:0 0 var(--space-2);font-size:1.05rem;font-weight:700;color:var(--cream)}
+.oc-cdesc{margin:0 0 var(--space-2);color:var(--color-text-muted);font-size:.88rem;line-height:1.55}
+.oc-meta{font-size:.8rem!important;color:var(--color-lavender)!important}
+.oc-cfoot{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);margin-top:auto;padding-top:var(--space-3);border-top:1px solid var(--color-border-soft)}
+.oc-clink{font-size:.83rem;color:var(--color-lavender);text-decoration:none;flex-shrink:0}
+.oc-clink:hover{text-decoration:underline}
+.oc-pick{padding:.45rem .9rem;border-radius:var(--radius-full);border:1px solid var(--color-border-strong);background:transparent;color:var(--color-text);font:600 .83rem var(--font-family-base);cursor:pointer;transition:background var(--dur-fast),border-color var(--dur-fast),color var(--dur-fast);flex-shrink:0}
+.oc-pick:hover:not(:disabled){background:rgba(124,58,237,.15);border-color:var(--color-accent-600)}
+.oc-pick[aria-pressed=true]{background:var(--color-accent-500);border-color:var(--color-accent-500);color:#fff}
+.oc-pick[aria-pressed=true]::before{content:'\2713  '}
+.oc-pick:disabled{opacity:.38;cursor:not-allowed}
+
+/* Benefits (from API) */
+.oc-benefits-heading{margin:var(--space-10) 0 var(--space-4);font-size:1.5rem;color:var(--cream)}
+.oc-benefits-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-2)}
+.oc-benefit{padding:var(--space-3) var(--space-4);border:1px solid var(--color-border-soft);border-radius:var(--radius-md);background:var(--color-surface);color:var(--color-text-muted);font-size:.95rem}
+.oc-benefit::before{content:'\2713  ';color:var(--color-accent-600);font-weight:700}
+
+/* =========================================================================
+   ECOSYSTEM LIST
+   ========================================================================= */
+.oc-eco{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0 var(--space-10);counter-reset:none}
+.oc-eco li{display:grid;grid-template-columns:44px 1fr;gap:var(--space-3);padding:var(--space-5) 0;border-top:1px solid var(--color-border-soft)}
+.oc-n{font:700 .8rem var(--disp);letter-spacing:.14em;color:var(--color-accent-700);padding-top:.35rem}
+.oc-eco h3{margin:0 0 var(--space-1);font-size:1.15rem;color:var(--cream)}
+.oc-eco p{margin:0;color:var(--color-text-muted);font-size:.95rem}
+
+/* =========================================================================
+   COMPARISON TABLE
+   ========================================================================= */
+.oc-tbl-wrap{overflow-x:auto;border:1px solid var(--color-border-soft);border-radius:var(--radius-lg)}
+.oc-tbl{width:100%;min-width:520px;border-collapse:collapse}
+.oc-tbl th,.oc-tbl td{padding:var(--space-4);text-align:left;border-bottom:1px solid var(--color-border-soft)}
+.oc-tbl thead th{color:var(--color-lavender);font-size:.85rem}
+.oc-tbl thead th:last-child,.oc-tbl td:last-child{background:rgba(124,58,237,.1)}
+.oc-tbl tbody th{font-weight:500;color:var(--cream)}
+.oc-tbl tr:last-child>*{border-bottom:0}
+.oc-yes{color:var(--color-lavender);font-weight:600}.oc-yes::before{content:'\2713  '}
+.oc-no{color:var(--color-text-muted)}.oc-no::before{content:'\2013  '}
+
+/* =========================================================================
+   HOW IT WORKS (STEPS)
+   ========================================================================= */
+.oc-steps{list-style:none;margin:var(--space-8) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--space-6);counter-reset:s}
+.oc-steps-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.oc-steps li{counter-increment:s;position:relative;padding-top:var(--space-6);border-top:1px solid var(--color-border-strong)}
+.oc-steps li::before{content:counter(s);position:absolute;top:-.8rem;left:0;display:grid;place-items:center;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--color-accent-500);font:700 .8rem var(--disp);color:#fff}
+.oc-steps h3{margin:0 0 var(--space-2);font-size:1.05rem;color:var(--cream)}
+.oc-steps p{margin:0;color:var(--color-text-muted);font-size:.92rem}
+
+/* AUDIENCE LIST */
+.oc-aud{list-style:none;margin:0;padding:0}
+.oc-aud li{padding:var(--space-4) 0;border-top:1px solid var(--color-border-soft);color:var(--color-text-muted)}
+.oc-aud strong{display:block;color:var(--cream);font-size:1.1rem}
+
+/* =========================================================================
+   TESTIMONIALS
+   ========================================================================= */
+.oc-proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-4);margin-bottom:var(--space-4)}
+.oc-proof figure{margin:0;padding:var(--space-6);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);background:var(--color-surface)}
+.oc-proof blockquote{margin:0 0 var(--space-4);font:italic 500 1.35rem/1.4 var(--serif);color:var(--cream)}
+.oc-proof figcaption{color:var(--color-text-muted);font-size:.85rem}
+
+/* =========================================================================
+   FINAL CTA SECTION
+   ========================================================================= */
+.oc-final{padding:var(--space-16) 0 var(--space-24);text-align:center;background:radial-gradient(50% 80% at 50% 100%,rgba(124,58,237,.35),transparent 70%);border-top:1px solid var(--color-border-soft)}
+.oc-final .oc-lead,.oc-final .oc-note{margin-left:auto;margin-right:auto}
+.oc-final .oc-actions{justify-content:center}
+.oc-final .oc-note{border:0;padding:0}
+
+/* =========================================================================
+   VIEW: REVIEW
+   ========================================================================= */
+
+/* Review hero banner */
+.oc-review-hero{position:relative;isolation:isolate;overflow:hidden;padding:var(--space-16) 0;border-bottom:1px solid var(--color-border-soft)}
+.oc-review-hero .oc-hero-bg{position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 80% at 70% 40%,rgba(124,58,237,.3),transparent 70%);-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.oc-review-hero-in{position:relative}
+.oc-review-heading{margin:var(--space-3) 0 var(--space-4);font-size:clamp(1.8rem,4vw,3rem);line-height:1.05;font-weight:800}
+
+/* Two-column layout */
+.oc-review-layout{display:grid;grid-template-columns:1fr 360px;gap:var(--space-10);align-items:start;padding-top:var(--space-8)}
+
+/* Left col */
+.oc-review-section-title{margin:0 0 var(--space-4);font-size:1.4rem;color:var(--cream)}
+.oc-review-sel-info{margin:0 0 var(--space-6);color:var(--color-text-muted);font-size:.95rem}
+.oc-review-courses{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-3)}
+.oc-review-course{display:flex;align-items:center;gap:var(--space-4);padding:var(--space-3) var(--space-4);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);background:var(--color-surface)}
+.oc-review-thumb{width:56px;height:56px;border-radius:var(--radius-md);overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,var(--color-accent-100),var(--color-bg));display:grid;place-items:center}
+.oc-review-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.oc-review-thumb-fallback{font:700 1.1rem/1 var(--disp);color:var(--color-lavender)}
+.oc-review-course-info{display:flex;align-items:center;gap:var(--space-3);flex:1;min-width:0}
+.oc-review-check{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--color-accent-500);color:#fff;font-size:.8rem;font-weight:700;display:grid;place-items:center}
+.oc-review-title{font:600 .95rem/1.3 var(--disp);color:var(--cream);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Right col: summary card */
+.oc-review-summary{position:sticky;top:var(--space-8)}
+.oc-review-summary-inner{padding:var(--space-6);border:1px solid var(--color-border-soft);border-radius:var(--radius-xl);background:var(--color-surface)}
+.oc-review-summary-title{margin:0 0 var(--space-5);font-size:1.2rem;color:var(--cream);font-weight:700}
+.oc-review-plan{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-5);padding-bottom:var(--space-5);border-bottom:1px solid var(--color-border-soft)}
+.oc-review-plan-label{font:700 1.05rem/1 var(--disp);color:var(--cream)}
+.oc-review-plan-tag{padding:var(--space-1) .6rem;border-radius:var(--radius-full);background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:var(--color-lavender);font-size:.75rem;font-weight:600;letter-spacing:.06em}
+.oc-review-price-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-4)}
+.oc-review-price-label{color:var(--color-text-muted);font-size:.9rem}
+.oc-review-price-val{display:flex;align-items:baseline;gap:var(--space-2);flex-direction:column;text-align:right}
+.oc-review-compare{color:var(--color-text-muted);font-size:.9rem;text-decoration:line-through}
+.oc-review-main-price{font:700 1.5rem/1 var(--disp);color:var(--cream)}
+.oc-review-coupon-note{display:flex;align-items:center;gap:var(--space-2);margin:0 0 var(--space-5);padding:var(--space-3);border-radius:var(--radius-md);background:rgba(167,139,250,.07);border:1px dashed var(--color-border-strong);color:var(--color-lavender);font-size:.82rem;line-height:1.4}
+.oc-review-coupon-note svg{flex-shrink:0;color:var(--color-accent-600)}
+.oc-review-error{margin:0 0 var(--space-4);padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.35);color:#fca5a5;font-size:.9rem;line-height:1.5}
+.oc-review-actions{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-5)}
+.oc-review-security{display:flex;align-items:center;gap:var(--space-2);margin:var(--space-4) 0 0;color:var(--color-text-muted);font-size:.78rem}
+.oc-review-security svg{flex-shrink:0;color:var(--color-accent-600)}
+
+/* Button with spinner */
+.oc-btn-with-spinner{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2)}
+.oc-btn-spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:oc-spin 0.7s linear infinite;flex-shrink:0}
+
+/* =========================================================================
+   ANIMATIONS
+   ========================================================================= */
+@keyframes oc-drift{to{transform:translate3d(-2%,2%,0) scale(1.05)}}
+@keyframes oc-reveal{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+
+/* =========================================================================
+   RESPONSIVE
+   ========================================================================= */
+@media (max-width:768px){
+  .oc-split,.oc-split-photo{grid-template-columns:1fr;gap:var(--space-8)}
+  .oc-photo{max-width:340px}
+  .oc-steps{grid-template-columns:1fr 1fr}
+  .oc-review-layout{grid-template-columns:1fr}
+  .oc-review-summary{position:static}
+}
+@media (max-width:480px){
+  .oc-mark{opacity:.5;right:-12vw}
+  .oc-steps{grid-template-columns:1fr}
+  .oc-flow{flex-wrap:wrap}
+  .oc-flow i{display:none}
+  .oc-actions .btn{width:100%}
+  .oc-hero{padding-bottom:var(--space-16)}
+  .oc-hero-meta{flex-direction:column;align-items:flex-start;gap:var(--space-3)}
+  .oc-hero-divider{display:none}
+  .oc-review-actions .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .oc-hero-bg,.oc-mark{animation:none}
+  .oc-course,.oc-pick,.oc-sticky{transition:none}
+  .oc-spinner,.oc-btn-spinner{animation:none}
+}
+
+/* Review view container — children handle their own layout */
+.oc-view-review{display:block}
+/* ==========================================================================
+   Phase 39 — Section 2 Intro Video
+   ========================================================================== */
+
+#oc-intro-video-wrap {
+  margin-top: var(--space-8, 2rem);
+  padding: 0;
+}
+
+.oc-video-container {
+  position: relative;
+  width: 100%;
+  max-width: 56rem;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.oc-video-container iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  #oc-intro-video-wrap {
+    margin-top: var(--space-6, 1.5rem);
+  }
+}

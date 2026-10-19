@@ -1,0 +1,617 @@
+/* ==========================================================================
+   Phase 30 — Checkout Page Styles
+   Extends the cart.css design system. All layout primitives (.cart-layout,
+   .cart-summary, .cart-summary-row, .cart-item-thumb, etc.) come from
+   cart.css and are reused without duplication.
+   ========================================================================== */
+
+/* ---- Page-level state management ---------------------------------------- */
+
+/*
+ * Four mutually exclusive page states driven by checkout-page.js:
+ *   loading  → visible while POST /checkout is in flight
+ *   error    → visible when the API returns a domain error (CART_EMPTY, etc.)
+ *   content  → visible once the order is successfully created/returned
+ *   success  → not used in Phase 30 (payment is a future phase)
+ *
+ * Hidden via [hidden] attribute (checkout-page.js calls node.hidden = true/false).
+ * The [hidden] attribute sets display:none natively, but we add an explicit
+ * rule here so that animated show avoids a flash on first paint.
+ */
+
+/* ---- Checkout-specific heading ------------------------------------------ */
+
+.checkout-lock-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: rgba(124, 58, 237, 0.14);
+  color: var(--color-accent-700);
+  flex-shrink: 0;
+}
+
+/* ---- Order number badge -------------------------------------------------- */
+
+.checkout-order-number {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-accent-700);
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) 14px;
+  margin-bottom: var(--space-2);
+}
+
+/* ---- Checkout item cards (read-only — no remove button) ------------------ */
+
+/*
+ * Reuses .cart-item for the grid layout. We add .checkout-item as a modifier
+ * that removes the hover border effect and the actions row (there is nothing
+ * to remove from a placed order).
+ */
+.checkout-item {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--surface-glass), var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  animation: card-in 0.35s var(--ease) both;
+}
+
+.checkout-item-thumb {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-2);
+  flex-shrink: 0;
+}
+.checkout-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.checkout-item-thumb .thumb-fallback {
+  font-size: 1.5rem;
+}
+
+.checkout-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.checkout-item-title {
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: var(--color-text);
+}
+
+.checkout-item-price {
+  margin-top: auto;
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+/* Membership order items show this badge instead of a per-item price
+   (the plan price is shown once in the order summary, not per course). */
+.checkout-item-membership-badge {
+  display: inline-block;
+  margin-top: auto;
+  padding: 0.2em 0.55em;
+  border-radius: 4px;
+  font-size: var(--font-size-sm, 0.8125rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: var(--color-primary-alpha-10, rgba(99, 102, 241, 0.12));
+  color: var(--color-primary, #6366f1);
+}
+
+/* ---- Items list ---------------------------------------------------------- */
+
+.checkout-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.checkout-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-3);
+}
+
+.checkout-items-count {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Summary column additions ------------------------------------------- */
+
+/* Status badge inside summary (PENDING) */
+.checkout-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+.checkout-status-row dt {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+.checkout-status-row dd {
+  margin: 0;
+}
+
+.badge-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(251, 191, 36, 0.12);
+  color: #d97706;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+/* ---- Payment CTA (Phase 31: enabled) ------------------------------------ */
+
+.checkout-payment-cta {
+  width: 100%;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+/* Only look disabled while the button is actually disabled
+   (JS sets disabled during loading / payment-in-flight). */
+.checkout-payment-cta:disabled,
+.checkout-payment-cta[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.checkout-payment-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(124, 58, 237, 0.06);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+.checkout-payment-notice svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-accent-700);
+}
+
+/* ---- Idempotent / returning-order notice -------------------------------- */
+
+.checkout-idempotent-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  font-size: var(--font-size-sm);
+  color: var(--color-success);
+  margin-bottom: var(--space-4);
+}
+.checkout-idempotent-notice[hidden] { display: none; }
+
+/* ---- Loading skeleton ---------------------------------------------------- */
+
+.checkout-skeleton-item {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.checkout-skeleton-thumb {
+  border-radius: var(--radius-md);
+  aspect-ratio: 16 / 9;
+}
+.checkout-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+}
+.checkout-skeleton-line {
+  border-radius: var(--radius-sm);
+  height: 14px;
+}
+.checkout-skeleton-line.is-short { width: 55%; }
+.checkout-skeleton-line.is-price { width: 25%; height: 20px; }
+
+/* ---- Error state --------------------------------------------------------- */
+
+.checkout-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  padding: var(--space-20) var(--space-6);
+  border: 1px dashed rgba(248, 113, 113, 0.4);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(400px 200px at 50% 0%, rgba(248, 113, 113, 0.06), transparent 70%),
+    rgba(255, 255, 255, 0.012);
+}
+.checkout-error-state[hidden] { display: none; }
+
+.checkout-error-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--color-danger);
+  margin-bottom: var(--space-2);
+}
+.checkout-error-state h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.025em;
+}
+.checkout-error-state p {
+  margin: 0;
+  color: var(--color-text-muted);
+  max-width: 44ch;
+  font-size: var(--font-size-lg);
+}
+
+/* ---- Invalid items list (inside error state) ----------------------------- */
+
+.checkout-invalid-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 440px;
+  text-align: left;
+  margin-top: var(--space-2);
+}
+.checkout-invalid-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(248, 113, 113, 0.07);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  font-size: var(--font-size-sm);
+}
+.checkout-invalid-item svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-danger);
+}
+.checkout-invalid-item-title {
+  font-weight: 700;
+  color: var(--color-text);
+}
+.checkout-invalid-item-reason {
+  color: var(--color-danger);
+}
+
+.checkout-error-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ---- Back link ----------------------------------------------------------- */
+
+.checkout-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+  text-decoration: none;
+  transition: color 0.15s var(--ease);
+}
+.checkout-back-link:hover { color: var(--color-text); }
+
+/* ---- Discount row (zero in Phase 30, but rendered when applicable) ------- */
+
+.checkout-discount-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
+.checkout-discount-row dt { color: var(--color-text-muted); font-weight: 500; }
+.checkout-discount-row dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-success);
+}
+
+/* ---- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 480px) {
+  .checkout-item {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+  .checkout-skeleton-item {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+}
+/* ---- Coupon section (Phase 34) ------------------------------------------ */
+/*
+ * Compact coupon UI inside the Order Summary panel.
+ * Appears below the pricing rows, above the payment CTA.
+ * Design: subtle, not visually dominant — consistent with the premium feel.
+ */
+
+.coupon-section {
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Label above the input row */
+.coupon-label {
+  display: block;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+/* Input + button inline group */
+.coupon-input-group {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.coupon-code-input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.15s var(--ease);
+}
+.coupon-code-input::placeholder {
+  color: var(--color-text-muted);
+  font-family: var(--font-sans, sans-serif);
+  letter-spacing: 0;
+  opacity: 0.6;
+}
+.coupon-code-input:focus {
+  border-color: var(--color-accent-700);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+.coupon-code-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Apply button — compact outline variant */
+.coupon-apply-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  min-width: 72px;
+  justify-content: center;
+}
+.coupon-apply-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.coupon-apply-btn .spinner {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+  flex-shrink: 0;
+}
+
+/* Applied coupon row — shown after a coupon is successfully applied */
+.coupon-applied-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(52, 211, 153, 0.07);
+  border: 1px solid rgba(52, 211, 153, 0.22);
+  animation: coupon-appear 0.2s var(--ease) both;
+}
+.coupon-applied-row[hidden] { display: none; }
+
+@keyframes coupon-appear {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.coupon-applied-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--color-success);
+  font-size: var(--font-size-sm);
+}
+.coupon-applied-info svg {
+  flex-shrink: 0;
+}
+
+.coupon-applied-code {
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.06em;
+  color: var(--color-success);
+  white-space: nowrap;
+}
+.coupon-applied-discount {
+  font-size: 0.75rem;
+  color: var(--color-success);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.coupon-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s var(--ease), border-color 0.15s var(--ease);
+  white-space: nowrap;
+}
+.coupon-remove-btn:hover {
+  color: var(--color-danger);
+  border-color: rgba(248, 113, 113, 0.45);
+}
+.coupon-remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Feedback message (error / success) */
+.coupon-message {
+  margin: 0;
+  font-size: var(--font-size-xs, 0.75rem);
+  line-height: 1.5;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+}
+.coupon-message[hidden] { display: none; }
+
+.coupon-message.is-error {
+  color: var(--color-danger);
+  background: rgba(248, 113, 113, 0.07);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+.coupon-message.is-success {
+  color: var(--color-success);
+  background: rgba(52, 211, 153, 0.07);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+.coupon-message.is-info {
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+}
+
+/* ---- Coupon row in summary dl ------------------------------------------- */
+/*
+ * The discount row already exists (.checkout-discount-row) but we add a
+ * coupon-specific sub-label under the "Discount" dt for the coupon code.
+ */
+.checkout-discount-row .coupon-code-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono, monospace);
+  color: var(--color-success);
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+/* ---- Payment error (already in Phase 31, ensure no conflict) ------------ */
+
+.checkout-payment-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(248, 113, 113, 0.07);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+  line-height: 1.5;
+}
+.checkout-payment-error[hidden] { display: none; }
+.checkout-payment-error svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+@media (max-width: 480px) {
+  .coupon-input-group {
+    flex-direction: column;
+  }
+  .coupon-apply-btn {
+    width: 100%;
+  }
+}

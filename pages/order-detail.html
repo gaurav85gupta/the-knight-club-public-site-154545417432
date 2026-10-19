@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme: applied synchronously BEFORE the stylesheets so first paint is already
+       the saved Day/Night theme (no flash). Student pages only. -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>Order Details — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/orders.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container is-medium">
+
+      <a href="orders.html" class="back-link"><span aria-hidden="true">&larr;</span> Back to My Orders</a>
+
+      <div id="order-alert" class="alert" role="alert" hidden></div>
+
+      <!-- Loading skeleton -->
+      <div id="order-loading" aria-label="Loading order">
+        <div class="skeleton skeleton-hero" aria-hidden="true"></div>
+      </div>
+
+      <!-- Not found state -->
+      <div id="order-notfound" class="empty-state" hidden>
+        <span class="empty-state-icon" aria-hidden="true">?</span>
+        <h3>This order could not be found.</h3>
+        <p>It may not exist, or it may not belong to your account.</p>
+        <a class="btn btn-primary" href="orders.html">Back to My Orders</a>
+      </div>
+
+      <!-- Error state -->
+      <div id="order-error" class="empty-state is-error" hidden>
+        <span class="empty-state-icon" aria-hidden="true">!</span>
+        <h3>Unable to load this order.</h3>
+        <p id="order-error-message">Please try again in a moment.</p>
+        <button class="btn btn-outline" id="order-retry" type="button">Try again</button>
+      </div>
+
+      <!-- Main content -->
+      <div id="order-content" hidden>
+
+        <!-- ---- Status banner (for non-PAID orders) ---- -->
+        <div id="order-status-banner" hidden></div>
+
+        <!-- ---- Receipt header ---- -->
+        <header class="receipt-head">
+          <div>
+            <p class="eyebrow">Order</p>
+            <h1 class="receipt-id" id="order-title"></h1>
+            <p class="receipt-date" id="order-date"></p>
+          </div>
+          <span id="order-status" class="receipt-status"></span>
+        </header>
+
+        <!-- ---- Two-column receipt grid ---- -->
+        <div class="receipt-grid">
+
+          <!-- LEFT: purchased courses -->
+          <div class="receipt-col">
+            <section class="s-card receipt-courses-section" aria-labelledby="order-courses-heading">
+              <p class="eyebrow" id="order-courses-heading">Purchased Courses</p>
+              <div id="order-courses-list"></div>
+            </section>
+          </div>
+
+          <!-- RIGHT: financial summary + payment info + coupon -->
+          <div class="receipt-col">
+
+            <section class="s-card" aria-labelledby="order-summary-title">
+              <h2 class="s-card-title" id="order-summary-title">Order Summary</h2>
+              <dl class="kv" id="order-summary-fields"></dl>
+            </section>
+
+            <section class="s-card" aria-labelledby="order-payment-title">
+              <h2 class="s-card-title" id="order-payment-title">Payment Information</h2>
+              <dl class="kv" id="order-payment-fields"></dl>
+            </section>
+
+            <section class="s-card" id="order-coupon-section"
+                     aria-labelledby="order-coupon-title" hidden>
+              <h2 class="s-card-title" id="order-coupon-title">Discount Applied</h2>
+              <dl class="kv" id="order-coupon-fields"></dl>
+            </section>
+
+          </div>
+        </div>
+
+      </div><!-- /#order-content -->
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/order-detail.js"></script>
+</body>
+</html>

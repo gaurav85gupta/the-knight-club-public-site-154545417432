@@ -1,0 +1,925 @@
+/* ==========================================================================
+   THE NIGHT CLUB — Public Site Shell (header · footer · content-page kit)
+
+   Loaded by EVERY public marketing page, after tokens/theme/base/site:
+     index.html · pages/courses.html · pages/course.html · pages/about.html
+     pages/testimonials.html · pages/contact.html · pages/one-percent-club.html
+     404.html
+
+   WHY THIS FILE EXISTS
+   Until now the premium floating header lived inside home.css, scoped to
+   `.home-page`, while every other public page used the plain `.site-header`
+   bar. The public site now has SIX primary links (Home, Courses, About,
+   Testimonials, Contact, 1% Club), so one header implementation is shared by
+   all of them and the responsive behaviour is solved once.
+
+   SCOPING RULE
+   Everything here is prefixed `.pub-*`. `.site-header` / `.site-nav` (still
+   used by the auth pages and the protected learn shell, which have no
+   `data-site-nav`) are NOT modified, so those shells cannot regress.
+
+   BREAKPOINT — 1100px (measured, not guessed)
+   With six links + two CTAs the inline desktop bar only fits on one line at
+   >= ~1021px (pill) / >= ~1101px (old bar); between 861-1100px it wrapped and
+   overflowed horizontally. The collapsed menu therefore takes over at
+   <= 1100px. See `--pub-collapse` note in the media queries below.
+   ========================================================================== */
+
+/* ---- Utilities shared by content pages ------------------------------------ */
+
+.pub-page {
+  background: var(--color-bg);
+  overflow-x: clip; /* ambient glows may extend past the viewport; never scroll sideways */
+}
+
+.pub-page .skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-accent-500);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+}
+.pub-page .skip-link:focus { top: var(--space-4); color: #fff; }
+
+.pub-page :focus-visible {
+  outline: 2px solid var(--color-lavender);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   HEADER — floating translucent pill, identical on every public page.
+   Markup contract (see any public page):
+
+     <div class="pub-header-wrap">
+       <header class="pub-header" data-site-nav>
+         <a class="brand" ...>            brand -> Home
+         <button class="nav-toggle" data-nav-toggle ...>
+         <nav class="site-nav" id="primary-nav" aria-label="Primary">
+           <div class="nav-links"> 6 links </div>
+           <div class="nav-actions" data-auth-pending> guest | user </div>
+         </nav>
+       </header>
+     </div>
+
+   nav.js binds to [data-site-nav] / [data-nav-toggle] / .nav-actions — this
+   file only styles, it never changes behaviour or auth logic.
+   ========================================================================== */
+
+.pub-header-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  height: var(--pub-header-height); /* every public-page hero pulls up by exactly this amount */
+  box-sizing: border-box;
+  padding: var(--space-4) var(--space-6) 0;
+  pointer-events: none; /* only the pill itself is interactive */
+}
+
+.pub-header {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-6);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-full);
+  background: var(--color-glass);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  box-shadow: 0 10px 40px -18px rgba(0, 0, 0, 0.8);
+  gap: var(--space-6);
+}
+
+/* Brand: "The" quiet, "Knight Club" in the lavender-violet gradient. */
+.pub-header .brand,
+.pub-footer .brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: rgba(245, 243, 251, 0.72);
+  white-space: nowrap;
+}
+.pub-header .brand span,
+.pub-footer .brand span {
+  font-weight: 800;
+  background: linear-gradient(120deg, #c4a0ff 0%, #a06aff 40%, #d8b4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.pub-header .brand:hover,
+.pub-footer .brand:hover { color: rgba(245, 243, 251, 0.9); }
+
+/* Nav: links centred, CTA group on the right. */
+.pub-header .site-nav {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  min-width: 0; /* allow the flex child to shrink instead of forcing overflow */
+}
+
+.pub-header .nav-links {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0;
+  gap: 2px;
+  background: transparent;
+  border: none;
+}
+
+.pub-header .nav-links a {
+  position: relative;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+.pub-header .nav-links a:hover {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---- 1% Club: golden text with a soft, static glow --------
+   NOT a pill / selected-state look: no border, no fill, no outline. The link
+   is just golden text; the glow is a blurred radial aura living BEHIND it
+   (::before). Pure CSS, no JavaScript. Specificity
+   (0,3,1) beats the generic `.pub-header .nav-links a` rules above. */
+.pub-header .nav-links a.nav-club {
+  --gold-1: #fff1b8;
+  --gold-2: #f5c542;
+  --gold-3: #d99a1a;
+  isolation: isolate;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--gold-2);
+  background: transparent;
+  box-shadow: none;
+  text-shadow: 0 0 10px rgba(255, 200, 70, 0.45);
+}
+
+/* Gold gradient on the text itself (solid gold above is the fallback). */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .pub-header .nav-links a.nav-club {
+    background: linear-gradient(100deg, var(--gold-1) 0%, var(--gold-2) 45%, var(--gold-3) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* The glow: a blurred golden aura living behind the text, static. */
+.pub-header .nav-links a.nav-club::before {
+  content: "";
+  position: absolute;
+  inset: -6px -14px;
+  z-index: -1;
+  border-radius: var(--radius-full);
+  background: radial-gradient(closest-side, rgba(255, 196, 60, 0.75), rgba(245, 170, 30, 0.35) 55%, rgba(245, 170, 30, 0) 100%);
+  filter: blur(9px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Hover: no box appears; the aura just gets brighter and the text lighter. */
+.pub-header .nav-links a.nav-club:hover,
+.pub-header .nav-links a.nav-club:focus-visible,
+.pub-header .nav-links a.nav-club[aria-current="page"] {
+  background-color: transparent;
+  box-shadow: none;
+  text-shadow: 0 0 14px rgba(255, 220, 120, 0.7);
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .pub-header .nav-links a.nav-club:hover,
+  .pub-header .nav-links a.nav-club:focus-visible,
+  .pub-header .nav-links a.nav-club[aria-current="page"] {
+    background: linear-gradient(100deg, #fffbe0 0%, var(--gold-1) 50%, var(--gold-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+.pub-header .nav-links a.nav-club:hover::before,
+.pub-header .nav-links a.nav-club:focus-visible::before {
+  opacity: 0.9;
+}
+.pub-header .nav-links a.nav-club:focus-visible {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 2px;
+}
+
+/* Mobile menu: the link is full-width there, so keep the aura hugging the
+   text (left-aligned, sized to the label) instead of smearing across the row. */
+@media (max-width: 768px) {
+  .pub-header .nav-links a.nav-club {
+    align-self: flex-start;
+    width: auto;
+  }
+  .pub-header .nav-links a.nav-club::before {
+    inset: -4px -12px;
+  }
+}
+
+
+/* Active page — driven purely by the static `aria-current="page"` attribute
+   written into each page's HTML. No JavaScript is involved. */
+.pub-header .nav-links a[aria-current="page"] {
+  color: var(--color-text);
+  background: rgba(139, 69, 255, 0.22);
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+
+.pub-header .nav-actions { margin-left: 0; }
+.pub-header .nav-actions > span {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+/* An author `display` rule outranks the UA's [hidden]{display:none}; restore it
+   so nav.js's hidden toggling keeps working (guest XOR user). */
+.pub-page [data-auth][hidden] { display: none !important; }
+
+.pub-header .btn-sm {
+  border-radius: var(--radius-full);
+  padding: 0.55rem 1.15rem;
+  white-space: nowrap;
+}
+
+/* Menu button (mobile) */
+.pub-header .nav-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border-soft);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.pub-header .nav-toggle .icon-close { display: none; }
+.pub-header.is-open .nav-toggle .icon-open { display: none; }
+.pub-header.is-open .nav-toggle .icon-close { display: block; }
+
+/* Header keeps a tighter rhythm between 1101-1240px so 6 links + 2 CTAs sit
+   comfortably on one line without wrapping. */
+@media (max-width: 1240px) {
+  .pub-header { gap: var(--space-4); padding-left: var(--space-5); }
+  .pub-header .site-nav { gap: var(--space-3); }
+  .pub-header .nav-links a { padding: var(--space-2) 0.65rem; }
+  .pub-header .btn-sm { padding: var(--space-2) 0.95rem; }
+}
+
+/* --- Collapsed menu: <= 1100px -------------------------------------------- */
+@media (max-width: 1100px) {
+  .pub-header-wrap { padding: var(--space-3) var(--space-4) 0; }
+
+  .pub-header {
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+    border-radius: 999px;
+    gap: var(--space-4);
+  }
+  .pub-header .nav-toggle { display: inline-flex; }
+
+  /* Open state: the pill grows into a rounded panel that holds the menu. */
+  .pub-header.is-open {
+    flex-wrap: wrap;
+    border-radius: var(--radius-xl);
+    background: rgba(16, 11, 30, 0.96); /* near-opaque: nothing ghosts through */
+    border-color: var(--color-border-strong);
+    /* The wrap is a fixed 84px tall; let an open menu extend past it and
+       stay scrollable if a very short viewport can't fit everything. */
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+  }
+
+  .pub-header .site-nav {
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    padding: 0 var(--space-2) var(--space-3);
+  }
+  .pub-header.is-open .site-nav { display: flex; }
+
+  /* site.css + theme.css (<= 860px) turn `.nav-links` into an absolutely
+     positioned dropdown card and give `.site-nav.is-open` its own border,
+     shadow and padding. Those legacy rules are still active here because the
+     shared class names are kept (nav.js and the markup contract depend on
+     them), so reset every one of them: the links live INSIDE our own panel. */
+  .pub-header .nav-links,
+  .pub-header.is-open .nav-links {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .pub-header .nav-links a,
+  .pub-header .nav-links a[aria-current="page"] {
+    width: auto;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+  }
+  .pub-header .site-nav.is-open,
+  .pub-header.is-open .site-nav {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin-top: 0;
+  }
+
+  .pub-header .nav-actions,
+  .pub-header .site-nav .nav-actions {
+    margin: 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-soft);
+  }
+  .pub-header .nav-actions > span { display: flex; width: 100%; }
+  .pub-header .nav-actions .btn {
+    flex: 1;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+}
+
+/* Small phones: slimmer gutters and brand (carried over from the old home rule). */
+@media (max-width: 480px) {
+  .pub-header-wrap { padding-left: var(--space-3); padding-right: var(--space-3); }
+  .pub-header .brand,
+  .pub-footer .brand { font-size: 1.1rem; }
+}
+
+/* ==========================================================================
+   FOOTER — four-column, includes the full six-link Explore list.
+   ========================================================================== */
+
+.pub-footer {
+  margin-top: 0;
+  padding: var(--space-16) 0 var(--space-8);
+  background: transparent;
+  border-top: 1px solid var(--color-border-soft);
+}
+.pub-footer .footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: var(--space-12);
+  margin-bottom: var(--space-12);
+}
+.pub-footer .footer-brand p {
+  margin: var(--space-4) 0 0;
+  max-width: 34ch;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+.pub-footer .footer-col h4 {
+  margin-bottom: var(--space-5);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--color-lavender);
+}
+.pub-footer .footer-col a:not(.brand) {
+  display: block;
+  margin-bottom: var(--space-3);
+  color: var(--color-text-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.pub-footer .footer-col a:not(.brand):hover { color: var(--color-text); }
+.pub-footer .footer-col a[aria-current="page"] { color: var(--color-text); }
+.pub-footer .footer-bottom {
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: var(--space-6);
+}
+.pub-footer .footer-bottom p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* Footer auth groups flow inline with their siblings (same technique as home). */
+.pub-footer [data-auth] { display: contents; }
+.pub-footer [data-auth][hidden] { display: none; }
+.pub-page:has(.nav-actions[data-auth-pending]) .pub-footer [data-auth] { visibility: hidden; }
+
+@media (max-width: 768px) {
+  .pub-footer { padding-top: var(--space-12); }
+  .pub-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+  .pub-footer .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 480px) {
+  .pub-footer .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   CONTENT-PAGE KIT — About · Testimonials · Contact · 1% Club
+   One shared vocabulary so the four pages read as one brand.
+   ========================================================================== */
+
+.pub-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-6);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+}
+.pub-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-600);
+  box-shadow: 0 0 12px 2px rgba(139, 92, 246, 0.8);
+}
+
+/* Page hero. Sits UNDER the floating header (pulled up by --pub-header-height)
+   so the ambient light is continuous behind the pill — no flat seam. */
+.pub-hero {
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(-1 * var(--pub-header-height));
+  padding: calc(var(--space-24) + var(--pub-header-height)) 0 var(--space-16);
+  text-align: center;
+  overflow: hidden;
+}
+.pub-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+}
+.pub-hero-bg::before {
+  content: '';
+  position: absolute;
+  top: -320px;
+  left: 50%;
+  width: 1000px;
+  height: 640px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(124, 58, 237, 0.34), rgba(124, 58, 237, 0.1) 55%, transparent 75%);
+  filter: blur(8px);
+}
+.pub-hero h1 {
+  margin: 0 auto var(--space-5);
+  max-width: 18ch;
+  font-size: clamp(2.6rem, 6.4vw, 5.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+.pub-hero h1 em {
+  font-style: normal;
+  color: #a78bfa; /* fallback shown if background-clip:text fails */
+  background: linear-gradient(120deg, #ddd6fe 0%, #a78bfa 55%, #c084fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pub-hero-lead {
+  margin: 0 auto;
+  max-width: 56ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: 1.65;
+}
+.pub-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-10);
+}
+
+/* Buttons at hero scale — size only. Colour/hover now live in buttons.css. */
+.pub-page .btn-lg { padding: 0.95rem 1.75rem; font-size: 1rem; border-radius: 12px; gap: var(--space-2); }
+
+/* Section rhythm + heading primitives */
+.pub-section { padding: var(--space-16) 0; position: relative; }
+.pub-section-tight { padding: var(--space-12) 0; }
+.pub-section-head { max-width: 640px; margin: 0 auto var(--space-12); text-align: center; }
+.pub-section-head .pub-eyebrow { justify-content: center; }
+.pub-title {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+.pub-sub {
+  margin: var(--space-4) auto 0;
+  max-width: 52ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+}
+
+/* Editorial prose column */
+.pub-prose { max-width: 720px; margin: 0 auto; }
+.pub-prose p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: 1.75;
+}
+.pub-prose p.pub-lead { color: var(--color-text); font-size: 1.3rem; line-height: 1.6; letter-spacing: -0.01em; }
+/* `.pub-prose p` (0,1,1) would otherwise override the eyebrow's own type
+   (0,1,0) when an eyebrow <p> sits inside a prose column. */
+.pub-prose p.pub-eyebrow {
+  margin: 0 0 var(--space-6);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--color-lavender);
+}
+.pub-prose a { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
+.pub-prose a:hover { color: var(--color-text); border-color: var(--color-accent-600); }
+
+/* Hairline-divided principle rows (same idea as home's "why" list) */
+.pub-rows { list-style: none; margin: 0; padding: 0; }
+.pub-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--space-6);
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--color-border-soft);
+}
+.pub-row:last-child { border-bottom: 1px solid var(--color-border-soft); }
+.pub-row-num {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--color-accent-700);
+  padding-top: 0.35rem;
+}
+.pub-row h3 { margin: 0 0 var(--space-2); font-size: 1.35rem; letter-spacing: -0.02em; }
+.pub-row p { margin: 0; color: var(--color-text-muted); line-height: 1.65; max-width: 56ch; }
+
+/* Quiet card (thin border, dark surface — no glow) */
+.pub-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+.pub-cards-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pub-card {
+  padding: var(--space-8);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(38, 24, 62, 0.80), rgba(20, 12, 40, 0.85));
+  transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.pub-card:hover { border-color: var(--color-border-strong); }
+.pub-card h3 { margin: 0 0 var(--space-3); font-size: 1.15rem; letter-spacing: -0.01em; }
+.pub-card p { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-base); line-height: 1.65; }
+.pub-card p + p { margin-top: var(--space-3); }
+.pub-card a { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
+.pub-card a:hover { color: var(--color-text); }
+.pub-card-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-5);
+  border-radius: 14px;
+  color: var(--color-lavender);
+  background: linear-gradient(160deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.04));
+  border: 1px solid var(--color-border-soft);
+}
+
+/* Closing CTA panel (mirrors home's .cta-panel, page-agnostic name) */
+.pub-cta { padding: var(--space-16) 0 var(--space-24); }
+.pub-cta-panel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  text-align: center;
+  padding: var(--space-24) var(--space-8);
+  border-radius: 32px;
+  border: 1px solid var(--color-border-soft);
+  background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+}
+.pub-cta-glow {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 100%;
+  width: 1100px;
+  height: 700px;
+  transform: translate(-50%, -62%);
+  background: radial-gradient(closest-side, rgba(139, 69, 255, 0.72), rgba(139, 69, 255, 0.28) 52%, transparent 76%);
+  filter: blur(10px);
+}
+.pub-cta-panel h2 {
+  margin: 0 0 var(--space-4);
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+.pub-cta-panel p {
+  margin: 0 auto var(--space-10);
+  max-width: 42ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+.pub-cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-4); }
+
+/* ---- Responsive ------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+  .pub-cards { grid-template-columns: 1fr; }
+  .pub-cards-2 { grid-template-columns: 1fr; }
+  .pub-hero { padding: calc(var(--space-16) + var(--pub-header-height)) 0 var(--space-12); }
+}
+@media (max-width: 480px) {
+  .pub-section { padding: var(--space-12) 0; }
+  .pub-row { grid-template-columns: 44px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-6) 0; }
+  .pub-card { padding: var(--space-6); }
+  .pub-cta-panel { padding: var(--space-16) var(--space-5); border-radius: var(--radius-xl); }
+  .pub-cta-actions,
+  .pub-hero-actions { flex-direction: column; align-items: stretch; }
+  .pub-hero-actions .btn,
+  .pub-cta-actions .btn { width: 100%; }
+}
+
+/* Reduced motion: no transitions at all. */
+@media (prefers-reduced-motion: reduce) {
+  .pub-page *, .pub-page *::before, .pub-page *::after { transition: none !important; }
+}
+
+/* ==========================================================================
+   FOUNDER V2 — ScaleToSky-inspired layout
+   Shared by the homepage (home.css) and About page (about.css). Previously
+   duplicated near-verbatim in both files; consolidated here (R1 foundation
+   fix A) since public.css is the only stylesheet both pages load. Each page
+   file may still add page-specific overrides on top of this base.
+   ========================================================================== */
+
+.founder-v2-panel {
+  display: grid;
+  /* Photo column sized to content, not a fraction of the row — keeps the
+     card compact (reference: a photo roughly a third of the row width, not
+     stretched to fill a wide grid track) while the copy column takes the
+     rest. minmax(0, …) still allows it to shrink below that on narrow
+     desktop widths before the 768px breakpoint stacks it. */
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: var(--space-16);
+  align-items: center;
+  position: relative;
+}
+
+/* The photo lives inside one self-contained frame — the violet field is a
+   padded border *within* the card's own box (not spilling past it into the
+   grid gutter), so the whole thing reads as a single card, not a photo
+   floating loose next to a background shape. The card gently lifts and
+   its glow blooms on hover/focus, so it feels alive rather than static. */
+.founder-v2-card {
+  width: 100%;
+  max-width: 340px;
+  position: relative;
+  isolation: isolate;
+  padding: var(--space-3);
+  border-radius: 1.5rem;
+  border: 1px solid var(--color-border-soft);
+  background:
+    radial-gradient(120% 140% at 15% 10%, rgba(157, 95, 255, 0.22), transparent 60%),
+    var(--color-surface-alt);
+  box-shadow: var(--shadow-float);
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+  animation: founder-card-fallback-in 0.8s cubic-bezier(.16,1,.3,1) 0.6s forwards;
+  transition: box-shadow 0.45s ease, border-color 0.45s ease;
+}
+
+/* Entrance animation plays once the card scrolls into view (see
+   founder-card.js). The CSS animation above is only a fallback in case
+   JS never runs — once JS adds .is-visible we cancel it and transition
+   in on our own terms so the two never fight. */
+.founder-v2-card.is-visible {
+  animation: none;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: transform 0.6s cubic-bezier(.16,1,.3,1), opacity 0.6s ease, box-shadow 0.45s ease, border-color 0.45s ease;
+}
+
+@keyframes founder-card-fallback-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (min-width: 769px) {
+  .founder-v2-card:hover,
+  .founder-v2-card:focus-within {
+    transform: translateY(-8px) scale(1.015);
+    border-color: var(--color-accent-300);
+    box-shadow: var(--shadow-float), 0 0 70px -18px rgba(157, 95, 255, 0.55);
+  }
+}
+
+.founder-v2-photo-wrap {
+  position: relative;
+  border-radius: 1.15rem;
+  overflow: hidden;
+  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.6);
+  background: var(--color-surface);
+}
+
+.founder-v2-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  aspect-ratio: 4 / 5;
+  transition: transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+
+.founder-v2-card:hover .founder-v2-photo-wrap img {
+  transform: scale(1.06);
+}
+
+/* A thin inner edge keeps the photo from looking like a flat clipped
+   rectangle against the glow behind it. */
+.founder-v2-photo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .founder-v2-card { animation: none; transition: none; opacity: 1; transform: none; }
+  .founder-v2-card:hover,
+  .founder-v2-card:focus-within { transform: none; }
+  .founder-v2-photo-wrap img { transition: none; }
+  .founder-v2-card:hover .founder-v2-photo-wrap img { transform: none; }
+}
+
+/* Credential chip replaces the old full-width scrim nameplate: the name
+   already leads the copy column, so this only needs to carry the social
+   link. It sits inset within the photo frame (photo-wrap clips overflow,
+   so the chip can't spill past the frame edge) rather than the previous
+   edge-to-edge bar across the whole bottom. */
+.founder-v2-nameplate {
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0.6rem 0.65rem 0.6rem 1rem;
+  border-radius: var(--radius-full);
+  background: var(--color-scrim-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.55);
+}
+
+.founder-v2-nameplate-info { display: flex; flex-direction: column; gap: 0.1rem; }
+.founder-v2-nameplate-name { font-size: 0.82rem; font-weight: 700; color: var(--color-text); line-height: 1.2; }
+.founder-v2-nameplate-role { font-size: 0.68rem; color: var(--color-text-muted); }
+
+.founder-v2-insta {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4);
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+.founder-v2-insta:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(221, 42, 123, 0.5);
+}
+
+.founder-v2-copy { padding-top: var(--space-5); }
+
+.founder-v2-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-accent-300);
+  margin: 0 0 var(--space-4);
+}
+
+.founder-v2-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent-600);
+  box-shadow: 0 0 10px var(--color-accent-600);
+  flex-shrink: 0;
+}
+
+.founder-v2-name {
+  margin: 0;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--color-text);
+}
+
+.founder-v2-title-label {
+  margin: var(--space-2) 0 var(--space-6);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent-300);
+}
+
+.founder-v2-bio {
+  margin: 0 0 var(--space-7);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  line-height: 1.75;
+  max-width: 52ch;
+}
+
+/* Traits read as one connected credentials rail (a vertical accent line
+   threading each line item) instead of four identical disconnected card
+   tiles — the repeated-pill grid was the generic "SaaS card kit" default. */
+.founder-v2-traits {
+  list-style: none;
+  margin: 0 0 var(--space-7);
+  padding: 0 0 0 var(--space-5);
+  border-left: 1px solid var(--color-border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.founder-v2-traits li {
+  position: relative;
+  padding: 0;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+.founder-v2-trait-dot {
+  display: block;
+  position: absolute;
+  top: 0.5em;
+  left: calc(-1 * var(--space-5) - 3.5px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-600);
+  box-shadow: 0 0 0 3px var(--color-surface);
+  flex-shrink: 0;
+}
+
+/* Tablet pinch zone: just above the 768px stack, the fixed photo column
+   leaves the copy column too narrow. Narrow the photo column first so the
+   copy column gets the space back, before the two columns stack outright
+   at 768px. */
+@media (max-width: 920px) and (min-width: 769px) {
+  .founder-v2-panel { grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: var(--space-10); }
+  .founder-v2-card { max-width: 260px; }
+}
+
+@media (max-width: 768px) {
+  .founder-v2-panel { grid-template-columns: 1fr; gap: var(--space-12); }
+  .founder-v2-card { max-width: 320px; margin: 0 auto; }
+  .founder-v2-copy { padding-top: 0; text-align: center; }
+  .founder-v2-eyebrow { justify-content: center; }
+  .founder-v2-bio { margin-left: auto; margin-right: auto; }
+  .founder-v2-traits { text-align: left; margin-left: auto; margin-right: auto; max-width: 42ch; }
+}

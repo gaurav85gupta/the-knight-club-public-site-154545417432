@@ -1,0 +1,518 @@
+/* ==========================================================================
+   THE NIGHT CLUB — Authentication pages (login, signup, dashboard shell)
+   Uses ONLY tokens from tokens.css. Dark-purple premium surface (the site's
+   default palette — these pages do not load site-theme-init.js and are
+   intentionally dark-only, matching the supplied background artwork).
+   Mobile-first: the base rules are the phone layout; wider screens add to it.
+   ========================================================================== */
+
+/* ---- Site header shared by auth pages ---- */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-6);
+  gap: var(--space-4);
+  position: relative;
+  z-index: 2;
+}
+
+.brand {
+  font-weight: 800;
+  font-size: var(--font-size-xl);
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+.brand:hover { color: var(--color-text); }
+.brand span { color: var(--color-accent-500); }
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.site-nav a:not(.btn) { color: var(--color-text-muted); font-weight: 500; }
+.site-nav a:not(.btn):hover { color: var(--color-accent-600); }
+
+.btn-sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
+/* ---- Page shell ---- */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--color-bg);
+  overflow-x: clip;
+}
+
+/* Supplied workspace artwork, positioned toward the right/outer edge so the
+   card stays the primary focus. One authoritative background treatment —
+   the dark scrim is a single gradient layered with the image, not a stack
+   of competing overlays. Static (no parallax/scroll effects). */
+.auth-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(100deg, var(--color-bg) 0%, rgba(7, 5, 15, 0.86) 34%, rgba(7, 5, 15, 0.40) 62%, rgba(7, 5, 15, 0.18) 100%),
+    url('../images/auth-background-dark.jpg');
+  background-repeat: no-repeat;
+  background-position: center right, right center;
+  background-size: cover;
+  pointer-events: none;
+}
+/* Fallback if the image fails to load: the gradient + solid bg still reads correctly. */
+.auth-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(1100px 480px at 78% 8%, var(--color-accent-50), transparent 70%);
+  pointer-events: none;
+}
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-4) var(--space-8);
+  position: relative;
+  z-index: 2;
+}
+
+/* ---- Flip scene ----
+   Canonical two-layer flip structure: the OUTER card (.auth-flip-card)
+   never rotates and owns layout/height/overflow; the INNER rotator
+   (.auth-flip-inner) is the only element whose transform changes
+   (0deg <-> 180deg). Each face carries its own FIXED rotation (front:
+   0deg, back: 180deg) plus backface-visibility: hidden, so exactly one
+   face is ever front-facing — rotating a face that is itself already
+   rotated 180deg (as an earlier version of this file did) composes two
+   3D rotations and makes the browser treat BOTH faces as back-facing,
+   which renders as a blank card. Keeping the rotation on one layer only
+   avoids that.
+   Faces are absolutely positioned so the inactive one never contributes
+   to layout height. The card's own height is synced by auth-flip.js to
+   whichever face is active (measured, then set as --auth-card-h), so
+   Sign In stays compact and Create Account gets the room its longer
+   form needs. */
+.auth-flip-scene {
+  width: 100%;
+  max-width: 460px;
+  perspective: 1800px;
+}
+.auth-flip-scene.is-wide { max-width: 720px; }
+
+.auth-flip-card {
+  position: relative;
+  /* min-height covers the moment before auth-flip.js's first measurement
+     (and the rare no-JS case, where the flip switcher itself is inert
+     anyway): the Sign In face stays reachable rather than collapsing to
+     zero height, since position:absolute children don't contribute to an
+     auto-height relative parent. auth-flip.js overwrites --auth-card-h
+     with the real measured height on load. */
+  min-height: 420px;
+  height: var(--auth-card-h, auto);
+  transition: height var(--dur-base) var(--ease-out);
+  will-change: height;
+  /* 3D-transformed descendants (the rotated back face) still inflate an
+     ancestor's scrollable overflow even while absolutely positioned and
+     invisible (visibility: hidden only hides paint, not layout/overflow
+     participation). Clipping overflow here stops the inactive, oversized
+     face from pushing the whole page taller. */
+  overflow: hidden;
+}
+
+.auth-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-base) var(--ease-out);
+  will-change: transform;
+}
+.auth-flip-scene[data-active="signup"] .auth-flip-inner { transform: rotateY(180deg); }
+
+.auth-face {
+  position: absolute;
+  /* top/left/right only — deliberately NOT `inset: 0` / bottom: 0, which
+     would stretch the face to the card's (animated) height and create a
+     circular dependency: the card's height is measured FROM each face's
+     natural content height, so the face itself must stay free to size to
+     its own content (height: fit-content) rather than being pinned to
+     whatever height the card currently has. */
+  top: 0;
+  left: 0;
+  right: 0;
+  backface-visibility: hidden;
+  min-width: 0;
+  height: fit-content;
+}
+.auth-face-front { transform: rotateY(0deg); }
+.auth-face-back { transform: rotateY(180deg); }
+
+/* The inactive face must not be reachable by keyboard or AT, and must not
+   paint over the active one even where 3D transforms are unsupported. */
+.auth-face[aria-hidden="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-flip-card { transition: height var(--dur-fast) linear; }
+  .auth-flip-inner { transition: none; transform: none !important; }
+  .auth-face-back { transform: none; }
+  .auth-flip-scene[data-active="login"] .auth-face-back { opacity: 0; visibility: hidden; }
+  .auth-flip-scene[data-active="signup"] .auth-face-front { opacity: 0; visibility: hidden; }
+}
+
+.auth-card {
+  width: 100%;
+  background: var(--color-glass-2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+  padding: var(--space-4) var(--space-6);
+}
+
+/* ---- Sign In / Create Account switcher ---- */
+.auth-switch {
+  display: inline-flex;
+  padding: 3px;
+  margin-bottom: var(--space-4);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-full);
+  width: 100%;
+}
+.auth-switch button {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.auth-switch button[aria-selected="true"] {
+  color: var(--color-text-on-accent);
+  background: linear-gradient(135deg, var(--bx-from, var(--color-accent-500)), var(--bx-to, var(--color-accent-600)));
+}
+.auth-switch button:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 2px; }
+
+.auth-card h1 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-1);
+}
+.auth-card .lead {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+/* ---- Form primitives ---- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+/* Signup form is long, so it goes two columns from the smallest screens
+   (not just tablet+) to cut vertical scrolling; fields that need the full
+   width (section titles, name, address, submit) opt in via .full. */
+.form-grid.two-col { grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-3); }
+.form-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-accent-600);
+  margin: var(--space-2) 0 0;
+}
+.form-section-title:first-child { margin-top: 0; }
+
+.field { display: flex; flex-direction: column; gap: 2px; }
+.field.full { grid-column: 1 / -1; }
+
+.field label {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+.field .hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  /* 16px minimum stops iOS Safari from zooming the page on focus */
+  font-size: 1rem;
+}
+.input::placeholder { color: var(--color-text-muted); opacity: 0.7; }
+.input:hover { border-color: var(--color-accent-300); }
+.input:focus {
+  outline: none;
+  border-color: var(--color-accent-500);
+  box-shadow: 0 0 0 3px var(--color-accent-100);
+}
+select.input { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--color-text-muted) 50%), linear-gradient(135deg, var(--color-text-muted) 50%, transparent 50%); background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 2.2rem; }
+select.input option { background: var(--color-surface-2); color: var(--color-text); }
+textarea.input { resize: vertical; min-height: 56px; }
+
+.field.has-error .input {
+  border-color: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18);
+}
+.field-error {
+  color: #fca5a5;
+  font-size: 0.75rem;
+  margin: 0;
+  min-height: 0;
+}
+
+/* Password field with show/hide toggle */
+.password-wrap { position: relative; }
+.password-wrap .input { padding-right: 4.25rem; }
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-accent-600);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.toggle-password:hover { background: var(--color-accent-50); }
+.toggle-password:focus-visible { outline: 2px solid var(--color-accent-500); }
+
+/* ---- Buttons in forms ---- */
+.btn-block { width: 100%; }
+.btn[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn .spinner {
+  width: 1em;
+  height: 1em;
+  margin-right: var(--space-2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+.btn.is-loading .spinner { display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Alerts ---- */
+.alert {
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
+  border: 1px solid transparent;
+}
+.alert[hidden] { display: none; }
+.alert-error   { background: rgba(248, 113, 113, 0.12); border-color: rgba(248, 113, 113, 0.35); color: #fca5a5; }
+.alert-success { background: var(--color-accent-50); border-color: var(--color-accent-100); color: var(--color-accent-700); }
+.alert-info    { background: var(--color-surface-alt); border-color: var(--color-border); color: var(--color-text); }
+
+.auth-alt {
+  text-align: center;
+  margin: var(--space-4) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.auth-alt a { font-weight: 600; }
+
+/* Visually hidden but available to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Dashboard shell ---- */
+.dash-wrap { width: 100%; max-width: 760px; }
+.dash-wrap-wide { max-width: 960px; }
+.dash-card h1 { font-size: var(--font-size-xl); }
+
+/* ---- Dashboard: Welcome ---- */
+.dash-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+.dash-welcome h1 { font-size: var(--font-size-2xl); margin: 0; }
+.dash-welcome .lead { margin: var(--space-1) 0 0; }
+
+/* ---- Dashboard: Summary cards ---- */
+.dash-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+}
+.summary-card-label { color: var(--color-text-muted); font-size: var(--font-size-sm); font-weight: 600; }
+.summary-card-value { font-size: var(--font-size-3xl); font-weight: 800; color: var(--color-accent-600); line-height: 1.2; }
+.summary-card-note { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+@media (max-width: 768px) {
+  .dash-summary { grid-template-columns: 1fr; }
+}
+
+/* ---- Dashboard: shared section spacing ---- */
+.dash-section { margin-top: var(--space-6); }
+.dash-section-title { font-size: var(--font-size-lg); margin: 0; }
+.dash-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.dash-state-text { margin-top: var(--space-6); }
+.dash-state { margin-top: var(--space-6); }
+
+/* ---- Dashboard: Continue Learning ---- */
+.continue-card {
+  display: flex;
+  gap: var(--space-6);
+  align-items: center;
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-alt);
+  flex-wrap: wrap;
+}
+.continue-card-thumb {
+  width: 160px;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-accent-50);
+}
+.continue-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.continue-card-thumb .thumb-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-300);
+  font-weight: 800;
+  font-size: var(--font-size-2xl);
+}
+.continue-card-body { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: var(--space-2); }
+.continue-card-title { font-size: var(--font-size-lg); font-weight: 700; margin: 0; }
+.continue-card-meta { color: var(--color-text-muted); font-size: var(--font-size-sm); margin: 0; }
+.continue-card-progress-track {
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+  overflow: hidden;
+}
+.continue-card-progress-fill { height: 100%; background: var(--color-accent-500); }
+@media (max-width: 768px) {
+  .continue-card { flex-direction: column; align-items: stretch; }
+  .continue-card-thumb { width: 100%; }
+}
+.profile-list { margin: var(--space-6) 0 0; display: grid; gap: var(--space-3); }
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.profile-row:last-child { border-bottom: 0; }
+.profile-row dt { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.profile-row dd { margin: 0; font-weight: 600; text-align: right; word-break: break-word; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-50);
+  color: var(--color-accent-700);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Tablet and up ---- */
+@media (min-width: 768px) {
+  .auth-main { padding-top: var(--space-6); }
+  .auth-card { padding: var(--space-6) var(--space-8); }
+}
+
+/* ---- Small phones ---- */
+@media (max-width: 480px) {
+  .auth-card { padding: var(--space-3); }
+  .site-nav { gap: var(--space-2); }
+  /* Matches the public header's established small-screen brand size
+     (public.css), so the wordmark stays on one line instead of wrapping. */
+  .site-header .brand { font-size: 1.1rem; }
+  .auth-main { padding-top: var(--space-3); padding-bottom: var(--space-4); }
+  /* Prioritize the form over the artwork on small screens; keep the purple
+     brand identity via the fallback radial glow rather than the full crop. */
+  .auth-page::before { background-position: center 15%, center 15%; opacity: 0.55; }
+}
+
+/* Very narrow screens: two columns get too cramped for comfortable typing,
+   so the signup form drops back to one column here only. */
+@media (max-width: 360px) {
+  .form-grid.two-col { grid-template-columns: 1fr; }
+}
+
+/* Respect users who ask for less motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn .spinner { animation-duration: 2s; }
+  .input, .btn { transition: none; }
+}

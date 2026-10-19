@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <script src="../assets/js/site-theme-init.js"></script>
+  <title>Online Courses for Practical Digital Skills | The Knight Club</title>
+  <meta name="description" content="Browse The Knight Club's practical online courses in digital skills. Search by topic, filter by category, compare levels, instructors and prices, then start learning." />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="canonical" href="/pages/courses.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Online Courses for Practical Digital Skills | The Knight Club" />
+  <meta property="og:description" content="Browse The Knight Club's practical online courses in digital skills. Search by topic, filter by category, compare levels, instructors and prices, then start learning." />
+  <meta property="og:url" content="/pages/courses.html" />
+  <meta property="og:site_name" content="The Knight Club" />
+  <meta property="og:image" content="https://www.theknightclub.in/assets/images/hero-bg.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:image" content="https://www.theknightclub.in/assets/images/hero-bg.jpg" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I choose a course?", "acceptedAnswer": {"@type": "Answer", "text": "Start with the skill you want to use, then check each course page for its level, curriculum, instructor and price. Use search and category filters to narrow the list."}}, {"@type": "Question", "name": "Are the courses suitable for beginners?", "acceptedAnswer": {"@type": "Answer", "text": "Every course shows its level on the course page, so you can see whether it suits a beginner or someone with experience before you enrol."}}, {"@type": "Question", "name": "How does enrolment and payment work?", "acceptedAnswer": {"@type": "Answer", "text": "Open a course, review the details and enrol from the course page. Payment is completed securely online through Razorpay. If you have a coupon code, you can apply it on the course page before paying."}}, {"@type": "Question", "name": "How do I access a course after I purchase it, and can I continue later?", "acceptedAnswer": {"@type": "Answer", "text": "Once your payment is confirmed, sign in and open My Learning or your dashboard \u2014 every course you own is listed there. Your progress is tracked automatically, so Continue Learning always picks up where you stopped."}}, {"@type": "Question", "name": "Do I need an account to browse courses?", "acceptedAnswer": {"@type": "Answer", "text": "No. You can browse, search and read course details without signing in. You only need an account to enrol."}}]}</script>
+  <meta name="theme-color" content="#0a0714" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/1-base/scroll.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/public.css" />
+  <link rel="stylesheet" href="../assets/css/courses.css" />
+  <link rel="stylesheet" href="../assets/css/theme-futuristic.css" />
+  <link rel="stylesheet" href="../assets/css/site-theme.css" />
+  <link rel="stylesheet" href="../assets/css/faq.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <link rel="stylesheet" href="../assets/css/cart.css" />
+  <noscript><style>.faq-answer{grid-template-rows:1fr !important;visibility:visible !important}.faq-icon{display:none}</style></noscript>
+</head>
+<body class="pub-page courses-page">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="pub-header-wrap">
+    <div id="pub-header-root" data-from-pages="true"></div>
+  </div>
+
+  <main id="main">
+
+    <!-- ==================================================================
+         1. HERO — what / who / outcome, one primary + one secondary action.
+            The search is no longer buried here; it lives in the catalogue
+            (section 3) so the hero stays calm and the catalogue is the
+            primary working area.
+         ================================================================== -->
+    <section class="pub-hero cc-hero" aria-labelledby="page-title" data-cc-section="hero">
+      <div class="cc-hero-bg" aria-hidden="true"></div>
+      <div class="container">
+        <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Courses</p>
+        <h1 id="page-title">Courses built around <em>skills you can actually use.</em></h1>
+        <p class="cc-hero-lead">Structured, practical courses in digital skills. Compare levels, instructors and prices, then start with the skill that fits your next step.</p>
+        <div class="cc-hero-actions">
+          <a href="#catalog" class="btn btn-primary btn-lg">Browse Courses</a>
+          <a href="about.html" class="btn btn-outline btn-lg">Learn About The Knight Club</a>
+        </div>
+
+        <!-- Only real API-derived numbers are ever inserted here (see courses.js);
+             this list stays hidden until at least one stat is available. -->
+        <ul class="cc-hero-stats" id="hero-stats" hidden></ul>
+        <div class="cc-hero-stats-skeleton" id="hero-stats-skeleton" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         2. SKILL AREAS — "What can you learn?"
+            The cards are generated by courses.js from the REAL categories
+            returned by Catalog.listCategories(). Nothing is hardcoded as a
+            category here. Clicking a card drives the same `category` state
+            as the filter chips in the catalogue below.
+         ================================================================== -->
+    <section class="cc-section cc-skills" id="skill-areas" aria-labelledby="skills-title" data-cc-section="skills">
+      <div class="container">
+        <header class="cc-section-head">
+          <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Skill areas</p>
+          <h2 id="skills-title" class="cc-h2">What can you learn?</h2>
+          <p class="cc-section-lead">The Knight Club teaches practical digital skills &mdash; marketing, content, freelancing, AI tools, video editing, digital products and web design. Choose a skill area to see the courses available right now.</p>
+        </header>
+        <ul class="cc-skill-grid" id="skill-areas-grid" hidden></ul>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         3. COURSE DISCOVERY / CATALOGUE — the primary product.
+            Search · categories · result summary · sort · grid · pagination.
+            IDs below are the ones courses.js binds to — do not rename
+            without updating the script.
+         ================================================================== -->
+    <section class="cc-section cc-catalog" id="catalog" aria-labelledby="catalog-title" data-cc-section="catalog">
+      <div class="container">
+        <header class="cc-section-head cc-section-head-left">
+          <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Course catalogue</p>
+          <h2 id="catalog-title" class="cc-h2">Explore Courses</h2>
+          <p class="cc-section-lead">Find a practical skill to learn next.</p>
+        </header>
+
+        <div class="cc-controls" data-cc-part="controls">
+          <!-- PREMIUM SEARCH — the single, existing search input/state. -->
+          <form id="filters-form" class="cc-search" role="search">
+            <span class="cc-search-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            </span>
+            <label for="search-input" class="sr-only">Search courses, skills or topics</label>
+            <input id="search-input" class="cc-search-input" type="search" name="search" placeholder="Search courses, skills or topics…" maxlength="100" autocomplete="off" />
+            <button type="button" class="cc-search-clear" id="search-clear" aria-label="Clear search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+            <button class="btn btn-primary cc-search-submit" type="submit">Search</button>
+          </form>
+
+          <!-- CATEGORY FILTER — populated only with real categories. -->
+          <div class="cc-cat-block" id="category-block" hidden>
+            <p class="cc-cat-label" id="category-label">Filter by category</p>
+            <div id="category-filter" class="cc-cat-row" role="group" aria-labelledby="category-label" hidden></div>
+          </div>
+        </div>
+
+        <!-- RESULTS / SORT TOOLBAR -->
+        <div class="cc-toolbar">
+          <p id="results-summary" class="cc-toolbar-summary" aria-live="polite">Loading courses…</p>
+          <label class="cc-sort" for="sort-select">
+            <span class="cc-sort-label">Sort by</span>
+            <select id="sort-select" name="sort" class="cc-sort-select" aria-label="Sort courses">
+              <option value="newest">Newest</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="title">Title A–Z</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- COURSE GRID -->
+        <div id="courses-list" class="cc-grid" aria-live="polite"></div>
+
+        <!-- PAGINATION -->
+        <nav id="pagination" class="cc-pagination" aria-label="Pagination" hidden>
+          <button class="cc-page-btn" id="prev-page" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+            <span>Previous</span>
+          </button>
+          <span class="cc-page-status" id="pagination-status"></span>
+          <button class="cc-page-btn" id="next-page" type="button">
+            <span>Next</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         4. HOW TO CHOOSE — for users who still aren't sure (existing 5 steps)
+         ================================================================== -->
+    <section class="cc-section cc-band cc-choose" aria-labelledby="choose-title" data-cc-section="choose">
+      <div class="container">
+        <header class="cc-section-head">
+          <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Not sure where to start?</p>
+          <h2 id="choose-title" class="cc-h2">How to choose a course</h2>
+        </header>
+        <ol class="cc-steps">
+          <li><span class="cc-step-num" aria-hidden="true">01</span><h3>Start with your goal</h3><p>Decide what you want to be able to do &mdash; freelance, create, market, build.</p></li>
+          <li><span class="cc-step-num" aria-hidden="true">02</span><h3>Check the level</h3><p>Each course lists its level so you can start in the right place.</p></li>
+          <li><span class="cc-step-num" aria-hidden="true">03</span><h3>Review the curriculum</h3><p>Open a course to see its modules and lessons before you decide.</p></li>
+          <li><span class="cc-step-num" aria-hidden="true">04</span><h3>Compare the details</h3><p>Look at the instructor, duration where shown, and price.</p></li>
+          <li><span class="cc-step-num" aria-hidden="true">05</span><h3>Enrol and begin</h3><p>Pay securely, then find the course in My Learning.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         5. 1% CLUB CROSS-SELL — compact and secondary on purpose.
+            No price is shown here, so there is no duplicated membership
+            pricing logic; the 1% Club page owns that.
+         ================================================================== -->
+    <section class="cc-section cc-club-section" aria-labelledby="club-title" data-cc-section="club">
+      <div class="container">
+        <div class="cc-club">
+          <span class="cc-club-mark" aria-hidden="true">1%</span>
+          <div class="cc-club-copy">
+            <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Beyond the courses</p>
+            <h2 id="club-title">Want mentorship and community alongside your courses?</h2>
+            <p>The 1% Club is a premium membership that pairs selected courses with mentorship, community and additional support.</p>
+          </div>
+          <a href="one-percent-club.html" class="btn btn-outline btn-lg cc-club-cta">Explore the 1% Club</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         6. FAQ — visible questions are identical to the FAQPage JSON-LD
+            in <head>. If you edit one, edit the other.
+         ================================================================== -->
+    <section class="cc-section cc-band faq-section" aria-labelledby="faq-title" data-cc-section="faq">
+      <div class="container faq-container">
+        <header class="faq-header">
+          <p class="faq-eyebrow">Course FAQ</p>
+          <h2 id="faq-title" class="faq-title">Course questions, answered</h2>
+          <p class="faq-lede">From choosing a course to picking up where you left off.</p>
+        </header>
+        <div class="faq-list" data-faq>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">How do I choose a course?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>Start with the skill you want to use, then check each course page for its level, curriculum, instructor and price. Use search and category filters to narrow the list.</p></div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">Are the courses suitable for beginners?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>Every course shows its level on the course page, so you can see whether it suits a beginner or someone with experience before you enrol.</p></div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">How does enrolment and payment work?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>Open a course, review the details and enrol from the course page. Payment is completed securely online through Razorpay. If you have a coupon code, you can apply it on the course page before paying.</p></div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">How do I access a course after I purchase it, and can I continue later?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>Once your payment is confirmed, sign in and open My Learning or your dashboard &mdash; every course you own is listed there. Your progress is tracked automatically, so Continue Learning always picks up where you stopped.</p></div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">Do I need an account to browse courses?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>No. You can browse, search and read course details without signing in. You only need an account to enrol.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         7. FINAL CTA — closes the journey
+         ================================================================== -->
+    <section class="pub-cta cc-final" aria-labelledby="cc-cta-title" data-cc-section="cta">
+      <div class="container">
+        <div class="pub-cta-panel">
+          <span class="pub-cta-glow" aria-hidden="true"></span>
+          <h2 id="cc-cta-title">Ready to pick your first skill?</h2>
+          <p>Choose a course, learn step by step and build something real.</p>
+          <div class="pub-cta-actions">
+            <a href="#catalog" class="btn btn-ghost btn-lg">Browse Courses</a>
+            <span data-auth="guest"><a href="signup.html" class="btn btn-primary btn-lg">Get Started</a></span>
+            <span data-auth="user" hidden><a href="dashboard.html" class="btn btn-primary btn-lg">Go to Dashboard</a></span>
+            <a href="one-percent-club.html" class="btn btn-ghost btn-lg">Explore the 1% Club</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="pub-footer-root" data-from-pages="true"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/catalog-api.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/vendor/lenis/lenis.min.js"></script>
+  <script src="../assets/js/core/smooth-scroll.js"></script>
+  <script src="../assets/js/public-shell.js"></script>
+  <script>PublicShell.mount({ active: 'courses' });</script>
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/site-theme-toggle.js" defer></script>
+  <script src="../assets/js/faq.js" defer></script>
+  <script src="../assets/js/courses.js" defer></script>
+</body>
+</html>

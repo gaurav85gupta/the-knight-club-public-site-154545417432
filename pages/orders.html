@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme: applied synchronously BEFORE the stylesheets so first paint is already
+       the saved Day/Night theme (no flash). Student pages only. -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>My Orders — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/orders.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <!-- Protected shell: hidden until the SERVER confirms the session, same
+       pattern as dashboard.html. -->
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container">
+
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Purchases</p>
+          <h1 class="page-title" id="orders-title">My Orders</h1>
+          <p class="page-sub">View your course purchases and payment history.</p>
+        </div>
+        <a href="courses.html" class="btn btn-outline">Browse Courses</a>
+      </header>
+
+      <div id="orders-alert" class="alert" role="alert" hidden></div>
+
+      <!-- Status filter pills (populated by JS) -->
+      <div id="orders-filters" class="orders-filters" role="group" aria-label="Filter by order status" hidden></div>
+
+      <section aria-labelledby="orders-title" aria-live="polite">
+
+        <div id="orders-loading" aria-label="Loading your orders">
+          <div class="skeleton skeleton-row" aria-hidden="true"></div>
+          <div class="skeleton skeleton-row" aria-hidden="true"></div>
+          <div class="skeleton skeleton-row" aria-hidden="true"></div>
+        </div>
+
+        <div id="orders-empty" class="empty-state" hidden>
+          <span class="empty-state-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>
+          </span>
+          <h3>You haven't placed any orders yet.</h3>
+          <p>Once you purchase a course, it will show up here.</p>
+          <a class="btn btn-primary" href="courses.html">Browse Courses</a>
+        </div>
+
+        <div id="orders-error" class="empty-state is-error" hidden>
+          <span class="empty-state-icon" aria-hidden="true">!</span>
+          <h3>Unable to load your orders.</h3>
+          <p id="orders-error-message">Please try again in a moment.</p>
+          <button class="btn btn-outline" id="orders-retry" type="button">Try again</button>
+        </div>
+
+        <div id="orders-list" class="order-list" hidden></div>
+
+        <div id="orders-pagination" class="pagination-controls" hidden>
+          <button class="btn btn-outline btn-sm" id="orders-prev" type="button" aria-label="Previous page">Previous</button>
+          <span id="orders-page-info" class="text-muted" style="font-size:var(--font-size-sm);"></span>
+          <button class="btn btn-outline btn-sm" id="orders-next" type="button" aria-label="Next page">Next</button>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/orders.js"></script>
+</body>
+</html>

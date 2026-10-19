@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme: applied synchronously BEFORE the stylesheets so first paint is already
+       the saved Day/Night theme (no flash). Student pages only. -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title id="page-title">Learn — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/learn.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <!-- Protected shell: hidden until the SERVER confirms the session, same
+       pattern as dashboard.html — an unauthenticated visitor never sees a
+       flash of protected UI. -->
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="learn-page">
+
+  <header class="learn-header">
+    <div class="learn-header-inner">
+      <a class="brand learn-header-brand" href="../index.html">The <span>Knight Club</span></a>
+      <p id="learn-header-course-title" class="learn-header-course-title"></p>
+      <nav class="site-nav learn-header-nav" aria-label="Learning">
+        <button type="button" id="sidebar-toggle" class="btn btn-outline btn-sm learn-sidebar-toggle" aria-expanded="false" aria-controls="learn-sidebar">
+          Course content
+        </button>
+        <a href="learning.html" class="text-muted">My Learning</a>
+        <a href="dashboard.html" class="text-muted">Dashboard</a>
+        <!-- Day/Night toggle: populated by ThemeToggle.create() (theme-toggle.js). -->
+        <span id="theme-toggle-slot" class="theme-toggle-slot"></span>
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm">Sign out</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="learn-main">
+
+    <!-- ==================== LOADING ==================== -->
+    <div id="state-loading" class="container learn-state">
+      <div class="skeleton skeleton-line" style="width:240px; height:16px;"></div>
+      <div class="skeleton" style="height:320px; margin-top:var(--space-6); border-radius:16px;"></div>
+    </div>
+
+    <!-- ==================== COURSE NOT FOUND ==================== -->
+    <div id="state-course-not-found" class="container learn-state" hidden>
+      <div class="state-panel" style="margin: var(--space-16) 0;">
+        <h3>Course not found</h3>
+        <p>This course doesn't exist or is no longer available.</p>
+        <a class="btn btn-primary" href="courses.html">Browse all courses</a>
+      </div>
+    </div>
+
+    <!-- ==================== LESSON NOT FOUND ==================== -->
+    <div id="state-lesson-not-found" class="container learn-state" hidden>
+      <div class="state-panel" style="margin: var(--space-16) 0;">
+        <h3>Lesson not found</h3>
+        <p>This lesson doesn't exist in this course.</p>
+        <a class="btn btn-primary" id="lesson-not-found-back" href="#">Back to course</a>
+      </div>
+    </div>
+
+    <!-- ==================== GENERIC ERROR ==================== -->
+    <div id="state-error" class="container learn-state" hidden>
+      <div class="state-panel" style="margin: var(--space-16) 0;">
+        <h3>Something went wrong</h3>
+        <p id="state-error-message">Please try again in a moment.</p>
+        <button class="btn btn-outline" id="state-error-retry" type="button">Try again</button>
+      </div>
+    </div>
+
+    <!-- ==================== LEARNING SHELL ==================== -->
+    <div id="learn-shell" class="learn-shell" hidden>
+
+      <!-- Mobile backdrop for the sidebar drawer -->
+      <div id="sidebar-backdrop" class="learn-sidebar-backdrop" hidden></div>
+
+      <!-- ---- SIDEBAR: course curriculum ---- -->
+      <aside id="learn-sidebar" class="learn-sidebar" aria-label="Course curriculum">
+        <div class="learn-sidebar-head">
+          <p class="text-muted learn-sidebar-eyebrow">Course</p>
+          <h1 id="sidebar-course-title" class="learn-sidebar-title"></h1>
+          <!-- Phase 14: real, server-authoritative course progress. Hidden
+               until data arrives; never shows a fabricated percentage. -->
+          <div id="course-progress-wrap" class="course-progress-wrap" hidden>
+            <div class="course-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-labelledby="course-progress-label">
+              <div id="course-progress-fill" class="course-progress-fill" style="width: 0%"></div>
+            </div>
+            <p id="course-progress-label" class="text-muted course-progress-label"></p>
+          </div>
+        </div>
+        <p class="learn-sidebar-nav-eyebrow">Course content</p>
+        <nav id="curriculum-nav" class="curriculum-nav" aria-label="Modules and lessons"></nav>
+        <!-- Phase 14: shown once the whole course is complete. -->
+        <div id="course-complete-banner" class="course-complete-banner" hidden>
+          <span aria-hidden="true">&#10003;</span> Course complete!
+        </div>
+      </aside>
+
+      <!-- ---- CURRENT LESSON AREA ---- -->
+      <section class="learn-content" aria-label="Current lesson">
+
+        <!-- Empty course (no lessons published yet) -->
+        <div id="lesson-empty" class="state-panel learn-content-state" hidden>
+          <h3>No lessons yet</h3>
+          <p>This course doesn't have any published lessons yet.</p>
+        </div>
+
+        <div id="lesson-panel" hidden>
+          <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
+            <a href="learning.html">My Learning</a>
+            <span aria-hidden="true">/</span>
+            <span id="breadcrumb-course-title"></span>
+            <span aria-hidden="true">/</span>
+            <span id="lesson-module-crumb" class="lesson-module-crumb"></span>
+          </nav>
+          <div class="lesson-header">
+            <h2 id="lesson-title" class="lesson-title"></h2>
+            <p id="lesson-meta" class="text-muted lesson-meta"></p>
+            <!-- Phase 14: real completed indicator for the current lesson. -->
+            <p id="lesson-completed-badge" class="lesson-completed-badge" hidden><span aria-hidden="true">&#10003;</span> Completed</p>
+          </div>
+
+          <!-- Locked (access denied) state for the current lesson -->
+          <div id="lesson-locked" class="lesson-locked" hidden>
+            <div class="lesson-locked-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="10" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>This lesson isn't unlocked yet</h3>
+            <p id="lesson-locked-message">This lesson is not currently accessible.</p>
+            <a id="lesson-locked-buy-link" class="btn btn-primary" href="#" hidden>Buy this course</a>
+          </div>
+
+          <!-- Video player area -->
+          <div id="lesson-video-wrap" class="lesson-video-wrap" hidden>
+            <div class="lesson-video-glow" aria-hidden="true"></div>
+            <iframe
+              id="lesson-video-frame"
+              class="lesson-video-frame"
+              src=""
+              title="Lesson video"
+              loading="lazy"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+              allowfullscreen
+            ></iframe>
+          </div>
+
+          <!-- No video on this (accessible) lesson yet -->
+          <div id="lesson-no-video" class="state-panel learn-content-state" hidden>
+            <h3>No video for this lesson yet</h3>
+            <p>Check back soon — this lesson's video hasn't been published yet.</p>
+          </div>
+
+          <div id="lesson-description-wrap" hidden>
+            <h3 class="lesson-section-heading">About this lesson</h3>
+            <p id="lesson-description"></p>
+          </div>
+
+          <!-- Progress display (Phase 14: real, server-authoritative) -->
+          <div id="lesson-progress-note" class="lesson-progress-note text-muted"></div>
+
+          <div class="lesson-action-bar">
+            <button type="button" id="mark-complete-btn" class="btn btn-outline btn-sm" hidden>Mark as complete</button>
+            <div class="lesson-nav-row">
+              <button type="button" id="nav-prev" class="btn btn-outline" disabled>
+                <span aria-hidden="true">&larr;</span> Previous
+              </button>
+              <button type="button" id="nav-next" class="btn btn-primary" disabled>
+                Next <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- "Up Next" — populated from the same navigation.next data the
+               Next button already uses; purely presentational, no new
+               endpoint or logic. Hidden when there is no next lesson. -->
+          <div id="up-next-card" class="up-next-card" hidden>
+            <p class="up-next-eyebrow">Up next</p>
+            <p id="up-next-title" class="up-next-title"></p>
+            <button type="button" id="up-next-continue" class="btn btn-primary btn-sm">Continue <span aria-hidden="true">&rarr;</span></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/learn.js"></script>
+</body>
+</html>

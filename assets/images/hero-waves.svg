@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a2cff" stop-opacity=".85"/>
+      <stop offset=".45" stop-color="#3a12a8" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#0a0518" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffe3f1"/>
+      <stop offset=".22" stop-color="#d27bff"/>
+      <stop offset=".5" stop-color="#7c3aed" stop-opacity=".9"/>
+      <stop offset=".8" stop-color="#b66bff"/>
+      <stop offset="1" stop-color="#f3d6ff"/>
+    </linearGradient>
+    <linearGradient id="peach" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd2b0"/>
+      <stop offset=".35" stop-color="#ff9ad5" stop-opacity=".9"/>
+      <stop offset=".7" stop-color="#9d5bff" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#ffcfa6"/>
+    </linearGradient>
+    <radialGradient id="edgeL" cx="0" cy=".5" r=".6"><stop offset="0" stop-color="#9b4dff" stop-opacity=".65"/><stop offset="1" stop-color="#9b4dff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="edgeR" cx="1" cy=".35" r=".6"><stop offset="0" stop-color="#8f3dff" stop-opacity=".8"/><stop offset="1" stop-color="#8f3dff" stop-opacity="0"/></radialGradient>
+    <filter id="b18" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="b5" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#edgeL)"/>
+  <rect width="1600" height="900" fill="url(#edgeR)"/>
+  <g transform="translate(0,85)">
+  <!-- purple body under the big bowl -->
+  <path d="M-60 430 C120 650 430 705 800 695 C1160 685 1430 520 1660 150 L1660 900 L-60 900 Z" fill="url(#fill)"/>
+  <!-- glowing rim of the bowl -->
+  <path d="M-60 430 C120 650 430 705 800 695 C1160 685 1430 520 1660 150" fill="none" stroke="url(#rim)" stroke-width="26" filter="url(#b18)" opacity=".85"/>
+  <path d="M-60 430 C120 650 430 705 800 695 C1160 685 1430 520 1660 150" fill="none" stroke="url(#rim)" stroke-width="5" filter="url(#b5)"/>
+  <path d="M-60 430 C120 650 430 705 800 695 C1160 685 1430 520 1660 150" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/>
+  <!-- lower peach / pink light wave -->
+  <path d="M-60 790 C300 650 690 640 1000 705 C1300 765 1500 625 1660 520" fill="none" stroke="url(#peach)" stroke-width="22" filter="url(#b18)" opacity=".8"/>
+  <path d="M-60 790 C300 650 690 640 1000 705 C1300 765 1500 625 1660 520" fill="none" stroke="url(#peach)" stroke-width="4" filter="url(#b5)"/>
+  <path d="M-60 790 C300 650 690 640 1000 705 C1300 765 1500 625 1660 520" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.2"/>
+  </g>
+  <!-- fade the very bottom into the page -->
+  <rect y="800" width="1600" height="100" fill="#07050f" opacity=".0"/>
+</svg>

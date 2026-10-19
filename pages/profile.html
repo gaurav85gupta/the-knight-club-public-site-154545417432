@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme: applied synchronously BEFORE the stylesheets so first paint is already
+       the saved Day/Night theme (no flash). Student pages only. -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>Profile — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/orders.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container is-narrow">
+
+      <a href="dashboard.html" class="back-link"><span aria-hidden="true">&larr;</span> Back to Dashboard</a>
+
+      <header class="profile-header" aria-labelledby="profile-name">
+        <span class="avatar avatar-lg" id="profile-avatar" aria-hidden="true"></span>
+        <div class="profile-header-info">
+          <h1 class="profile-name" id="profile-name"></h1>
+          <div class="profile-sub">
+            <span id="profile-userid"></span>
+            <span class="badge" id="profile-role"></span>
+          </div>
+        </div>
+      </header>
+
+      <section class="s-card" aria-labelledby="profile-info-title">
+        <h2 class="s-card-title" id="profile-info-title">Personal information</h2>
+        <p class="s-card-desc">The details on your Knight Club account.</p>
+        <dl class="kv" id="profile-list"></dl>
+      </section>
+
+      <p style="margin-top:var(--space-6)" class="text-muted">
+        Want to change your password? Head to <a href="settings.html">Account Settings</a>.
+      </p>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/profile.js"></script>
+</body>
+</html>

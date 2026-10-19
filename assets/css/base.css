@@ -1,0 +1,149 @@
+/* ==========================================================================
+   THE NIGHT CLUB — Base Styles (Public Website)
+   Minimal reset + foundational element styling. Page-specific styles belong
+   in their own stylesheet under assets/css/, imported alongside this file.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+
+  /* Several page body classes (.home-page, .pub-page, .about-page,
+     .contact-page, .courses-page, .course-detail-page …) set
+     `overflow-x: clip` on BODY so their own oversized ambient-glow /
+     decorative elements never force a horizontal scrollbar. That only
+     clips body's own scrollable overflow region though — an abs-positioned
+     descendant's box still inflates HTML's scrollWidth, and HTML is the
+     box mobile browsers actually check to decide whether the page can be
+     panned/slid sideways. That mismatch is what made the site feel like it
+     didn't "fit" and slid horizontally on a phone, even though nothing
+     ever looked visibly cut off. Fixed at the true root, in the one
+     stylesheet every page on the site loads (base.css), so no current or
+     future page can regress this — rather than chasing each oversized
+     decorative element individually on every page. */
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--color-accent-600);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-accent-700);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 var(--space-4);
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+p {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Plain fallback only — buttons.css (loaded last, higher specificity)
+   owns the real colours everywhere. Do not edit this to change a button
+   look; edit buttons.css instead. */
+.btn-primary {
+  background: var(--color-accent-500);
+  color: var(--color-text-on-accent);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-600);
+  color: var(--color-text-on-accent);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.btn-outline:hover {
+  border-color: var(--color-accent-500);
+  color: var(--color-accent-600);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-8);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Simple responsive helpers ---- */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-4);
+  }
+}
+
+/* ---- h1 — Coolvetica Heavy Compressed (self-hosted via assets/fonts/coolvetica.css) ---- */
+h1 {
+  font-family: var(--font-family-h1);
+}

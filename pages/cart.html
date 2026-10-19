@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme applied synchronously before stylesheets — no flash on first paint -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>My Cart — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/cart.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <!-- Protected shell: page is invisible until server confirms the session -->
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container">
+
+      <!-- Page header -->
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Shopping</p>
+          <h1 class="page-title">Your Cart</h1>
+          <p class="page-sub" id="cart-subtitle">Review your selected courses before checkout.</p>
+        </div>
+        <a href="courses.html" class="btn btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Continue Shopping
+        </a>
+      </header>
+
+      <!-- Alert banner (API errors) -->
+      <div id="cart-alert" class="alert" role="alert" hidden></div>
+
+      <!-- Loading skeleton -->
+      <div id="cart-loading" aria-label="Loading your cart" aria-live="polite">
+        <div class="cart-layout">
+          <div class="cart-items-col">
+            <div class="cart-item-skeleton">
+              <div class="skeleton cart-skeleton-thumb"></div>
+              <div class="cart-skeleton-lines">
+                <div class="skeleton cart-skeleton-line"></div>
+                <div class="skeleton cart-skeleton-line is-short"></div>
+                <div class="skeleton cart-skeleton-line is-price"></div>
+              </div>
+            </div>
+            <div class="cart-item-skeleton">
+              <div class="skeleton cart-skeleton-thumb"></div>
+              <div class="cart-skeleton-lines">
+                <div class="skeleton cart-skeleton-line"></div>
+                <div class="skeleton cart-skeleton-line is-short"></div>
+                <div class="skeleton cart-skeleton-line is-price"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="skeleton" style="height:260px; border-radius: var(--radius-xl);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="cart-empty" class="cart-empty" hidden aria-live="polite">
+        <span class="cart-empty-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </span>
+        <h2>Your cart is empty</h2>
+        <p>Your cart is waiting for your next step. Explore our courses and start your journey.</p>
+        <a href="courses.html" class="btn btn-primary btn-lg">
+          Explore Courses
+          <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Main cart (items + summary) -->
+      <div id="cart-content" class="cart-layout" hidden aria-live="polite">
+
+        <!-- Left: items list -->
+        <section class="cart-items-col" aria-label="Cart items">
+          <div class="cart-items-header">
+            <label class="cart-select-all">
+              <input type="checkbox" id="cart-select-all" aria-label="Select all courses" />
+              <span id="cart-items-count"></span>
+            </label>
+            <button type="button" class="cart-clear-btn" id="cart-clear-btn" aria-label="Remove all items from cart">
+              Remove all
+            </button>
+          </div>
+          <div id="cart-items-list" role="list"></div>
+        </section>
+
+        <!-- Right: order summary -->
+        <aside class="cart-summary-col" aria-label="Order summary">
+          <div class="cart-summary">
+            <h2 class="cart-summary-title">Order Summary</h2>
+
+            <dl class="cart-summary-rows">
+              <div class="cart-summary-row">
+                <dt id="summary-courses-label">Courses</dt>
+                <dd id="summary-courses-val">—</dd>
+              </div>
+              <div class="cart-summary-row is-total">
+                <dt id="summary-subtotal-label">Subtotal</dt>
+                <dd id="summary-subtotal">—</dd>
+              </div>
+            </dl>
+            <p class="cart-selection-note" id="cart-selection-note" hidden></p>
+
+            <!-- Unavailable warning -->
+            <div id="cart-unavailable-notice" class="cart-unavailable-notice" hidden role="alert">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0; margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span id="cart-unavailable-text"></span>
+            </div>
+
+            <!-- Checkout CTA -->
+            <button
+              type="button"
+              class="btn btn-primary btn-lg cart-checkout-btn"
+              id="cart-checkout-btn"
+            >
+              Proceed to Checkout
+              <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+
+            <p class="cart-summary-note">
+              Secure checkout &middot; Prices in INR
+            </p>
+          </div>
+        </aside>
+
+      </div>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/cart-page.js"></script>
+</body>
+</html>

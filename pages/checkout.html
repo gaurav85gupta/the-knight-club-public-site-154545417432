@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme applied synchronously before stylesheets — no flash on first paint -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>Checkout — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/cart.css" />
+  <link rel="stylesheet" href="../assets/css/checkout.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <!-- Protected shell: page is invisible until server confirms the session -->
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container">
+
+      <!-- Back link to cart -->
+      <a href="cart.html" class="checkout-back-link" aria-label="Back to cart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to cart
+      </a>
+
+      <!-- Page header -->
+      <header class="page-head" style="margin-bottom: var(--space-6)">
+        <div style="display:flex; align-items:center; gap: var(--space-4)">
+          <span class="checkout-lock-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <div>
+            <p class="eyebrow">Secure Checkout</p>
+            <h1 class="page-title">Review your order</h1>
+          </div>
+        </div>
+      </header>
+
+      <!-- ================================================================
+           STATE: LOADING
+           Shown while POST /checkout is in flight.
+           ================================================================ -->
+      <div id="checkout-loading" aria-label="Processing your order" aria-live="polite">
+        <div class="cart-layout">
+
+          <!-- Left: item skeletons -->
+          <div>
+            <div style="display:flex; flex-direction:column; gap: var(--space-3);">
+              <div class="checkout-skeleton-item" aria-hidden="true">
+                <div class="skeleton checkout-skeleton-thumb"></div>
+                <div class="checkout-skeleton-lines">
+                  <div class="skeleton checkout-skeleton-line"></div>
+                  <div class="skeleton checkout-skeleton-line is-short"></div>
+                  <div class="skeleton checkout-skeleton-line is-price"></div>
+                </div>
+              </div>
+              <div class="checkout-skeleton-item" aria-hidden="true">
+                <div class="skeleton checkout-skeleton-thumb"></div>
+                <div class="checkout-skeleton-lines">
+                  <div class="skeleton checkout-skeleton-line"></div>
+                  <div class="skeleton checkout-skeleton-line is-short"></div>
+                  <div class="skeleton checkout-skeleton-line is-price"></div>
+                </div>
+              </div>
+              <div class="checkout-skeleton-item" aria-hidden="true">
+                <div class="skeleton checkout-skeleton-thumb"></div>
+                <div class="checkout-skeleton-lines">
+                  <div class="skeleton checkout-skeleton-line"></div>
+                  <div class="skeleton checkout-skeleton-line is-short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: summary skeleton -->
+          <div>
+            <div class="skeleton" style="height:300px; border-radius: var(--radius-xl);" aria-hidden="true"></div>
+          </div>
+
+        </div>
+
+        <!-- Screen-reader announcement -->
+        <p class="sr-only" aria-live="assertive">Creating your order, please wait…</p>
+      </div>
+
+      <!-- ================================================================
+           STATE: ERROR
+           Shown when the checkout cannot proceed.
+           ================================================================ -->
+      <div id="checkout-error" class="checkout-error-state" hidden aria-live="polite" role="alert">
+
+        <span class="checkout-error-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </span>
+
+        <h2 id="checkout-error-title">Checkout unavailable</h2>
+        <p id="checkout-error-message">Please return to your cart and try again.</p>
+
+        <!-- Per-item validation detail (populated by JS for INVALID_CART) -->
+        <div id="checkout-error-items"></div>
+
+        <div class="checkout-error-actions">
+          <button type="button" id="checkout-retry-btn" class="btn btn-primary">Try again</button>
+          <button type="button" id="checkout-go-cart-btn" class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back to cart
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ================================================================
+           STATE: CONTENT
+           Shown once the Order has been successfully created/retrieved.
+           ================================================================ -->
+      <div id="checkout-content" hidden aria-live="polite">
+
+        <!-- Order number -->
+        <div style="margin-bottom: var(--space-4)">
+          <span class="checkout-order-number">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Order
+            <span id="checkout-order-number">—</span>
+          </span>
+        </div>
+
+        <!-- Idempotent notice -->
+        <div id="checkout-idempotent-notice" class="checkout-idempotent-notice" hidden role="status">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0; margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>You already started checkout — your existing order is shown below.</span>
+        </div>
+
+        <div class="cart-layout">
+
+          <!-- Left: order items (read-only snapshot) -->
+          <section aria-label="Order items">
+            <div class="checkout-items-header">
+              <p class="checkout-items-count" id="checkout-items-count">0 courses</p>
+            </div>
+            <div id="checkout-items-list" role="list"></div>
+          </section>
+
+          <!-- Right: order summary -->
+          <aside aria-label="Order summary">
+            <div class="cart-summary">
+
+              <h2 class="cart-summary-title">Order Summary</h2>
+
+              <dl class="cart-summary-rows">
+
+                <!-- Status row -->
+                <div class="checkout-status-row">
+                  <dt>Status</dt>
+                  <dd>
+                    <span class="badge-pending" aria-label="Order status: Awaiting payment">
+                      <svg width="7" height="7" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>
+                      Pending
+                    </span>
+                  </dd>
+                </div>
+
+                <!-- Subtotal -->
+                <div class="cart-summary-row">
+                  <dt>Subtotal</dt>
+                  <dd id="summary-subtotal">—</dd>
+                </div>
+
+                <!-- Discount (hidden when discount = 0) -->
+                <div id="summary-discount-row" class="checkout-discount-row" hidden>
+                  <dt>Discount</dt>
+                  <dd id="summary-discount">—</dd>
+                </div>
+
+                <!-- Total -->
+                <div class="cart-summary-row is-total">
+                  <dt>Total</dt>
+                  <dd id="summary-total">—</dd>
+                </div>
+
+              </dl>
+
+              <!-- ---- Coupon section (Phase 34) ---- -->
+              <div class="coupon-section" id="coupon-section">
+
+                <!-- Apply row (visible when no coupon is applied) -->
+                <div class="coupon-apply-row" id="coupon-apply-row">
+                  <label for="coupon-code-input" class="coupon-label">Have a coupon?</label>
+                  <div class="coupon-input-group">
+                    <input
+                      type="text"
+                      id="coupon-code-input"
+                      class="coupon-code-input"
+                      placeholder="Enter code"
+                      autocomplete="off"
+                      autocapitalize="characters"
+                      spellcheck="false"
+                      maxlength="40"
+                    />
+                    <button type="button" id="coupon-apply-btn" class="btn btn-outline coupon-apply-btn">
+                      <span class="coupon-btn-spinner spinner" aria-hidden="true" hidden></span>
+                      <span class="coupon-btn-label">Apply</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Applied row (visible when coupon is active) -->
+                <div class="coupon-applied-row" id="coupon-applied-row" hidden>
+                  <div class="coupon-applied-info">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span class="coupon-applied-code" id="coupon-applied-code"></span>
+                    <span class="coupon-applied-discount" id="coupon-applied-discount"></span>
+                  </div>
+                  <button type="button" id="coupon-remove-btn" class="coupon-remove-btn" aria-label="Remove coupon">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Remove
+                  </button>
+                </div>
+
+                <!-- Coupon feedback message -->
+                <p class="coupon-message" id="coupon-message" role="alert" hidden></p>
+
+              </div>
+              <!-- /Coupon section -->
+
+              <!-- ---- Payment CTA (Phase 31: enabled) ---- -->
+              <button
+                type="button"
+                id="checkout-payment-btn"
+                class="btn btn-primary btn-lg checkout-payment-cta"
+                aria-label="Continue to payment"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <span id="checkout-payment-btn-text">Continue to Payment</span>
+              </button>
+
+              <!-- Payment processing notice (shown during payment flow) -->
+              <div id="checkout-payment-notice" class="checkout-payment-notice" hidden role="status">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="checkout-payment-notice-text">Preparing your payment…</span>
+              </div>
+
+              <!-- Payment error (shown on failure) -->
+              <div id="checkout-payment-error" class="checkout-payment-error" hidden role="alert">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="checkout-payment-error-text">Payment could not be completed. Please try again.</span>
+              </div>
+
+              <p class="cart-summary-note">
+                Secure checkout &middot; Prices in INR
+              </p>
+
+            </div>
+          </aside>
+
+        </div>
+      </div>
+      <!-- /STATE: CONTENT -->
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/payments.js"></script>
+  <script src="../assets/js/checkout-page.js"></script>
+</body>
+</html>

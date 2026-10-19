@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <script src="../assets/js/site-theme-init.js"></script>
+  <title id="page-title">Course — The Knight Club</title>
+  <meta id="page-description" name="description" content="View course details on The Knight Club." />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link id="page-canonical" rel="canonical" href="" />
+  <meta property="og:type" content="website" />
+  <meta id="og-title" property="og:title" content="Course — The Knight Club" />
+  <meta id="og-description" property="og:description" content="View course details on The Knight Club." />
+  <meta id="og-url" property="og:url" content="" />
+  <meta id="og-image" property="og:image" content="" />
+  <script id="course-structured-data" type="application/ld+json"></script>
+  <meta name="theme-color" content="#0a0714" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/1-base/scroll.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/public.css" />
+  <link rel="stylesheet" href="../assets/css/courses.css" />
+  <link rel="stylesheet" href="../assets/css/course-detail.css" />
+  <link rel="stylesheet" href="../assets/css/theme-futuristic.css" />
+  <link rel="stylesheet" href="../assets/css/site-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <link rel="stylesheet" href="../assets/css/cart.css" />
+</head>
+<body class="pub-page course-page">
+
+  <a class="skip-link" href="#course-main">Skip to content</a>
+
+  <div class="pub-header-wrap">
+    <div id="pub-header-root" data-from-pages="true"></div>
+  </div>
+
+  <main id="course-main">
+    <!-- Loading skeleton -->
+    <div id="loading-state" class="container cd-loading">
+      <div class="skeleton skeleton-line" style="width:200px; height:14px;"></div>
+      <div class="skeleton cd-sk-title"></div>
+      <div class="cd-sk-grid">
+        <div class="cd-sk-body">
+          <div class="skeleton cd-sk-line" style="width:95%;"></div>
+          <div class="skeleton cd-sk-line" style="width:88%;"></div>
+          <div class="skeleton cd-sk-line" style="width:70%;"></div>
+          <div class="skeleton cd-sk-block"></div>
+        </div>
+        <div class="skeleton cd-sk-card"></div>
+      </div>
+    </div>
+
+    <!-- Not found / error state -->
+    <div id="error-state" class="container" hidden>
+      <div class="state-panel cd-state-panel">
+        <h3 id="error-title">Course not found</h3>
+        <p id="error-message">This course doesn't exist or is no longer available.</p>
+        <a class="btn btn-primary" href="courses.html">Browse all courses</a>
+      </div>
+    </div>
+
+    <!-- Course content -->
+    <div id="course-content" hidden>
+      <section class="pub-hero cd-hero" aria-labelledby="course-title">
+        <div class="cd-hero-bg" aria-hidden="true"></div>
+        <div class="container">
+          <p class="breadcrumbs cd-breadcrumbs">
+            <a href="../index.html">Home</a> <span class="cd-crumb-sep" aria-hidden="true">/</span> <a href="courses.html">Courses</a> <span class="cd-crumb-sep" aria-hidden="true">/</span> <span id="crumb-title"></span>
+          </p>
+          <div id="detail-meta-top"></div>
+          <h1 class="course-title-xl cd-title" id="course-title"></h1>
+          <p id="course-short-desc" class="cd-short-desc"></p>
+          <div class="course-meta-row cd-meta-row" id="course-meta-row"></div>
+        </div>
+      </section>
+
+      <section class="cd-section">
+        <div class="container">
+          <div class="course-detail-grid cd-grid">
+            <div class="detail-body cd-body">
+              <div class="cd-block">
+                <h2 class="cd-h2">About this course</h2>
+                <p id="course-description" class="cd-prose"></p>
+              </div>
+
+              <div id="outcomes-block" class="cd-block" hidden>
+                <h2 class="cd-h2">What you'll learn</h2>
+                <ul class="outcome-list cd-outcome-list" id="outcomes-list"></ul>
+              </div>
+
+              <div id="requirements-block" class="cd-block" hidden>
+                <h2 class="cd-h2">Requirements</h2>
+                <ul class="requirement-list cd-requirement-list" id="requirements-list"></ul>
+              </div>
+
+              <div id="curriculum-block" class="cd-block" hidden>
+                <h2 class="cd-h2">Curriculum</h2>
+                <div id="curriculum-summary" class="cd-curriculum-summary"></div>
+                <div class="curriculum-list cd-curriculum-list" id="curriculum-list"></div>
+              </div>
+
+              <div id="tags-block" class="cd-block" hidden>
+                <div class="tag-row cd-tag-row" id="tags-row"></div>
+              </div>
+            </div>
+
+            <aside class="buy-card cd-buy-card" aria-label="Enroll">
+              <div class="thumb cd-buy-thumb" id="buy-thumb-wrap" hidden>
+                <img id="buy-thumb" src="" alt="" />
+              </div>
+              <div class="price-row cd-price-row">
+                <span class="price-current cd-price-current" id="buy-price"></span>
+                <span class="price-original cd-price-original" id="buy-original" hidden></span>
+              </div>
+
+              <div id="buy-alert" class="alert cd-alert" role="alert" hidden></div>
+              <!-- Phase 29: Add to Cart CTA -->
+              <button class="btn btn-ghost btn-block" id="add-to-cart-btn" type="button" hidden>
+                <span class="spinner cd-spinner" aria-hidden="true"></span>
+                <span class="label">Add to Cart</span>
+              </button>
+              <button class="btn btn-primary btn-block" id="enroll-btn" type="button">
+                <span class="spinner cd-spinner" aria-hidden="true"></span>
+                <span class="label">Enroll now</span>
+              </button>
+              <a class="btn btn-ghost btn-block" id="start-learning-link" href="#" hidden>Start Learning</a>
+              <a class="btn btn-ghost btn-block" id="go-to-cart-link" href="cart.html" hidden>View Cart →</a>
+              <p class="cd-secure-note" id="buy-secure-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Secure payment via Razorpay.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="related-block" class="cd-section cd-related" hidden>
+        <div class="container">
+          <header class="cc-section-head">
+            <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Keep exploring</p>
+            <h2 class="cc-h2">Related Courses</h2>
+          </header>
+          <div id="related-list" class="course-grid"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="pub-footer-root" data-from-pages="true"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/catalog-api.js"></script>
+  <script src="../assets/js/payments.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/vendor/lenis/lenis.min.js"></script>
+  <script src="../assets/js/core/smooth-scroll.js"></script>
+  <script src="../assets/js/public-shell.js"></script>
+  <script>PublicShell.mount({ active: 'course' });</script>
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/site-theme-toggle.js" defer></script>
+  <script src="../assets/js/course-detail.js"></script>
+</body>
+</html>

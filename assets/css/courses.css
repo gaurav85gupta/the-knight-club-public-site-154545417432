@@ -1,0 +1,1186 @@
+/* ==========================================================================
+   THE KNIGHT CLUB — Courses Page — Futuristic Redesign
+   
+   Cinematic dark UI with orbital grid lines, neon-traced cards,
+   kinetic scroll reveals, and laser-sharp typography.
+   
+   Scoping rule: every shared-class override prefixed .courses-page.
+   New classes use cc- namespace. Never touches shared .course-card /
+   .course-grid used by course.html's related grid.
+
+   PHASE C1 — information architecture: hero > skill areas > catalogue >
+   how to choose > practical learning > 1% Club > FAQ > CTA. The section
+   system (.cc-section / .cc-band / .cc-section-head) is defined in
+   section 11 at the end of this file and uses theme TOKENS only, so Light
+   and Dark both work without extra overrides.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. PAGE-LEVEL ATMOSPHERE
+   -------------------------------------------------------------------------- */
+
+.courses-page {
+  background: var(--color-bg);
+  overflow-x: clip;
+}
+
+/* Full-page subtle noise layer */
+.courses-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   1. HERO — Cinematic starfield + scanning beam
+   ========================================================================== */
+
+/* .cc-hero now composes with the shared .pub-hero (see public.css) for its
+   position/isolation/margin-top/overflow skeleton — this file only supplies
+   the courses-page-specific padding (shorter bottom padding than the
+   .pub-hero default, to leave room for the stats strip below). */
+.cc-hero {
+  padding-bottom: var(--space-10);
+}
+
+/* Starfield */
+.cc-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Deep space radial — dialed back so the perspective grid below reads as
+   this page's own signature instead of competing with it */
+.cc-hero-bg::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  width: 1200px;
+  height: 700px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(139, 69, 255, 0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 30% 60%, rgba(80, 40, 180, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 25% at 70% 70%, rgba(192, 120, 255, 0.05) 0%, transparent 55%);
+}
+
+/* Perspective grid — the signature element for this page; made larger and
+   more visible so Courses has a distinct identity from the Home hero */
+.cc-hero-bg::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0;
+  height: 420px;
+  background-image:
+    linear-gradient(rgba(139, 69, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 69, 255, 0.22) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 35%, rgba(0,0,0,0.9) 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 35%, rgba(0,0,0,0.9) 70%, transparent 100%);
+  transform: perspective(500px) rotateX(38deg);
+  transform-origin: bottom center;
+}
+
+
+
+/* Hero headline — large cinematic type, solid color so it stays crisp
+   against the perspective grid instead of competing with another gradient */
+.cc-hero h1 {
+  margin: 0 auto var(--space-5);
+  max-width: 18ch;
+  font-size: clamp(2.6rem, 6.4vw, 5.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+  color: #f3effa;
+  text-shadow: 0 0 60px rgba(139, 69, 255, 0.35);
+}
+
+.cc-hero-lead {
+  margin: 0 auto;
+  max-width: 52ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: 1.7;
+}
+
+/* Hero stats row */
+.cc-hero-stats {
+  list-style: none;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3) var(--space-8);
+}
+.cc-hero-stats[hidden] { display: none; }
+
+/* Skeleton shown in the stats row's place before JS populates it, so the
+   hero doesn't visibly shift/pop once the real numbers arrive */
+.cc-hero-stats-skeleton {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  margin: var(--space-8) 0 0;
+}
+.cc-hero-stats-skeleton span {
+  width: 92px;
+  height: 1.1rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, rgba(139,69,255,0.12) 25%, rgba(139,69,255,0.22) 37%, rgba(139,69,255,0.12) 63%);
+  background-size: 200% 100%;
+  animation: cc-stat-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes cc-stat-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-hero-stats-skeleton span { animation: none; }
+}
+
+.cc-stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+.cc-stat strong {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.cc-stat-plain { color: var(--color-text-muted); }
+.cc-stat-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--color-border-strong);
+}
+
+/* Hero action buttons */
+.cc-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+  margin: var(--space-8) 0 0;
+}
+
+/* ==========================================================================
+   2. SEARCH — capsule with focus ring (lives inside .cc-controls, section 11)
+   ========================================================================== */
+
+.cc-search {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: none;
+  margin: 0;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-6);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(139, 69, 255, 0.4);
+  background: linear-gradient(165deg, rgba(36, 24, 70, 0.9) 0%, rgba(18, 12, 36, 0.92) 100%);
+  backdrop-filter: saturate(200%) blur(24px);
+  -webkit-backdrop-filter: saturate(200%) blur(24px);
+  box-shadow:
+    0 0 0 1px rgba(139, 69, 255, 0.14) inset,
+    0 18px 48px -22px rgba(0, 0, 0, 0.8),
+    0 0 40px -16px rgba(139, 69, 255, 0.45);
+  transition:
+    border-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+}
+
+.cc-search:hover { border-color: rgba(139, 69, 255, 0.5); }
+
+.cc-search:focus-within {
+  border-color: rgba(167, 139, 250, 0.75);
+  box-shadow:
+    0 0 0 1px rgba(139, 69, 255, 0.2) inset,
+    0 18px 48px -22px rgba(0, 0, 0, 0.8),
+    0 0 0 4px rgba(139, 69, 255, 0.22),
+    0 0 60px -10px rgba(139, 69, 255, 0.55);
+}
+
+.cc-search-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  color: var(--color-lavender);
+}
+
+.cc-search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: var(--space-3) 0;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  text-overflow: ellipsis;
+}
+.cc-search-input::placeholder { color: rgba(184, 174, 212, 0.55); }
+.cc-search-input:focus { outline: none; }
+
+.cc-search-clear {
+  flex: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 150ms var(--ease-out);
+}
+.cc-search-clear:hover { color: var(--color-text); background: rgba(139, 69, 255, 0.2); }
+.cc-search-clear:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 2px; }
+.cc-search.has-query .cc-search-clear { display: inline-flex; }
+
+.cc-search-submit {
+  flex: none;
+  border-radius: var(--radius-full);
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #8b45ff, #6b21d4);
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  box-shadow: 0 4px 24px -4px rgba(139, 69, 255, 0.65), 0 0 0 1px rgba(196, 181, 253, 0.12) inset;
+  transition: box-shadow 150ms var(--ease-out), transform 150ms var(--ease-out);
+}
+.cc-search-submit:hover {
+  box-shadow: 0 6px 34px -4px rgba(139, 69, 255, 0.85), 0 0 0 1px rgba(196, 181, 253, 0.2) inset;
+  transform: translateY(-1px);
+}
+.cc-search-submit:active { transform: translateY(0); }
+
+/* ==========================================================================
+   3. SHARED HEADING + COPY STYLES (section heads, practical + choose copy)
+   ========================================================================== */
+
+.cc-h2 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin: 0 0 var(--space-4);
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #d4c0ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cc-practical h3, .cc-choose h3 {
+  margin: 0 0 var(--space-2);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+}
+.cc-practical p, .cc-choose p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+.cc-practical a, .cc-choose a {
+  color: var(--color-lavender);
+  text-decoration: underline;
+  text-decoration-color: rgba(212, 192, 255, 0.3);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms;
+}
+.cc-practical a:hover, .cc-choose a:hover {
+  text-decoration-color: rgba(212, 192, 255, 0.8);
+}
+
+/* ==========================================================================
+   4. CATEGORY CHIPS — horizontal pill rail
+   ========================================================================== */
+
+.cc-cat-label {
+  margin: 0 0 var(--space-4);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(184, 174, 212, 0.6);
+}
+
+.cc-cat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+}
+.cc-cat-row[hidden] { display: none; }
+
+.cc-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(139, 69, 255, 0.2);
+  background: rgba(15, 10, 30, 0.6);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+.cc-cat-chip:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 3px; }
+.cc-cat-chip:hover {
+  color: var(--color-text);
+  border-color: rgba(139, 69, 255, 0.45);
+  background: rgba(139, 69, 255, 0.1);
+  transform: translateY(-1px);
+}
+.cc-cat-chip.is-active {
+  color: #fff;
+  border-color: rgba(139, 69, 255, 0.7);
+  background: linear-gradient(135deg, rgba(139, 69, 255, 0.4), rgba(107, 33, 212, 0.4));
+  box-shadow: 0 0 20px -8px rgba(139, 69, 255, 0.8), 0 4px 16px -8px rgba(0,0,0,0.5);
+}
+
+/* ==========================================================================
+   5. TOOLBAR — results count + sort
+   ========================================================================== */
+
+.cc-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin: var(--space-8) 0 var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid rgba(139, 69, 255, 0.15);
+  position: relative;
+}
+
+/* Thin laser accent on border */
+.cc-toolbar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(139, 69, 255, 0.8), transparent);
+}
+
+.cc-toolbar-summary {
+  margin: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.cc-toolbar-summary .cc-summary-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.cc-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.cc-sort-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.cc-sort-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(139, 69, 255, 0.25);
+  background:
+    rgba(15, 10, 30, 0.8)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b45ff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 0.9rem center;
+  padding: 0.55rem 2.4rem 0.55rem 1.15rem;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 150ms var(--ease-out);
+}
+.cc-sort-select:focus-visible {
+  outline: 2px solid rgba(139, 69, 255, 0.6);
+  outline-offset: 2px;
+}
+.cc-sort-select:hover {
+  border-color: rgba(139, 69, 255, 0.5);
+}
+
+/* ==========================================================================
+   6. COURSE CARD GRID — Holographic cards with reveal animation
+   ========================================================================== */
+
+.cc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+/* Staggered entrance animation — keyframes shared via tokens.css so the
+   courses listing (.cc-card) and homepage featured courses (.hc-card)
+   animate identically. */
+.cc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(
+    165deg,
+    rgba(28, 18, 58, 0.92) 0%,
+    rgba(15, 10, 30, 0.96) 100%
+  );
+  border: 1px solid rgba(139, 69, 255, 0.18);
+  overflow: hidden;
+  color: var(--color-text);
+  /* Stagger via nth-child */
+  transition:
+    transform 280ms var(--ease-out),
+    border-color 280ms var(--ease-out),
+    box-shadow 280ms var(--ease-out);
+}
+
+/* Corner-accent: top-right neon corner */
+.cc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60px; height: 60px;
+  background:
+    linear-gradient(225deg, rgba(139, 69, 255, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 280ms var(--ease-out);
+}
+
+/* Hover shine sweep */
+.cc-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.025) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 280ms var(--ease-out);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 20px;
+}
+
+.cc-card:hover, .cc-card:focus-visible {
+  color: var(--color-text);
+}
+.cc-card:focus-visible {
+  border-color: rgba(139, 69, 255, 0.7);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(139, 69, 255, 0.3);
+}
+
+@media (hover: hover) {
+  .cc-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(139, 69, 255, 0.45);
+    box-shadow:
+      0 0 0 1px rgba(139, 69, 255, 0.1) inset,
+      0 40px 80px -24px rgba(0, 0, 0, 0.9),
+      0 0 60px -20px rgba(139, 69, 255, 0.4);
+  }
+  .cc-card:hover::before { opacity: 2; }
+  .cc-card:hover::after { opacity: 1; }
+  .cc-card:hover .cc-thumb img,
+  .cc-card:hover .cc-thumb .cc-thumb-art {
+    transform: scale(1.07);
+  }
+  /* Thumbnail gets a faint inner glow ring on hover, echoing the card's own
+     border glow, so the image and chrome read as one lit-up object. */
+  .cc-card:hover .cc-thumb::before {
+    opacity: 1;
+  }
+  .cc-card:hover .cc-price-now {
+    filter: drop-shadow(0 0 14px rgba(139, 69, 255, 0.45));
+  }
+  .cc-card:hover .cc-title-link {
+    color: var(--color-lavender);
+  }
+  .cc-card:hover .cc-go {
+    background: linear-gradient(135deg, #8b45ff, #6b21d4);
+    color: #fff;
+    transform: translate(2px, -2px);
+    box-shadow: 0 0 16px rgba(139, 69, 255, 0.6);
+  }
+  .cc-card:hover .cc-cta {
+    background: rgba(139, 69, 255, 0.22);
+    border-color: rgba(139, 69, 255, 0.55);
+    box-shadow: 0 0 20px -6px rgba(139, 69, 255, 0.5);
+  }
+  .cc-card:hover .cc-cta svg { transform: translate(2px, -2px); }
+}
+
+/* Inner glow ring on the thumbnail itself — off by default, faded in on
+   card hover above. Kept separate from .cc-thumb::after (the vignette). */
+.cc-thumb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 280ms var(--ease-out);
+  box-shadow: 0 0 0 1px rgba(139, 69, 255, 0.35) inset;
+}
+
+/* --- Thumbnail --- */
+.cc-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: rgba(20, 12, 44, 1);
+}
+.cc-thumb img,
+.cc-thumb .cc-thumb-art {
+  width: 100%;
+  height: 100%;
+  transition: transform 520ms var(--ease-out);
+}
+.cc-thumb img { object-fit: cover; }
+
+/* When a real <img> is present, the pre-rendered fallback art sits behind it,
+   ready to appear the instant onerror removes a broken/placeholder image —
+   no flash of missing content, no layout shift, no second network request. */
+.cc-thumb img + .cc-thumb-art { display: none; }
+.cc-thumb.cc-thumb-broken .cc-thumb-art {
+  display: block;
+  animation: thumb-fallback-in 420ms var(--ease-out) both;
+}
+@keyframes thumb-fallback-in {
+  from { opacity: 0; transform: scale(1.03); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Vignette overlay */
+.cc-thumb::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(15, 10, 30, 0.55)
+  );
+  pointer-events: none;
+}
+
+/* Fallback art — generative branded visuals */
+.cc-thumb-art {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at var(--art-x, 30%) var(--art-y, 25%), hsl(var(--art-hue, 262) 85% 55% / 0.45), transparent 55%),
+    radial-gradient(circle at 85% 90%, hsl(calc(var(--art-hue, 262) + 30) 75% 50% / 0.18), transparent 50%),
+    linear-gradient(155deg, #120c26 0%, #0d0820 100%);
+}
+
+.cc-thumb-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(139, 69, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 69, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 75%);
+  mask-image: radial-gradient(circle at 50% 50%, #000, transparent 75%);
+}
+
+.cc-art-shape {
+  position: absolute; z-index: 0; pointer-events: none;
+  transition: transform 520ms var(--ease-out);
+}
+.cc-art-shape-a { border: 1px solid rgba(139, 69, 255, 0.28); }
+.cc-art-shape-b {
+  background: linear-gradient(135deg, rgba(139, 69, 255, 0.18), rgba(107, 33, 212, 0.04));
+  border: 1px solid rgba(139, 69, 255, 0.14);
+}
+@media (hover: hover) {
+  .cc-card:hover .cc-art-shape-a { transform: scale(1.08) rotate(4deg); }
+  .cc-card:hover .cc-art-shape-b { transform: scale(1.1); }
+}
+
+.cc-art-v0 .cc-art-shape-a { width: 62%; aspect-ratio: 1; border-radius: 50%; right: -14%; top: -30%; }
+.cc-art-v0 .cc-art-shape-b { width: 38%; aspect-ratio: 1; border-radius: 50%; left: -8%; bottom: -26%; }
+.cc-art-v1 .cc-art-shape-a { width: 54%; aspect-ratio: 1; border-radius: 22%; transform: rotate(18deg); right: -8%; bottom: -34%; }
+.cc-art-v1 .cc-art-shape-b { width: 30%; aspect-ratio: 1; border-radius: 50%; left: 8%; top: -16%; }
+.cc-art-v2 .cc-art-shape-a { width: 70%; height: 1px; border: 0; background: linear-gradient(90deg, transparent, rgba(139, 69, 255, 0.45), transparent); left: 8%; top: 34%; transform: rotate(-14deg); }
+.cc-art-v2 .cc-art-shape-b { width: 46%; aspect-ratio: 1; border-radius: 50%; right: -12%; bottom: -30%; }
+.cc-art-v3 .cc-art-shape-a { width: 46%; aspect-ratio: 1; transform: rotate(45deg); border-radius: 14%; left: -12%; top: -24%; }
+.cc-art-v3 .cc-art-shape-b { width: 58%; aspect-ratio: 1; border-radius: 50%; right: -18%; bottom: -36%; }
+
+.cc-art-initials {
+  position: absolute; z-index: 1; left: var(--space-5); top: 50%;
+  transform: translateY(-58%);
+  font-size: clamp(3rem, 6.4vw, 4.2rem);
+  font-weight: 800; letter-spacing: -0.06em; line-height: 1;
+  color: transparent;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.9) 0%, rgba(196, 160, 255, 0.55) 55%, rgba(139, 69, 255, 0.25) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 4px 20px rgba(139, 69, 255, 0.6));
+}
+
+/* --- Badges --- */
+.cc-badges {
+  position: absolute;
+  left: var(--space-3); bottom: var(--space-3);
+  z-index: 2;
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.cc-badge {
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.03em;
+  color: var(--color-text);
+  background: var(--color-scrim-card);
+  border: 1px solid rgba(139, 69, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.cc-badge-cat {
+  color: var(--color-lavender);
+  border-color: rgba(139, 69, 255, 0.4);
+  background: rgba(139, 69, 255, 0.12);
+}
+
+/* --- Card body --- */
+.cc-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+.cc-title {
+  margin: 0;
+  font-size: 1.05rem; line-height: 1.3; font-weight: 700; letter-spacing: -0.02em;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cc-title-link {
+  color: inherit;
+  transition: color 150ms;
+}
+.cc-title-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.cc-title-link:hover, .cc-title-link:focus-visible {
+  color: var(--color-lavender);
+}
+.cc-desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cc-instructor {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: rgba(184, 174, 212, 0.6);
+}
+
+/* --- Card footer --- */
+.cc-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(139, 69, 255, 0.1);
+}
+.cc-price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.cc-price-now {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff, #d4c0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cc-price-was {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+.cc-off {
+  margin-left: var(--space-2);
+  font-size: .68rem;
+  font-weight: 700;
+  color: #a0e878;
+  background: rgba(100, 200, 80, 0.1);
+  border: 1px solid rgba(100, 200, 80, 0.2);
+  padding: 0.12rem 0.38rem;
+  border-radius: var(--radius-full);
+}
+
+/* Arrow go-button */
+.cc-go {
+  position: relative; z-index: 2;
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  color: rgba(139, 69, 255, 0.8);
+  background: rgba(139, 69, 255, 0.1);
+  border: 1px solid rgba(139, 69, 255, 0.25);
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    transform 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+}
+
+/* CTA link button */
+.cc-cta-slot { position: relative; z-index: 2; }
+.cc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: .48rem .95rem;
+  border: 1px solid rgba(139, 69, 255, 0.35);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  background: rgba(139, 69, 255, 0.08);
+  transition:
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+.cc-cta svg { transition: transform 160ms var(--ease-out); }
+.cc-cta:hover, .cc-cta:focus-visible {
+  background: linear-gradient(135deg, var(--bx-from) 0%, var(--bx-via) 50%, var(--bx-to) 100%);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 0 16px -4px rgba(var(--bx-glow), 0.4);
+}
+.cc-cta:hover svg { transform: translate(2px, -2px); }
+.cc-cta-owned {
+  background: linear-gradient(135deg, var(--bx-from) 0%, var(--bx-via) 50%, var(--bx-to) 100%);
+  border-color: transparent;
+  color: #fff;
+}
+.cc-cta-owned:hover, .cc-cta-owned:focus-visible {
+  background: linear-gradient(135deg, var(--bx-from-h) 0%, var(--bx-via-h) 50%, var(--bx-to-h) 100%);
+}
+
+/* --- Skeleton loading --- */
+.cc-skeleton { pointer-events: none; animation: none !important; }
+.cc-skeleton .cc-thumb { border-radius: 0; }
+.cc-sk-line { height: 13px; border-radius: 6px; }
+.cc-sk-short { width: 55%; }
+.cc-sk-meta { width: 40%; height: 10px; }
+.cc-sk-price { width: 30%; height: 18px; margin-top: var(--space-4); }
+
+/* Skeleton shimmer */
+@keyframes sk-shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+.courses-page .skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139, 69, 255, 0.06) 25%,
+    rgba(139, 69, 255, 0.13) 50%,
+    rgba(139, 69, 255, 0.06) 75%
+  );
+  background-size: 800px 100%;
+  animation: sk-shimmer 1.6s ease-in-out infinite;
+}
+
+/* --- Empty / Error state --- */
+.cc-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+  border: 1px dashed rgba(139, 69, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(15, 10, 30, 0.6);
+}
+.cc-state h3 { margin: 0 0 var(--space-2); }
+.cc-state p { margin: 0 auto var(--space-6); max-width: 44ch; color: var(--color-text-muted); }
+.cc-state p:last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   7. PAGINATION
+   ========================================================================== */
+
+.cc-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  margin-top: var(--space-12);
+}
+.cc-pagination[hidden] { display: none; }
+
+.cc-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(139, 69, 255, 0.25);
+  background: rgba(15, 10, 30, 0.7);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 150ms var(--ease-out),
+    background-color 150ms var(--ease-out),
+    box-shadow 150ms var(--ease-out),
+    opacity 150ms;
+}
+.cc-page-btn:hover:not(:disabled) {
+  border-color: rgba(139, 69, 255, 0.55);
+  background: rgba(139, 69, 255, 0.12);
+  box-shadow: 0 0 20px -8px rgba(139, 69, 255, 0.5);
+}
+.cc-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.cc-page-status {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid rgba(139, 69, 255, 0.15);
+  border-radius: var(--radius-full);
+  background: rgba(139, 69, 255, 0.05);
+}
+
+/* ==========================================================================
+   8. PAGE CHAPTERS — section system (Phase C1)
+   One vertical rhythm for every section; bands give the guidance/FAQ
+   chapters a quieter raised surface so the catalogue stays the focus.
+   Colors come from theme tokens only (Light/Dark switch automatically).
+   ========================================================================== */
+
+.cc-section {
+  position: relative;
+  padding-block: var(--space-12);
+}
+.cc-skills, .cc-catalog { scroll-margin-top: var(--space-10); }
+
+/* Raised band — the secondary chapters (how to choose, FAQ) */
+.cc-band {
+  padding-block: var(--space-16);
+  background: var(--color-surface-alt);
+  border-block: 1px solid var(--color-border-soft);
+}
+
+/* Chapter heading block: eyebrow · h2 · short lead */
+.cc-section-head {
+  max-width: 62ch;
+  margin: 0 0 var(--space-8);
+}
+.cc-section-head .pub-eyebrow { margin-bottom: var(--space-4); }
+.cc-section-head .cc-h2 { margin-bottom: var(--space-3); }
+.cc-section-lead {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: 1.7;
+}
+
+/* Hero-only: the page's centered eyebrow (other eyebrows stay left-aligned) */
+.cc-hero .pub-eyebrow { justify-content: center; }
+
+/* The catalogue is the primary product: biggest heading, most room. */
+.cc-catalog .cc-h2 { font-size: clamp(2rem, 3.8vw, 3rem); }
+.cc-catalog { padding-top: var(--space-16); }
+
+/* -------- Skill areas (generated from real categories) -------- */
+
+.cc-skill-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-4);
+}
+.cc-skill-grid[hidden] { display: none; }
+
+.cc-skill {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-glass);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+.cc-skill-mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+  background: hsl(var(--skill-hue, 262) 80% 60% / 0.2);
+  border: 1px solid hsl(var(--skill-hue, 262) 80% 65% / 0.4);
+}
+.cc-skill-name { flex: 1; min-width: 0; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.cc-skill-go {
+  flex: none;
+  display: grid;
+  color: var(--color-accent-500);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.cc-skill:hover, .cc-skill.is-active {
+  border-color: var(--color-border-strong);
+  background: var(--color-accent-50);
+}
+.cc-skill.is-active { box-shadow: 0 0 0 1px var(--color-border-strong) inset; }
+@media (hover: hover) {
+  .cc-skill:hover { transform: translateY(-2px); }
+  .cc-skill:hover .cc-skill-go { transform: translate(2px, -2px); }
+}
+.cc-skill:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: 3px; }
+
+/* -------- Catalogue controls -------- */
+
+.cc-controls {
+  display: grid;
+  gap: var(--space-5);
+}
+.cc-cat-block[hidden] { display: none; }
+.cc-cat-label {
+  margin: 0 0 var(--space-3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* -------- How to choose: horizontal steps (desktop) -------- */
+
+.cc-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+.cc-steps li {
+  position: relative;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-strong);
+}
+.cc-steps li::before {
+  content: '';
+  position: absolute;
+  top: -5px; left: 0;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--color-accent-500);
+  box-shadow: 0 0 0 3px var(--color-border-soft);
+}
+.cc-step-num {
+  display: block;
+  margin-bottom: var(--space-3);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-accent-500);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------- Practical learning -------- */
+
+.cc-practical-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8) var(--space-12);
+}
+.cc-practical-grid article {
+  position: relative;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
+}
+.cc-practical-grid article::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: 0;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-500);
+}
+
+/* -------- 1% Club cross-sell (compact, secondary) -------- */
+
+.cc-club {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-10);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-soft);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 14%, var(--color-surface)) 0%, var(--color-surface) 70%);
+}
+.cc-club-mark {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: var(--color-accent-600);
+}
+.cc-club .pub-eyebrow { margin-bottom: var(--space-3); }
+.cc-club h2 {
+  margin: 0 0 var(--space-2);
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.cc-club p:not(.pub-eyebrow) { margin: 0; max-width: 56ch; color: var(--color-text-muted); line-height: 1.7; }
+
+/* ==========================================================================
+   9. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .cc-grid { gap: var(--space-4); }
+  .cc-steps { gap: var(--space-4); }
+}
+
+/* Steps become a vertical timeline once five columns get cramped */
+@media (max-width: 1024px) {
+  .cc-steps { grid-template-columns: 1fr; gap: 0; max-width: 560px; }
+  .cc-steps li {
+    margin-left: var(--space-1);
+    padding: 0 0 var(--space-8) var(--space-8);
+    border-top: 0;
+    border-left: 1px solid var(--color-border-strong);
+  }
+  .cc-steps li:last-child { padding-bottom: 0; border-left-color: transparent; }
+  .cc-steps li::before { top: 4px; left: -5px; }
+  .cc-step-num { margin-bottom: var(--space-2); }
+}
+
+@media (max-width: 1024px) {
+  .cc-hero { padding-top: calc(var(--space-12) + var(--pub-header-height)); }
+  .cc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cc-club { grid-template-columns: auto minmax(0, 1fr); }
+  .cc-club-cta { grid-column: 1 / -1; justify-self: start; }
+}
+
+@media (max-width: 768px) {
+  .cc-practical-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+}
+
+@media (max-width: 480px) {
+  .cc-section { padding-block: var(--space-10); }
+  .cc-catalog { padding-top: var(--space-12); }
+  .cc-band { padding-block: var(--space-12); }
+  .cc-section-head { margin-bottom: var(--space-6); }
+  .cc-section-lead { font-size: var(--font-size-base); }
+  .cc-hero { padding-top: calc(var(--pub-header-height) + var(--space-8)); padding-bottom: var(--space-6); }
+  .cc-hero h1 { font-size: clamp(2.3rem, 10vw, 3.2rem); }
+  .cc-hero-actions .btn { width: 100%; }
+  .cc-skill-grid { grid-template-columns: 1fr; gap: var(--space-3); }
+  .cc-search { padding-left: var(--space-4); min-width: 0; }
+  .cc-search-input { font-size: 0.95rem; }
+  .cc-search-submit { padding: 0.65rem 1.15rem; }
+  .cc-toolbar { flex-direction: column; align-items: flex-start; gap: var(--space-3); margin-top: var(--space-6); }
+  .cc-sort { width: 100%; justify-content: space-between; }
+  .cc-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+  .cc-pagination { gap: var(--space-3); }
+  .cc-page-btn span { display: none; }
+  .cc-club { grid-template-columns: 1fr; padding: var(--space-6); gap: var(--space-5); }
+  .cc-club-cta { width: 100%; }
+}
+
+/* Kept as a distinct exception: pagination label re-appears (span display
+   flips back from none to inline) at very small widths once numbers are
+   dropped from the pager, a genuinely different state from the 480px rule
+   above rather than a redundant duplicate. */
+@media (max-width: 400px) {
+  .cc-page-btn span { display: inline; }
+  .cc-page-btn { padding: 0.55rem 0.9rem; }
+}
+
+/* ==========================================================================
+   10. REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .courses-page *,
+  .courses-page *::before,
+  .courses-page *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

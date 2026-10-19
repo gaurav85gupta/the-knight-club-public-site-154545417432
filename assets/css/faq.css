@@ -1,0 +1,372 @@
+/* ==========================================================================
+   THE KNIGHT CLUB — Global FAQ component  (the ONLY place FAQ is styled)
+   --------------------------------------------------------------------------
+   Used by: index, courses, one-percent-club, testimonials, contact.
+   Behaviour: assets/js/faq.js  (initFAQs). Markup contract at the bottom.
+
+   Everything is built from the existing tokens (tokens.css / site-theme.css),
+   so Dark and Light switch automatically. Light/Dark-specific surface values
+   are declared once, in the two token blocks below — never per page.
+
+   Load order: after the page stylesheet, theme-futuristic.css and
+   site-theme.css (so it is the last word on FAQ presentation).
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. Component tokens (DARK is the default theme)
+   -------------------------------------------------------------------------- */
+.faq-section {
+  --faq-radius: var(--radius-lg);
+  --faq-pad-x: var(--space-5);
+  --faq-pad-y: var(--space-4);
+  --faq-gap: var(--space-3);
+  --faq-num-w: 1.8rem;                 /* width of the "01" column — answers align to it */
+
+  /* surfaces: a faint lavender wash over whatever the section sits on */
+  --faq-card: rgba(212, 192, 255, 0.045);                                         /* fallback */
+  --faq-card: color-mix(in srgb, var(--color-lavender) 5%, transparent);
+  --faq-card-hover: rgba(212, 192, 255, 0.075);
+  --faq-card-hover: color-mix(in srgb, var(--color-lavender) 8%, transparent);
+  --faq-card-open: rgba(212, 192, 255, 0.085);
+  --faq-card-open: color-mix(in srgb, var(--color-lavender) 9%, transparent);
+
+  --faq-shadow: none;
+  --faq-shadow-open: 0 18px 40px -22px rgba(139, 69, 255, 0.55);
+  --faq-number: var(--color-accent-300);
+  --faq-number-open: var(--color-accent-700);
+  --faq-icon-ring: var(--color-border-soft);
+  --faq-icon-fg: var(--color-lavender);
+  --faq-icon-open-bg: var(--color-accent-500);
+  --faq-icon-open-fg: #ffffff;
+  --faq-focus: var(--color-accent-600);
+}
+
+/* LIGHT — soft lavender page, elevated (not pure-white) cards, indigo shadow */
+html[data-site-theme="light"] .faq-section {
+  --faq-card: #f8f7ff;                                                             /* fallback */
+  --faq-card: color-mix(in srgb, var(--color-surface) 72%, var(--color-accent-50));
+  --faq-card-hover: #ffffff;
+  --faq-card-open: #ffffff;
+  --faq-shadow: 0 1px 2px rgba(28, 21, 48, 0.06), 0 10px 22px -16px rgba(28, 21, 48, 0.22);
+  --faq-shadow-open: 0 1px 2px rgba(28, 21, 48, 0.06), 0 20px 40px -22px rgba(28, 21, 48, 0.34);
+  --faq-number: var(--color-accent-500);
+  --faq-number-open: var(--color-accent-600);
+  --faq-icon-ring: var(--color-border-strong);
+  --faq-icon-fg: var(--color-accent-500);
+  --faq-icon-open-bg: var(--color-accent-500);
+  --faq-icon-open-fg: #ffffff;
+  --faq-focus: var(--color-accent-600);
+}
+
+
+/* --------------------------------------------------------------------------
+   2. Section + header
+   -------------------------------------------------------------------------- */
+/* :where() = zero specificity. A page's own section class (section-block,
+   pub-section, oc-sec, cc-section …) keeps controlling vertical rhythm; a
+   bare .faq-section still gets sensible padding. */
+:where(.faq-section) {
+  padding-block: var(--space-12);
+  position: relative;
+}
+
+.faq-container {
+  max-width: 940px;                    /* comfortable reading width (list ≈ 880px) */
+}
+
+.faq-header {
+  max-width: 640px;
+  margin: 0 auto var(--space-8);
+  text-align: center;
+}
+.faq-header::after {                   /* tiny accent rule — calm, not decorative art */
+  content: "";
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin: var(--space-6) auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-500), transparent);
+  opacity: 0.8;
+}
+
+.faq-section .faq-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-lavender);
+}
+.faq-section .faq-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-600);
+  box-shadow: 0 0 10px 1px rgba(139, 92, 246, 0.6);
+}
+html[data-site-theme="light"] .faq-section .faq-eyebrow::before { box-shadow: none; }
+
+.faq-section .faq-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  color: var(--color-text);
+}
+html[data-site-theme="light"] .faq-section .faq-title { color: var(--color-text); }
+
+.faq-section .faq-lede {
+  margin: var(--space-4) auto 0;
+  max-width: 52ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. List + item (closed state)
+   -------------------------------------------------------------------------- */
+.faq-list {
+  counter-reset: faq;                  /* numbering is automatic — never typed */
+  display: grid;
+  gap: var(--space-2);
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+.faq-section .faq-item {
+  counter-increment: faq;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--faq-radius);
+  background: var(--faq-card);
+  box-shadow: var(--faq-shadow);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+.faq-section .faq-item:hover {
+  border-color: var(--color-border-strong);
+  background: var(--faq-card-hover);
+}
+
+.faq-heading {                         /* the <h3> wrapper around the button */
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  color: inherit;
+}
+
+.faq-question {
+  display: grid;
+  grid-template-columns: var(--faq-num-w) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--faq-gap);
+  width: 100%;
+  margin: 0;
+  padding: var(--faq-pad-y) var(--faq-pad-x);
+  border: 0;
+  border-radius: var(--faq-radius);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.faq-question:focus { outline: none; }
+.faq-question:focus-visible {          /* obvious keyboard focus — inset so it never clips */
+  outline: 2px solid var(--faq-focus);
+  outline-offset: -4px;
+}
+
+.faq-number {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: var(--faq-number);
+  opacity: 0.85;
+  transition: color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+.faq-number::before { content: counter(faq, decimal-leading-zero); }
+
+.faq-text {
+  font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);   /* ≈ 15 → 17px */
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+
+/* + that becomes × — two bars, one rotation, no icon library */
+.faq-icon {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--faq-icon-ring);
+  border-radius: 50%;
+  color: var(--faq-icon-fg);
+  transition: transform var(--dur-base) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  margin: -1px 0 0 -5px;
+  border-radius: 2px;
+  background: currentColor;
+}
+.faq-icon::after { transform: rotate(90deg); }
+
+.faq-section .faq-item:hover .faq-icon {
+  border-color: var(--color-border-strong);
+  color: var(--color-accent-600);
+}
+
+
+/* --------------------------------------------------------------------------
+   4. Open state
+   -------------------------------------------------------------------------- */
+.faq-section .faq-item.is-open {
+  border-color: var(--color-border-strong);
+  background: var(--faq-card-open);
+  box-shadow: var(--faq-shadow-open);
+}
+.faq-section .faq-item.is-open .faq-number { color: var(--faq-number-open); opacity: 1; }
+.faq-section .faq-item.is-open .faq-icon {      /* outranks the :hover icon rule above */
+  transform: rotate(45deg);            /* + → × */
+  background: var(--faq-icon-open-bg);
+  border-color: var(--faq-icon-open-bg);
+  color: var(--faq-icon-open-fg);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. Answer — grid-rows 0fr → 1fr gives a real height animation with no
+      measuring, no max-height guess and no animation library. visibility
+      removes closed answers (and their links) from tab order / a11y tree.
+   -------------------------------------------------------------------------- */
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows var(--dur-base) var(--ease-out),
+              visibility 0s linear var(--dur-base);
+}
+.faq-item.is-open > .faq-answer {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows var(--dur-base) var(--ease-out),
+              visibility 0s linear 0s;
+}
+
+.faq-answer-inner {
+  min-height: 0;
+  overflow: hidden;
+  /* indent so answer text lines up under the question text, not the number */
+  padding-inline: calc(var(--faq-pad-x) + var(--faq-num-w) + var(--faq-gap)) var(--faq-pad-x);
+}
+.faq-answer-inner > * { max-width: 62ch; }
+.faq-answer-inner p {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+.faq-answer-inner > :last-child { margin-bottom: var(--faq-pad-y); }
+.faq-answer-inner a {
+  color: var(--color-lavender);
+  border-bottom: 1px solid var(--color-border-strong);
+}
+.faq-answer-inner a:hover { color: var(--color-accent-600); }
+.faq-answer-inner em { font-style: normal; font-weight: 500; color: var(--color-text); }
+
+/* Optional footnote under the list (e.g. testimonials) */
+.faq-note {
+  max-width: 880px;
+  margin: var(--space-8) auto 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.faq-note a { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
+
+
+/* --------------------------------------------------------------------------
+   6. Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .faq-section {
+    --faq-pad-x: var(--space-3);
+    --faq-pad-y: var(--space-3);
+    --faq-gap: var(--space-2);
+    --faq-num-w: 1.4rem;
+  }
+  .faq-header { margin-bottom: var(--space-6); }
+  .faq-number { font-size: 0.6875rem; letter-spacing: 0.08em; }
+  .faq-icon { width: 24px; height: 24px; }
+  .faq-icon::before, .faq-icon::after { width: 9px; margin: -1px 0 0 -4.5px; }
+  .faq-section .faq-lede { font-size: var(--font-size-base); }
+}
+
+
+/* --------------------------------------------------------------------------
+   7. Reduced motion — accordion still works, it just snaps
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .faq-section .faq-item,
+  .faq-number,
+  .faq-icon,
+  .faq-answer,
+  .faq-item.is-open > .faq-answer { transition: none; }
+}
+
+
+/* ==========================================================================
+   MARKUP CONTRACT (copy this block to add a FAQ to any page)
+   --------------------------------------------------------------------------
+   <section class="faq-section" aria-labelledby="faq-title">
+     <div class="container faq-container">
+       <header class="faq-header">
+         <p class="faq-eyebrow">Page-specific label</p>
+         <h2 id="faq-title" class="faq-title">Page-specific heading</h2>
+         <p class="faq-lede">Page-specific supporting line.</p>
+       </header>
+       <div class="faq-list" data-faq>              <!-- add data-faq-single for one-open-at-a-time -->
+         <div class="faq-item">
+           <h3 class="faq-heading">
+             <button type="button" class="faq-question" aria-expanded="false">
+               <span class="faq-number" aria-hidden="true"></span>
+               <span class="faq-text">Question?</span>
+               <span class="faq-icon" aria-hidden="true"></span>
+             </button>
+           </h3>
+           <div class="faq-answer" role="region">
+             <div class="faq-answer-inner"><p>Answer.</p></div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+   ids / aria-controls / aria-labelledby are wired automatically by faq.js if
+   omitted. Numbers come from a CSS counter — add or remove items freely.
+   ========================================================================== */

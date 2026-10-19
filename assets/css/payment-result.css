@@ -1,0 +1,189 @@
+/**
+ * payment-result.css — Payment Result Page styles (Phase 31)
+ *
+ * Covers all four states: loading, success, pending, failure/error.
+ * Uses the same design tokens as the rest of the student-facing UI.
+ */
+
+/* ---- Page layout ---- */
+.payment-result-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-16) var(--space-4);
+  text-align: center;
+}
+
+.payment-result-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: payment-spin 0.8s linear infinite;
+}
+
+@keyframes payment-spin {
+  to { transform: rotate(360deg); }
+}
+
+.payment-result-loading-text {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---- Result card ---- */
+.payment-result-card {
+  max-width: 520px;
+  margin: var(--space-10) auto;
+  padding: var(--space-10) var(--space-8);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+/* ---- Icon ---- */
+.payment-result-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: var(--space-6);
+}
+
+.payment-result-icon--success {
+  background: color-mix(in srgb, var(--color-success, #22c55e) 12%, transparent);
+  color: var(--color-success, #22c55e);
+}
+
+.payment-result-icon--pending {
+  background: color-mix(in srgb, var(--color-warning, #f59e0b) 12%, transparent);
+  color: var(--color-warning, #f59e0b);
+}
+
+.payment-result-icon--failure {
+  background: color-mix(in srgb, var(--color-error, #ef4444) 12%, transparent);
+  color: var(--color-error, #ef4444);
+}
+
+/* ---- Titles ---- */
+.payment-result-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--space-3);
+  line-height: 1.25;
+}
+
+.payment-result-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-8);
+  line-height: 1.6;
+}
+
+/* ---- Details table ---- */
+.payment-result-details {
+  background: var(--color-surface-raised, var(--color-bg));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-6);
+  text-align: left;
+}
+
+.payment-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2-5) 0;
+  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-3);
+}
+
+.payment-result-row:last-child {
+  border-bottom: none;
+}
+
+.payment-result-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.payment-result-value {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: 600;
+  text-align: right;
+}
+
+.payment-result-status-paid {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  color: var(--color-success, #22c55e);
+}
+
+.payment-result-status-pending {
+  color: var(--color-warning, #f59e0b);
+}
+
+/* ---- Notice box ---- */
+.payment-result-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2-5);
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-6);
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.payment-result-notice svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-primary);
+}
+
+/* ---- Actions ---- */
+.payment-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* Kept at 400px (not merged with the 480px rule below): the two actions
+   stack-to-row at this narrower point than the card's own padding eases up,
+   so merging them would either stack the actions through 400-480px or widen
+   the card's full padding into viewports too narrow for it. */
+@media (min-width: 400px) {
+  .payment-result-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+/* ---- Responsive card padding ---- */
+@media (max-width: 480px) {
+  .payment-result-card {
+    margin: var(--space-6) auto;
+    padding: var(--space-6) var(--space-5);
+  }
+  .payment-result-title {
+    font-size: var(--font-size-xl);
+  }
+}

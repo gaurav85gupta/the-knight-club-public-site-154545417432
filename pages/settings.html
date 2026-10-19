@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme: applied synchronously BEFORE the stylesheets so first paint is already
+       the saved Day/Night theme (no flash). Student pages only. -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>Account Settings — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/orders.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container is-narrow">
+
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Account</p>
+          <h1 class="page-title">Account Settings</h1>
+          <p class="page-sub">Manage your account and security.</p>
+        </div>
+      </header>
+
+      <div class="settings-stack">
+
+        <section aria-labelledby="grp-account">
+          <h2 class="settings-group-title" id="grp-account">Account</h2>
+          <div class="s-card setting-card">
+            <span class="setting-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+            <div class="setting-text">
+              <h3>Profile</h3>
+              <p>Manage your personal information</p>
+            </div>
+            <a class="btn btn-outline" href="profile.html">Open Profile <span class="btn-arrow" aria-hidden="true">&rarr;</span></a>
+          </div>
+        </section>
+
+        <section aria-labelledby="grp-security">
+          <h2 class="settings-group-title" id="grp-security">Security</h2>
+          <div class="s-card setting-card">
+            <span class="setting-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></span>
+            <div class="setting-text">
+              <h3>Password</h3>
+              <p>Change your account password</p>
+            </div>
+            <a class="btn btn-primary" href="change-password.html">Change Password <span class="btn-arrow" aria-hidden="true">&rarr;</span></a>
+          </div>
+        </section>
+
+        <section aria-labelledby="grp-status">
+          <h2 class="settings-group-title" id="grp-status">Account status</h2>
+          <div class="s-card setting-card">
+            <span class="setting-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+            <div class="setting-text">
+              <h3 id="status-value">&mdash;</h3>
+              <p id="status-role">Student Account</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/settings.js"></script>
+</body>
+</html>

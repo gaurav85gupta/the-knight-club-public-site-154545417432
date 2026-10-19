@@ -1,0 +1,201 @@
+/* ==========================================================================
+   THE NIGHT CLUB — Design Tokens
+   Single source of truth for ALL colors, spacing, radius, shadow, motion.
+
+   ARCHITECTURE RULE:
+   No CSS file outside this one may use a hardcoded color value for any
+   surface, scrim, text, or border. Use tokens. Decorative ambient gradients
+   (glow blobs, hero halos) that are theme-specific live in:
+     • dark effects  → theme-futuristic.css (guarded by html:not([data-site-theme="light"]))
+     • light effects → site.css section B body rule
+   ========================================================================== */
+
+:root {
+
+  /* ------------------------------------------------------------------ */
+  /* DARK PALETTE (default)                                               */
+  /* ------------------------------------------------------------------ */
+
+  /* Surfaces */
+  --color-bg:          #07050f;
+  --color-surface:     #0e0b1c;
+  --color-surface-alt: #13102a;
+  --color-surface-2:   #1c1836;
+
+  /* Accent scale */
+  --color-accent-50:   #1a1238;
+  --color-accent-100:  #261c50;
+  --color-accent-300:  #9d6eff;
+  --color-accent-500:  #7c3aed;
+  --color-accent-600:  #9d5fff;
+  --color-accent-700:  #c4a0ff;
+
+  /* Second accent */
+  --color-cyan:        #06b6d4;
+  --color-cyan-glow:   rgba(6, 182, 212, 0.35);
+
+  /* Text */
+  --color-text:           #f0eefb;
+  --color-text-muted:     #b3a9d4;
+  --color-text-on-accent: #ffffff;
+
+  /* Borders */
+  --color-border:        #1e1840;
+  --color-border-soft:   rgba(167, 139, 250, 0.14);
+  --color-border-strong: rgba(167, 139, 250, 0.38);
+
+  /* Glass */
+  --color-glass:   rgba(14, 11, 28, 0.72);
+  --color-glass-2: rgba(28, 22, 52, 0.80);
+
+  /* Lavender highlight */
+  --color-lavender: #c4b5fd;
+
+  /* ── Scrims & overlays ─────────────────────────────────────────
+     These were previously hardcoded rgba() in every page CSS.
+     Now one token = one change to flip both themes.              */
+  --color-scrim:        rgba(7,  5,  15, 0.82);   /* dark full overlay */
+  --color-scrim-soft:   rgba(20, 15, 36, 0.50);   /* card/section tint */
+  --color-scrim-card:   rgba(28, 20, 52, 0.90);   /* heavy card overlay */
+  --color-scrim-thumb:  rgba(10,  7, 20, 0.62);   /* thumbnail bottom fade */
+  --color-scrim-panel:  rgba(20, 15, 36, 0.60);   /* panel bg */
+
+  /* Shadows */
+  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md:    0 8px 24px rgba(124, 58, 237, 0.22);
+  --shadow-lg:    0 16px 48px rgba(124, 58, 237, 0.40);
+  --glow-accent:  0 0 80px rgba(124, 58, 237, 0.50);
+  --glow-soft:    0 0 0 1px var(--color-border-strong), 0 18px 60px -12px rgba(124, 58, 237, 0.60);
+  --shadow-float: 0 32px 80px -20px rgba(0, 0, 0, 0.80);
+
+  /* ------------------------------------------------------------------ */
+  /* SPACING (4 px base)                                                  */
+  /* ------------------------------------------------------------------ */
+  --space-1:  0.25rem;
+  --space-2:  0.50rem;
+  --space-3:  0.75rem;
+  --space-4:  1.00rem;
+  --space-5:  1.25rem;
+  --space-6:  1.50rem;
+  --space-8:  2.00rem;
+  --space-10: 2.50rem;
+  --space-12: 3.00rem;
+  --space-16: 4.00rem;
+  --space-24: 6.00rem;
+  --space-32: 8.00rem;
+
+  /* ------------------------------------------------------------------ */
+  /* LAYOUT                                                               */
+  /* ------------------------------------------------------------------ */
+  /* Height of the floating public-site header (.pub-header-wrap in
+     public.css). Every public-page hero pulls itself up by exactly this
+     amount (margin-top: calc(-1 * var(--pub-header-height))) so its ambient
+     background sits flush behind the floating pill with no seam. Previously
+     hardcoded as the literal 84px in six separate places across
+     public.css/home.css/courses.css/one-percent.css — change it here ONLY. */
+  --pub-header-height: 84px;
+
+  /* ------------------------------------------------------------------ */
+  /* RADIUS                                                               */
+  /* ------------------------------------------------------------------ */
+  --radius-sm:   6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-full: 999px;
+
+  /* ------------------------------------------------------------------ */
+  /* TYPOGRAPHY                                                           */
+  /* ------------------------------------------------------------------ */
+  --font-family-base: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-h1:   'Coolvetica', 'Helvetica Condensed', 'Arial Narrow', sans-serif;
+  --font-size-sm:   0.875rem;
+  --font-size-base: 1.000rem;
+  --font-size-lg:   1.125rem;
+  --font-size-xl:   1.500rem;
+  --font-size-2xl:  2.000rem;
+  --font-size-3xl:  2.750rem;
+
+  /* ------------------------------------------------------------------ */
+  /* MOTION                                                               */
+  /* ------------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 180ms;
+  --dur-base: 240ms;
+
+  /* ------------------------------------------------------------------ */
+  /* LAYOUT                                                               */
+  /* ------------------------------------------------------------------ */
+  --max-width: 1200px;
+}
+
+
+/* ====================================================================
+   LIGHT PALETTE OVERRIDES
+   Selector specificity (0,1,1) beats :root (0,1,0) — no !important needed
+   here. Every token that must flip in light mode is re-declared below.
+   ==================================================================== */
+
+html[data-site-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-bg:          #F7F1FF;
+  --color-surface:     #ffffff;
+  --color-surface-alt: #F0EBFF;
+  --color-surface-2:   #EDE3FB;
+
+  /* Accent scale */
+  --color-accent-50:   #F0EBFF;
+  --color-accent-100:  #E8D9FF;
+  --color-accent-300:  #A23DE0;
+  --color-accent-500:  #6D3DF5;
+  --color-accent-600:  #5125C7;
+  --color-accent-700:  #5125C7;
+
+  /* Second accent */
+  --color-cyan:       #6D3DF5;
+  --color-cyan-glow:  rgba(109, 61, 245, 0.25);
+
+  /* Text */
+  --color-text:       #1C1530;
+  --color-text-muted: #6F6A78;
+
+  /* Borders */
+  --color-border:        #E9E5F2;
+  --color-border-soft:   rgba(109, 61, 245, 0.16);
+  --color-border-strong: rgba(109, 61, 245, 0.38);
+
+  /* Glass */
+  --color-glass:   rgba(255, 255, 255, 0.82);
+  --color-glass-2: rgba(255, 255, 255, 0.92);
+
+  /* Lavender */
+  --color-lavender: #6D3DF5;
+
+  /* ── Scrims flip automatically ─────────────────────────────────
+     Dark scrims become light scrims. Any component using
+     var(--color-scrim-*) now works in both themes for free.      */
+  --color-scrim:        rgba(255, 255, 255, 0.88);
+  --color-scrim-soft:   rgba(240, 235, 255, 0.60);
+  --color-scrim-card:   rgba(255, 255, 255, 0.92);
+  --color-scrim-thumb:  rgba(28,  21,  48, 0.30);   /* thumb fade stays dark */
+  --color-scrim-panel:  rgba(255, 255, 255, 0.80);
+
+  /* Shadows */
+  --shadow-sm:    0 1px 2px rgba(28, 21, 48, 0.08);
+  --shadow-md:    0 8px 24px rgba(28, 21, 48, 0.12);
+  --shadow-lg:    0 16px 44px rgba(28, 21, 48, 0.16);
+  --glow-accent:  0 0 60px rgba(162, 61, 224, 0.25);
+  --glow-soft:    0 0 0 1px var(--color-border-strong), 0 18px 50px -14px rgba(109, 61, 245, 0.35);
+  --shadow-float: 0 26px 60px -22px rgba(28, 21, 48, 0.32);
+
+  /* Page-local helpers (used in site.css dark-panel re-declarations) */
+  --lt-navy:       #1C1530;
+  --lt-navy-2:     #3B2265;
+  --lt-periwinkle: #6D3DF5;
+  --lt-gold:       #f5be4f;
+}
+
+
+

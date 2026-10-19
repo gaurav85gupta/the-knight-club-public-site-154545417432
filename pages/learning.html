@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme: applied synchronously BEFORE the stylesheets so first paint is already
+       the saved Day/Night theme (no flash). Student pages only. -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>My Learning — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/orders.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container">
+
+      <header class="page-head">
+        <div>
+          <p class="eyebrow">Library</p>
+          <h1 class="page-title">My Learning</h1>
+          <p class="page-sub">Your courses, progress and learning journey.</p>
+        </div>
+        <a href="courses.html" class="btn btn-outline">Browse Courses</a>
+      </header>
+
+      <!-- Filters are VIEWS over one dataset, not separate pages. -->
+      <div class="tab-bar" role="tablist" aria-label="Filter courses" id="learning-tabs" hidden>
+        <button class="tab" role="tab" id="tab-all" data-filter="all" aria-selected="true" aria-controls="learning-panel" type="button">All <span class="tab-count" id="count-all">0</span></button>
+        <button class="tab" role="tab" id="tab-in-progress" data-filter="in-progress" aria-selected="false" aria-controls="learning-panel" tabindex="-1" type="button">In Progress <span class="tab-count" id="count-in-progress">0</span></button>
+        <button class="tab" role="tab" id="tab-completed" data-filter="completed" aria-selected="false" aria-controls="learning-panel" tabindex="-1" type="button">Completed <span class="tab-count" id="count-completed">0</span></button>
+      </div>
+
+      <section id="learning-panel" role="tabpanel" aria-live="polite" aria-labelledby="tab-all">
+        <div id="learning-loading" class="learn-grid" aria-label="Loading your courses"></div>
+
+        <div id="learning-empty" class="empty-state" hidden>
+          <span class="empty-state-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>
+          </span>
+          <h3 id="learning-empty-title">You haven't enrolled in any courses yet.</h3>
+          <p id="learning-empty-message">Browse the catalog and start learning something new.</p>
+          <a class="btn btn-primary" href="courses.html">Browse Courses</a>
+        </div>
+
+        <div id="learning-filter-empty" class="empty-state is-compact" hidden>
+          <h3 id="learning-filter-empty-title" style="font-size:var(--font-size-lg)">Nothing here yet.</h3>
+          <p id="learning-filter-empty-message"></p>
+          <button class="btn btn-outline btn-sm" id="learning-show-all" type="button">Show all courses</button>
+        </div>
+
+        <div id="learning-unavailable" class="empty-state" hidden>
+          <span class="empty-state-icon" aria-hidden="true">i</span>
+          <h3>Learning data isn't available yet.</h3>
+          <p>Your enrolled courses will appear here once learning activity is available.</p>
+        </div>
+
+        <div id="learning-error" class="empty-state is-error" hidden>
+          <span class="empty-state-icon" aria-hidden="true">!</span>
+          <h3>We couldn't load your learning right now.</h3>
+          <p id="learning-error-message">Please try again in a moment.</p>
+          <button class="btn btn-outline" id="learning-retry" type="button">Try again</button>
+        </div>
+
+        <div id="learning-grid" class="learn-grid" hidden></div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/learning.js"></script>
+</body>
+</html>

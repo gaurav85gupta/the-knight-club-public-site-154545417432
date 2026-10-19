@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+  <script src="assets/js/site-theme-init.js"></script>
+  <title>Page not found — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/theme.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <link rel="stylesheet" href="assets/css/public.css" />
+  <link rel="stylesheet" href="assets/css/theme-futuristic.css" />
+  <link rel="stylesheet" href="assets/css/site-theme.css" />
+  <link rel="stylesheet" href="assets/css/buttons.css" />
+</head>
+<body class="pub-page">
+
+  <div class="pub-header-wrap">
+    <header class="pub-header" data-site-nav>
+      <a class="brand" href="index.html" aria-label="The Knight Club — home">The <span>Knight Club</span></a>
+
+      <button class="nav-toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav">
+        <svg class="icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="pages/courses.html">Courses</a>
+          <a href="pages/one-percent-club.html" class="nav-club">1% Club</a>
+          <a href="pages/about.html">About</a>
+          <a href="pages/testimonials.html">Testimonials</a>
+          <a href="pages/contact.html">Contact</a>
+        </div>
+        <div class="nav-actions" data-auth-pending>
+          <span data-auth="guest">
+            <a href="pages/signup.html" class="btn btn-primary btn-sm">Get Started</a>
+            <a href="pages/login.html" class="btn btn-outline btn-sm">Login</a>
+          </span>
+          <span data-auth="user" hidden>
+            <a href="pages/dashboard.html" class="btn btn-primary btn-sm">Dashboard</a>
+          </span>
+        </div>
+      </nav>
+    </header>
+  </div>
+
+  <main>
+    <section class="not-found container">
+      <div class="code">404</div>
+      <h1>Page not found</h1>
+      <p class="text-muted" style="max-width: 480px; margin: 0 auto var(--space-8);">
+        The page you're looking for doesn't exist or may have moved.
+      </p>
+      <div class="hero-actions">
+        <a href="index.html" class="btn btn-primary">Back to home</a>
+        <a href="pages/courses.html" class="btn btn-outline">Browse courses</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pub-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand">
+          <a class="brand" href="index.html" aria-label="The Knight Club — home">The <span>Knight Club</span></a>
+          <p>A premium platform for learning new skills through expert-led courses.</p>
+        </div>
+        <nav class="footer-col" aria-label="Explore">
+          <h4>Explore</h4>
+          <a href="index.html">Home</a>
+          <a href="pages/courses.html">Courses</a>
+          <a href="pages/about.html">About</a>
+          <a href="pages/testimonials.html">Testimonials</a>
+          <a href="pages/contact.html">Contact</a>
+          <a href="pages/one-percent-club.html">1% Club</a>
+        </nav>
+        <nav class="footer-col" aria-label="Account">
+          <h4>Account</h4>
+          <span data-auth="guest">
+            <a href="pages/login.html">Login</a>
+            <a href="pages/signup.html">Get Started</a>
+          </span>
+          <span data-auth="user" hidden>
+            <a href="pages/dashboard.html">Dashboard</a>
+          </span>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 The Knight Club. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/nav.js"></script>
+  <script src="assets/js/site-theme-toggle.js" defer></script>
+</body>
+</html>

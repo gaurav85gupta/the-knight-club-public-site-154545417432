@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <script src="../assets/js/site-theme-init.js"></script>
+  <title>Student Stories &amp; Testimonials | The Knight Club</title>
+  <meta name="description" content="Read experiences shared by learners on The Knight Club: what they studied, how it felt to learn, and what they took from it. Real words, nothing added." />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="canonical" href="/pages/testimonials.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Student Stories &amp; Testimonials | The Knight Club" />
+  <meta property="og:description" content="Read experiences shared by learners on The Knight Club: what they studied, how it felt to learn, and what they took from it. Real words, nothing added." />
+  <meta property="og:url" content="/pages/testimonials.html" />
+  <meta property="og:site_name" content="The Knight Club" />
+  <meta property="og:image" content="https://www.theknightclub.in/assets/images/hero-bg.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:image" content="https://www.theknightclub.in/assets/images/hero-bg.jpg" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Are these testimonials from actual students?", "acceptedAnswer": {"@type": "Answer", "text": "Stories on this page are shared by learners, and we don't add ratings, results or details that a learner didn't provide. The platform does not currently run an independent verification of each story, so please treat them as individual opinions."}}, {"@type": "Question", "name": "Can I read feedback about a specific course?", "acceptedAnswer": {"@type": "Answer", "text": "Where a story is linked to a course, it names the course and links to its page. Each course page also lists its curriculum, instructor, level and price so you can judge it directly."}}, {"@type": "Question", "name": "Where can I explore the courses?", "acceptedAnswer": {"@type": "Answer", "text": "The Courses page lists everything currently available, with search, category filters and sorting."}}, {"@type": "Question", "name": "How can I contact The Knight Club?", "acceptedAnswer": {"@type": "Answer", "text": "Visit the Contact page, or sign in and use your dashboard if you are already a student."}}]}</script>
+  <meta name="theme-color" content="#0a0714" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/1-base/scroll.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/public.css" />
+  <link rel="stylesheet" href="../assets/css/testimonials.css" />
+  <link rel="stylesheet" href="../assets/css/theme-futuristic.css" />
+  <link rel="stylesheet" href="../assets/css/site-theme.css" />
+  <link rel="stylesheet" href="../assets/css/faq.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <link rel="stylesheet" href="../assets/css/cart.css" />
+  <noscript><style>.faq-answer{grid-template-rows:1fr !important;visibility:visible !important}.faq-icon{display:none}</style></noscript>
+</head>
+<body class="pub-page testimonials-page">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="pub-header-wrap">
+    <div id="pub-header-root" data-from-pages="true"></div>
+  </div>
+
+  <main id="main">
+
+    <!-- HERO -->
+    <section class="pub-hero tm-hero" aria-labelledby="page-title">
+      <div class="pub-hero-bg" aria-hidden="true"></div>
+      <div class="container">
+        <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Student stories</p>
+        <h1 id="page-title">Student Stories <em>&amp; Experiences</em></h1>
+        <p class="pub-hero-lead">This page brings together experiences shared by learners on The Knight Club &mdash; what they studied, how it felt to learn, and what they took from it. We don&rsquo;t add ratings, results or details a learner didn&rsquo;t share.</p>
+      </div>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section class="pub-section tm-intro" aria-labelledby="intro-title">
+      <div class="container tm-intro-grid">
+        <h2 id="intro-title" class="pub-title ab-title-left">What Learners Are Saying</h2>
+        <div class="tm-intro-copy">
+          <p>A course page tells you what is taught; a learner&rsquo;s own account tells you how it felt to go through it. Every experience is personal &mdash; one learner&rsquo;s story is not a promise about yours, but read together they give a more honest picture than any description we could write ourselves.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED (rendered only if a real testimonial is flagged `featured`) -->
+    <section class="pub-section tm-featured" id="featured-wrap" aria-labelledby="featured-title" hidden>
+      <div class="container">
+        <h2 id="featured-title" class="tm-h2">Featured Student Experience</h2>
+        <div id="featured-body"></div>
+      </div>
+    </section>
+
+    <!-- COLLECTION (rendered only when real testimonials exist) -->
+    <section class="pub-section tm-stories" id="stories-wrap" aria-labelledby="stories-title" hidden>
+      <div class="container">
+        <h2 id="stories-title" class="tm-h2">More Learner Experiences</h2>
+        <div id="story-filter" class="tm-filter" role="group" aria-label="Filter stories by topic" hidden></div>
+        <div id="stories-grid" class="tm-grid" hidden></div>
+        <p class="tm-more"><button type="button" class="btn btn-outline" id="load-more" hidden>Show more stories</button></p>
+      </div>
+    </section>
+
+    <!-- LOADING / ERROR (only used once a data source is configured) -->
+    <section class="pub-section tm-stories" aria-label="Story status">
+      <div class="container">
+        <div id="stories-state" class="tm-state" hidden></div>
+
+        <!-- HONEST EMPTY STATE: no testimonials endpoint exists yet (see testimonials.js). -->
+        <div id="stories-empty" class="tm-empty">
+          <div class="tm-empty-visual" aria-hidden="true">
+            <span class="tm-quote-mark">&ldquo;</span>
+            <span class="tm-empty-line tm-empty-line-lg"></span>
+            <span class="tm-empty-line"></span>
+            <span class="tm-empty-line tm-empty-line-sm"></span>
+          </div>
+          <div class="tm-empty-copy">
+            <p class="pub-eyebrow"><span class="pub-eyebrow-dot" aria-hidden="true"></span>Coming soon</p>
+            <h2 class="pub-title">Student stories are coming soon.</h2>
+            <p class="pub-sub tm-sub-left">There are no learner stories to show yet, and we&rsquo;d rather show nothing than make something up. When learners share their experience, you&rsquo;ll read it here in their own words.</p>
+            <a href="courses.html" class="link-arrow">Explore Courses <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT LEARNERS TALK ABOUT (derived from the topics on real stories; hidden otherwise) -->
+    <section class="pub-section" id="themes-wrap" aria-labelledby="themes-title" hidden>
+      <div class="container">
+        <h2 id="themes-title" class="tm-h2">What Learners Talk About</h2>
+        <ul id="themes-list" class="tm-themes"></ul>
+      </div>
+    </section>
+
+    <!-- LONG-FORM (only for testimonials that carry a `story`) -->
+    <section class="pub-section tm-longform" id="longform-wrap" aria-labelledby="longform-title" hidden>
+      <div class="container">
+        <h2 id="longform-title" class="tm-h2">In Their Own Words</h2>
+        <div id="longform-body"></div>
+      </div>
+    </section>
+
+    <!-- COURSES WITH STORIES (only real, linked courses) -->
+    <section class="pub-section" id="courses-wrap" aria-labelledby="courses-title" hidden>
+      <div class="container">
+        <h2 id="courses-title" class="tm-h2">Learning Experiences Across Our Courses</h2>
+        <ul id="courses-list" class="tm-course-list"></ul>
+      </div>
+    </section>
+
+    <!-- INVITATION FOR REAL, LONGER FEEDBACK -->
+    <section class="pub-section" aria-labelledby="share-title">
+      <div class="container tm-share">
+        <div>
+          <h2 id="share-title" class="tm-h2">Studied With Us? Share Your Experience.</h2>
+          <p>Longer accounts help future learners most. If you have taken a course or joined the 1% Club, tell us in your own words: what you were hoping to learn, what you found useful, what was hard, and what you would tell someone deciding today.</p>
+        </div>
+        <a href="contact.html" class="btn btn-outline btn-lg">Contact Us</a>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="pub-section faq-section" aria-labelledby="faq-title">
+      <div class="container faq-container">
+        <header class="faq-header">
+          <p class="faq-eyebrow">Testimonials FAQ</p>
+          <h2 id="faq-title" class="faq-title">Frequently Asked Questions</h2>
+          <p class="faq-lede">How the stories on this page are shared, and where to go next.</p>
+        </header>
+        <div class="faq-list" data-faq>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">Are these testimonials from actual students?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>Stories on this page are shared by learners, and we don't add ratings, results or details that a learner didn't provide. The platform does not currently run an independent verification of each story, so please treat them as individual opinions.</p></div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">Can I read feedback about a specific course?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>Where a story is linked to a course, it names the course and links to its page. Each course page also lists its curriculum, instructor, level and price so you can judge it directly.</p></div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">Where can I explore the courses?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>The Courses page lists everything currently available, with search, category filters and sorting.</p></div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-heading">
+              <button type="button" class="faq-question" aria-expanded="false">
+                <span class="faq-number" aria-hidden="true"></span>
+                <span class="faq-text">How can I contact The Knight Club?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner"><p>Visit the Contact page, or sign in and use your dashboard if you are already a student.</p></div>
+            </div>
+          </div>
+        </div>
+        <p class="faq-note">Want mentorship and community alongside your courses? See the <a href="one-percent-club.html">1% Club</a>, or go back to <a href="../index.html">Home</a>.</p>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="pub-cta" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="pub-cta-panel">
+          <span class="pub-cta-glow" aria-hidden="true"></span>
+          <h2 id="cta-title">Ready to Explore What You Can Learn?</h2>
+          <p>Browse the course catalogue and find the skill that fits your next step.</p>
+          <div class="pub-cta-actions">
+            <a href="courses.html" class="btn btn-primary btn-lg">Explore Courses <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a href="about.html" class="btn btn-ghost btn-lg">Learn About The Knight Club <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="pub-footer-root" data-from-pages="true"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/vendor/lenis/lenis.min.js"></script>
+  <script src="../assets/js/core/smooth-scroll.js"></script>
+  <script src="../assets/js/public-shell.js"></script>
+  <script>PublicShell.mount({ active: 'testimonials' });</script>
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/site-theme-toggle.js" defer></script>
+  <script src="../assets/js/faq.js" defer></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/testimonials-data.js"></script>
+  <script src="../assets/js/testimonials.js"></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+/* ==========================================================================
+   THE NIGHT CLUB — Dark Theme Decorative Layer (theme-futuristic.css)
+   Was: theme.css + theme-futuristic.css (merged, all rules guarded)
+
+   RULE: Every rule in this file is guarded by
+         html:not([data-site-theme="light"])
+   so it NEVER affects light mode. No !important needed — guard provides
+   specificity. Purely decorative: glows, canvas effects, deeper glass.
+   Structural/layout rules belong in their own component file.
+   ========================================================================== */
+
+
+/* ====================================================================
+   1. BODY BACKGROUND — deep space gradient
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) body {
+  background:
+    radial-gradient(1100px 500px at 50% -5%,  rgba(124, 58, 237, 0.18), transparent 65%),
+    radial-gradient(700px  350px at 10% 60%,  rgba(79,  30, 180, 0.08), transparent 70%),
+    radial-gradient(700px  350px at 90% 40%,  rgba(6,  182, 212, 0.04), transparent 70%),
+    var(--color-bg);
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+
+/* ====================================================================
+   2. TYPOGRAPHY ACCENTS
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .section-title {
+  background: linear-gradient(160deg, #ffffff 30%, rgba(196, 181, 253, 0.9) 70%, rgba(124, 58, 237, 0.6) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.3));
+}
+
+html:not([data-site-theme="light"]) .eyebrow-plain {
+  color: var(--color-accent-600);
+  background: rgba(124, 58, 237, 0.10);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+}
+html:not([data-site-theme="light"]) .eyebrow-plain::before {
+  background: var(--color-accent-500);
+  box-shadow: 0 0 8px var(--color-accent-500);
+}
+
+
+/* ====================================================================
+   3. NAV — deeper glass pill in dark
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .pub-header {
+  background: rgba(7, 5, 15, 0.75);
+  backdrop-filter: saturate(200%) blur(20px);
+  -webkit-backdrop-filter: saturate(200%) blur(20px);
+  border-color: rgba(124, 58, 237, 0.12);
+}
+
+html:not([data-site-theme="light"]) .site-nav .nav-links {
+  background: transparent;
+  border: none;
+}
+
+html:not([data-site-theme="light"]) .site-nav .nav-links a:hover {
+  background: rgba(124, 58, 237, 0.10);
+}
+
+html:not([data-site-theme="light"]) .site-nav .nav-links a.is-active {
+  background: linear-gradient(135deg, #7c3aed, #9d5fff);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.45);
+}
+
+/* Mobile open state */
+html:not([data-site-theme="light"]) .pub-header.is-open {
+  background: rgba(16, 11, 30, 0.96);
+  border-color: var(--color-border-strong);
+}
+
+
+/* ====================================================================
+   4. HERO — dark background photo, headline, CTA
+
+   The hero's right side is the supplied dark workspace photograph,
+   assets/images/knight-club-hero-dark.jpg, shown via .hero.hero-v2::after
+   (geometry declared once in home.css). A left-weighted scrim is layered
+   under it, in the same declaration, purely for text legibility over the
+   photo's own highlights — not a decorative glow, and not layered as a
+   second background element.
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .home-page .hero.hero-v2 {
+  background: var(--color-bg);
+}
+
+html:not([data-site-theme="light"]) .home-page .hero.hero-v2::after {
+  background-image:
+    linear-gradient(90deg, rgba(7, 5, 15, 0.92) 0%, rgba(7, 5, 15, 0.84) 36%, rgba(7, 5, 15, 0.50) 54%, rgba(7, 5, 15, 0.10) 70%, transparent 82%),
+    url("../images/knight-club-hero-dark.jpg");
+  background-color: var(--color-bg);
+}
+
+/* Below 640px the hero stops using the photo as a background behind the
+   text (home.css switches .hero.hero-v2::after off there) and instead
+   shows it in its own dedicated visual band, .hero-v2-mobile-art, below
+   the copy/actions. A closer mobile-specific crop (same photoshoot, no
+   distortion) keeps the founder's face and desk the focus instead of the
+   wide desktop framing shrunk down. No scrim: it's no longer sitting under
+   text, so legibility isn't a concern here, only a clean, readable crop. */
+@media (max-width: 640px) {
+  html:not([data-site-theme="light"]) .hero-v2-mobile-art {
+    background-image: url("../images/knight-club-hero-dark-mobile.jpg");
+  }
+}
+
+/* Headline — solid off-white with a soft purple glow consistent with the
+   brand's existing dark typographic treatment. */
+html:not([data-site-theme="light"]) .home-page .hero h1.hero-v2-title {
+  color: #f3effa;
+  background: none;
+  -webkit-text-fill-color: #f3effa;
+  text-shadow:
+    0 0 80px rgba(139, 69, 255, 0.40),
+    0 2px 40px rgba(6, 4, 12, 0.60);
+  filter: drop-shadow(0 4px 28px rgba(150, 90, 255, 0.35));
+}
+html:not([data-site-theme="light"]) .home-page .hero-title-accent {
+  color: #c27bff;
+  background: linear-gradient(100deg, #f06bff 0%, #c27bff 50%, #e6cbff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 22px rgba(200, 100, 255, 0.45));
+}
+html:not([data-site-theme="light"]) .home-page .hero-v2-lead   { color: #ece6f9; }
+html:not([data-site-theme="light"]) .home-page .hero-v2-tag {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  letter-spacing: 0.4em;
+  color: #cfc6ee;
+}
+/* Colour comes from buttons.css. Only the hero's extra glow lives here. */
+html:not([data-site-theme="light"]) .home-page .hero-v2-actions .btn-primary {
+  box-shadow: 0 10px 40px -6px rgba(140, 70, 255, 0.85);
+}
+
+@media (max-width: 600px) {
+  html:not([data-site-theme="light"]) .home-page .hero-v2-tag {
+    letter-spacing: 0.22em;
+    margin-top: var(--space-4);
+  }
+}
+
+
+/* ====================================================================
+   5. BUTTONS
+   Moved to buttons.css (single source of truth for all .btn-* colour,
+   gradient, shadow and hover rules). Do not re-add them here.
+   ==================================================================== */
+
+/* ====================================================================
+   6. CARDS — deeper glass
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .hc-card {
+  background: linear-gradient(160deg, rgba(28, 20, 52, 0.90), rgba(12, 8, 28, 0.95));
+  border: 1px solid var(--color-border-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+html:not([data-site-theme="light"]) .hc-card:hover {
+  border-color: rgba(167, 139, 250, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(167, 139, 250, 0.15) inset,
+    0 24px 60px -20px rgba(124, 58, 237, 0.60),
+    0 0 80px -30px rgba(124, 58, 237, 0.40);
+}
+
+html:not([data-site-theme="light"]) .eco-col {
+  border: 1px solid var(--color-border-soft);
+  background: linear-gradient(160deg, rgba(22, 16, 46, 0.90), rgba(10, 8, 22, 0.96));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+html:not([data-site-theme="light"]) .eco-col::before {
+  content: '';
+  position: absolute;
+  top: -60%; right: -20%;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.08), transparent 70%);
+  pointer-events: none;
+}
+html:not([data-site-theme="light"]) .eco-col-club {
+  border-color: rgba(124, 58, 237, 0.25);
+  box-shadow: 0 0 60px -20px rgba(124, 58, 237, 0.25);
+}
+
+html:not([data-site-theme="light"]) .aud-grid li {
+  background: linear-gradient(160deg, rgba(18, 14, 36, 0.80), rgba(8, 6, 18, 0.90));
+  border: 1px solid var(--color-border-soft);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+html:not([data-site-theme="light"]) .aud-grid li::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.30), transparent);
+}
+html:not([data-site-theme="light"]) .aud-grid li:hover {
+  border-color: rgba(167, 139, 250, 0.30);
+  box-shadow: 0 12px 40px -15px rgba(124, 58, 237, 0.50), 0 0 0 1px rgba(167, 139, 250, 0.08) inset;
+}
+
+/* SK card hover glow */
+html:not([data-site-theme="light"]) .sk-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.0), rgba(124, 58, 237, 0.12));
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+html:not([data-site-theme="light"]) .sk-card:hover::after { opacity: 1; }
+html:not([data-site-theme="light"]) .sk-grid li:nth-child(4) .sk-card::before {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.15), transparent 70%);
+}
+html:not([data-site-theme="light"]) .sk-grid li:nth-child(4) .sk-card:hover {
+  border-color: rgba(6, 182, 212, 0.30);
+  box-shadow: 0 20px 50px -20px rgba(6, 182, 212, 0.35);
+}
+
+
+/* ====================================================================
+   7. PANELS — club / cta / feature
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .club-panel {
+  border-color: rgba(124, 58, 237, 0.25);
+  background:
+    radial-gradient(900px 500px at 85% 15%, rgba(100, 40, 200, 0.25), transparent 60%),
+    radial-gradient(600px 300px at 10% 80%, rgba(6, 182, 212, 0.05), transparent 65%),
+    linear-gradient(180deg, rgba(16, 10, 35, 0.98), rgba(7, 5, 15, 1.00));
+  box-shadow: 0 0 120px -40px rgba(124, 58, 237, 0.40);
+}
+
+html:not([data-site-theme="light"]) .cta-panel {
+  border-color: rgba(124, 58, 237, 0.20);
+  box-shadow:
+    0 0 0 1px rgba(167, 139, 250, 0.08),
+    inset 0 1px 0 rgba(167, 139, 250, 0.08),
+    0 0 120px -40px rgba(124, 58, 237, 0.30);
+}
+
+
+/* ====================================================================
+   8. FLOW STEPS
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .flow-num {
+  background: radial-gradient(circle at 50% 30%, rgba(28, 22, 52, 1), rgba(14, 11, 28, 1));
+  border: 1px solid rgba(124, 58, 237, 0.30);
+  box-shadow:
+    0 0 0 4px rgba(124, 58, 237, 0.06),
+    inset 0 1px 0 rgba(196, 181, 253, 0.10);
+}
+html:not([data-site-theme="light"]) .flow li:nth-child(2) .flow-num {
+  background: radial-gradient(circle at 50% 30%, rgba(124, 58, 237, 0.90), rgba(79, 30, 180, 0.70));
+  border-color: rgba(196, 181, 253, 0.50);
+  box-shadow:
+    0 0 0 8px rgba(124, 58, 237, 0.10),
+    0 0 60px rgba(124, 58, 237, 0.55),
+    0 0 120px rgba(124, 58, 237, 0.20);
+}
+
+
+/* ====================================================================
+   9. FOOTER
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .pub-footer {
+  background: rgba(7, 5, 15, 0.95);
+  border-top: 1px solid rgba(124, 58, 237, 0.10);
+}
+html:not([data-site-theme="light"]) .pub-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 15%; right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(124, 58, 237, 0.40) 40%,
+    rgba(167, 139, 250, 0.50) 50%,
+    rgba(124, 58, 237, 0.40) 60%,
+    transparent);
+}
+
+
+/* ====================================================================
+   10. FOUNDER PHOTO
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .founder-photo {
+  box-shadow:
+    0 0 0 1px rgba(124, 58, 237, 0.25),
+    0 32px 80px -20px rgba(0, 0, 0, 0.85),
+    0 0 80px -30px rgba(124, 58, 237, 0.45);
+}
+
+
+/* ====================================================================
+   11. SECTION DIVIDERS
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .section-block + .section-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(124, 58, 237, 0.20) 30%,
+    rgba(167, 139, 250, 0.30) 50%,
+    rgba(124, 58, 237, 0.20) 70%,
+    transparent);
+}
+
+
+/* ====================================================================
+   12. SCROLLBAR + SELECTION
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) ::-webkit-scrollbar       { width: 6px; }
+html:not([data-site-theme="light"]) ::-webkit-scrollbar-track { background: var(--color-bg); }
+html:not([data-site-theme="light"]) ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #7c3aed, #9d5fff);
+  border-radius: 3px;
+}
+html:not([data-site-theme="light"]) ::-webkit-scrollbar-thumb:hover { background: #a78bfa; }
+
+html:not([data-site-theme="light"]) ::selection { background: rgba(124, 58, 237, 0.50); color: #fff; }
+
+
+/* ====================================================================
+   13. UTILITIES
+   ==================================================================== */
+
+html:not([data-site-theme="light"]) .link-arrow {
+  color: var(--color-accent-600);
+}
+html:not([data-site-theme="light"]) .link-arrow:hover {
+  color: var(--color-lavender);
+}
+
+html:not([data-site-theme="light"]) #trust-strip .trust-item strong {
+  color: var(--color-lavender);
+}

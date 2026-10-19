@@ -1,0 +1,1070 @@
+/* ==========================================================================
+   THE NIGHT CLUB — Light Theme Component Overrides (site.css)
+
+   ARCHITECTURE:
+     tokens.css           → ALL color/shadow/spacing variables (dark + light)
+     theme-futuristic.css → dark-only decorative effects (guarded by :not([light]))
+     site.css             → light-mode component overrides (this file)
+
+   Every rule here is gated by html[data-site-theme="light"], giving it
+   specificity (0,2,0) or higher — always greater than the (0,1,0) base
+   rules in public.css/home.css/etc., so !important is not needed here.
+   (It was used throughout this file until a cleanup pass removed it —
+   kept only on the universal-selector transition override below, which
+   must beat arbitrary elements' own transition rules regardless of their
+   specificity.)
+   DO NOT add hardcoded rgba() dark colors here — use var(--color-*) tokens.
+   ========================================================================== */
+
+/* ==========================================================================
+   THE NIGHT CLUB — Public site Dark / Light theme
+   --------------------------------------------------------------------------
+   SCOPE: public marketing pages only. Every light rule is gated by
+   `html[data-site-theme="light"]`, which is set by site-theme-init.js. Dark
+   mode (the default) is the existing stylesheet set, left untouched.
+   The student portal never loads this file and uses a different attribute
+   (`data-theme`), so it cannot be affected.
+
+   LIGHT PALETTE — three colours, taken from the reference image:
+     1. Lavender   #F7F1FF / #F0EBFF   page + soft surfaces
+     2. Periwinkle #6D3DF5 / #6D3DF5   accent, highlights, active states
+     3. Deep navy  #1C1530 / #3B2265   headings, primary buttons, dark panels
+   Gold (#f5be4f) is kept only for the 1% Club accent, as in the image.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   A. THE TOGGLE BUTTON  (identical in both themes)
+   ========================================================================== */
+
+.site-theme-toggle {
+  position: relative;
+  flex: none;
+  order: 3;                       /* desktop: after .site-nav, at the far right */
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-soft);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+              transform 0.15s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.site-theme-toggle:hover {
+  border-color: var(--color-border-strong);
+  background: rgba(139, 69, 255, 0.16);
+}
+.site-theme-toggle:active { transform: scale(0.94); }
+.site-theme-toggle:focus-visible {
+  outline: 2px solid var(--color-accent-600);
+  outline-offset: 3px;
+}
+
+.site-theme-toggle .site-theme-icon {
+  grid-area: 1 / 1;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+}
+/* Dark mode shows the SUN (= "switch to light"); light mode shows the MOON. */
+.site-theme-toggle .site-theme-icon-moon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+.site-theme-toggle .site-theme-icon-sun  { opacity: 1; transform: none; color: #f5c542; }
+html[data-site-theme="light"] .site-theme-toggle .site-theme-icon-sun  { opacity: 0; transform: rotate(90deg) scale(0.4); }
+html[data-site-theme="light"] .site-theme-toggle .site-theme-icon-moon { opacity: 1; transform: none; color: #3B2265; }
+
+/* Header sits in a flex row; the toggle goes right after the hamburger on mobile.
+   1100px mirrors public.css's documented, measured header-collapse breakpoint —
+   kept in sync with it rather than the 480/768/1024 scale. */
+@media (max-width: 1100px) {
+  .pub-header .site-theme-toggle { order: 0; margin-left: auto; }
+  .pub-header .nav-toggle { margin-left: 0; }
+}
+@media (max-width: 480px) {
+  .site-theme-toggle { width: 36px; height: 36px; }
+}
+
+/* Short colour fade, only while the user is switching (class added by JS). */
+html.site-theme-transition,
+html.site-theme-transition body,
+html.site-theme-transition body *:not(canvas):not(svg):not(path) {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease,
+              box-shadow 0.35s ease, fill 0.35s ease !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.site-theme-transition,
+  html.site-theme-transition body,
+  html.site-theme-transition body *:not(canvas):not(svg):not(path) { transition: none !important; }
+  .site-theme-toggle .site-theme-icon { transition: none; }
+}
+
+/* Respect reduced-motion preference: skip the whole-page colour fade.
+   Theme still switches instantly — just no animated crossfade. */
+@media (prefers-reduced-motion: reduce) {
+  html.site-theme-transition,
+  html.site-theme-transition body,
+  html.site-theme-transition body * { transition: none !important; }
+}
+
+
+/* ==========================================================================
+   B. LIGHT TOKENS — now live in tokens.css (html[data-site-theme="light"])
+   Body background, scrollbar and selection remain here as they are
+   presentational rules, not token declarations.
+   ========================================================================== */
+
+html[data-site-theme="light"] body {
+  background:
+    radial-gradient(900px 520px at 88% -4%, rgba(162, 61, 224, 0.18), transparent 62%),
+    radial-gradient(700px 420px at 4% 30%, rgba(109, 61, 245, 0.12), transparent 68%),
+    linear-gradient(180deg, #F7F1FF 0%, #FDFCFF 18%, #FFFFFF 50%, #FDFBFE 82%, #FCF1F8 100%);
+  color: var(--color-text);
+}
+html[data-site-theme="light"] ::selection { background: #6D3DF5; color: #fff; }
+html[data-site-theme="light"] ::-webkit-scrollbar-thumb { background: #A23DE0; }
+html[data-site-theme="light"] ::-webkit-scrollbar-thumb:hover { background: #6D3DF5; }
+html[data-site-theme="light"] ::-webkit-scrollbar-track { background: #F0EBFF; }
+
+
+/* ==========================================================================
+   C. DARK-NAVY PANELS KEEP THEIR DARK LOOK (like the navy strip in the image)
+   Re-declare the dark tokens INSIDE these containers so every child
+   (text, muted text, pills, buttons) automatically reads correctly again.
+   ========================================================================== */
+
+html[data-site-theme="light"] .pub-footer,
+html[data-site-theme="light"] .club-panel,
+html[data-site-theme="light"] .cta-panel,
+html[data-site-theme="light"] .pub-cta-panel,
+html[data-site-theme="light"] .feature-panel,
+html[data-site-theme="light"] .fm-window,
+html[data-site-theme="light"] .ab-club,
+html[data-site-theme="light"] .eco-col-club,
+html[data-site-theme="light"] .tm-share,
+html[data-site-theme="light"] .hc-badge,
+html[data-site-theme="light"] .cc-badge,
+html[data-site-theme="light"] .founder-stat {
+  --color-text: #f5f3fb;
+  --color-text-muted: #c4bde6;
+  --color-lavender: #d4c8ff;
+  --color-accent-300: #b6afff;
+  --color-accent-500: #8f86ff;
+  --color-accent-600: #a49dff;
+  --color-accent-700: #c9c4ff;
+  --color-border: rgba(226, 180, 230, 0.22);
+  --color-border-soft: rgba(226, 180, 230, 0.20);
+  --color-border-strong: rgba(226, 180, 230, 0.45);
+  --gold: #e9c97a;
+  color: var(--color-text);
+}
+
+/* gold labels / numbers: a deeper amber is needed on lavender backgrounds */
+html[data-site-theme="light"] .home-page,
+html[data-site-theme="light"] .about-page { --gold: #8f5f00; }
+
+
+/* ==========================================================================
+   D. HEADER (glass pill) + MOBILE MENU
+   ========================================================================== */
+
+html[data-site-theme="light"] .pub-header {
+  background: rgba(255, 255, 255, 0.80);
+  border: 1px solid rgba(109, 61, 245, 0.16);
+  box-shadow: 0 10px 34px -16px rgba(28, 21, 48, 0.28);
+}
+html[data-site-theme="light"] .pub-header .brand { color: #1C1530; }
+html[data-site-theme="light"] .pub-header .brand:hover { color: #3B2265; }
+html[data-site-theme="light"] .pub-header .brand span {
+  background: linear-gradient(120deg, #3B2265 0%, #6D3DF5 55%, #A23DE0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-site-theme="light"] .pub-header .nav-links a { color: #6F6A78; }
+html[data-site-theme="light"] .pub-header .nav-links a:hover {
+  color: #1C1530;
+  background: rgba(109, 61, 245, 0.12);
+}
+html[data-site-theme="light"] .pub-header .nav-links a[aria-current="page"],
+html[data-site-theme="light"] .pub-header .nav-links a.is-active {
+  color: #fff;
+  background: linear-gradient(120deg, #6D3DF5 0%, #A23DE0 55%, #E8399B 100%);
+  box-shadow: 0 6px 16px -6px rgba(162, 61, 224, 0.55);
+}
+
+/* 1% Club link: the bright gold is unreadable on lavender, so use a deeper
+   amber gradient on the text and a soft golden aura behind it. */
+html[data-site-theme="light"] .pub-header .nav-links a.nav-club {
+  --gold-1: #d9941a;
+  --gold-2: #b86e00;
+  --gold-3: #8a5000;
+  text-shadow: none;
+}
+html[data-site-theme="light"] .pub-header .nav-links a.nav-club::before {
+  background: radial-gradient(closest-side, rgba(245, 190, 79, 0.65), rgba(245, 190, 79, 0.28) 55%, rgba(245, 190, 79, 0) 100%);
+}
+html[data-site-theme="light"] .pub-header .nav-links a.nav-club:hover,
+html[data-site-theme="light"] .pub-header .nav-links a.nav-club:focus-visible,
+html[data-site-theme="light"] .pub-header .nav-links a.nav-club[aria-current="page"] {
+  background: linear-gradient(100deg, #b86e00 0%, #8a5000 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+html[data-site-theme="light"] .pub-header .nav-toggle {
+  background: rgba(109, 61, 245, 0.08);
+  border-color: rgba(109, 61, 245, 0.2);
+  color: #1C1530;
+}
+html[data-site-theme="light"] .site-theme-toggle {
+  background: rgba(109, 61, 245, 0.08);
+  border-color: rgba(109, 61, 245, 0.22);
+  color: #1C1530;
+}
+html[data-site-theme="light"] .site-theme-toggle:hover {
+  background: rgba(109, 61, 245, 0.16);
+  border-color: rgba(109, 61, 245, 0.45);
+}
+
+/* 1100px mirrors public.css's documented header-collapse breakpoint. */
+@media (max-width: 1100px) {
+  html[data-site-theme="light"] .pub-header.is-open {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(109, 61, 245, 0.28);
+    box-shadow: 0 24px 60px -20px rgba(28, 21, 48, 0.35);
+  }
+  html[data-site-theme="light"] .pub-header.is-open .nav-links { background: transparent; border: 0; }
+}
+
+
+/* ==========================================================================
+   E. BUTTONS
+   Base .btn-primary / .btn-outline colour and the dark-panel button
+   overrides now live in buttons.css (single source of truth). Do not
+   re-add them here.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   F. HERO (home) + page heroes
+
+   The hero's right side is the supplied light workspace photograph,
+   assets/images/knight-club-hero-light.jpg, shown via .hero.hero-v2::after
+   (geometry declared once in home.css). A left-weighted white scrim is
+   layered under it, in the same declaration, so the left-aligned copy
+   stays readable against the photo — not a decorative glow, and not a
+   second background element.
+   ========================================================================== */
+
+html[data-site-theme="light"] .home-page .hero.hero-v2,
+html[data-site-theme="light"] .hero.hero-v2 { background: var(--color-bg); }
+
+html[data-site-theme="light"] .home-page .hero.hero-v2::after {
+  background-image:
+    linear-gradient(90deg, rgba(247, 241, 255, 0.95) 0%, rgba(247, 241, 255, 0.86) 32%, rgba(247, 241, 255, 0.50) 50%, rgba(247, 241, 255, 0.10) 68%, transparent 80%),
+    url("../images/knight-club-hero-light.jpg");
+  background-color: var(--color-bg);
+}
+
+/* Below 640px the hero stops using the photo as a background behind the
+   text (home.css switches .hero.hero-v2::after off there) and instead
+   shows it in its own dedicated visual band, .hero-v2-mobile-art — see
+   theme-futuristic.css for the full rationale (same pattern, light crop). */
+@media (max-width: 640px) {
+  html[data-site-theme="light"] .hero-v2-mobile-art {
+    background-image: url("../images/knight-club-hero-light-mobile.jpg");
+  }
+}
+
+/* Scanline texture is tuned for the dark hero's particle-canvas feel; the
+   light hero now shows the photo directly, so the stripe overlay is
+   switched off rather than re-tuned to a near-invisible variant. */
+html[data-site-theme="light"] .hero.hero-v2::before {
+  display: none;
+}
+
+html[data-site-theme="light"] .home-page .hero h1.hero-v2-title,
+html[data-site-theme="light"] .hero-v2-title {
+  color: #1C1530;
+  text-shadow: none;
+}
+html[data-site-theme="light"] .hero-title-accent {
+  color: #6D3DF5;
+  background: linear-gradient(135deg, #6D3DF5, #A23DE0 55%, #5125C7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: none;
+}
+html[data-site-theme="light"] .hero-v2-lead {
+  color: #6F6A78;
+}
+html[data-site-theme="light"] .hero-v2-tag {
+  background: rgba(109, 61, 245, 0.10);
+  border-color: rgba(109, 61, 245, 0.28);
+  color: #5125C7;
+  box-shadow: none;
+}
+@media (max-width: 600px) {
+  html[data-site-theme="light"] .home-page .hero-v2-tag { margin-top: var(--space-4); }
+}
+html[data-site-theme="light"] .hero-stat strong { color: #3B2265; }
+html[data-site-theme="light"] .hero-stat span { color: #6F6A78; }
+html[data-site-theme="light"] .hero-stat-div { background: rgba(109, 61, 245, 0.25); }
+html[data-site-theme="light"] .hero-scroll-mouse { border-color: rgba(28, 21, 48, 0.4); }
+html[data-site-theme="light"] .hero-scroll-wheel { background: #6D3DF5; }
+html[data-site-theme="light"] .hero-scroll-hint span { color: #6F6A78; }
+
+/* inner-page hero (courses / about / contact / 1% club ...)
+   Matches the Scale To Sky pattern: the headline is solid dark text, and
+   only an explicitly emphasised <em> phrase (not every page has one) gets
+   the purple gradient — a whole-headline gradient painted across wrapped
+   lines reads as two flat, mismatched colors instead of one accent. */
+html[data-site-theme="light"] .pub-hero h1,
+html[data-site-theme="light"] .cc-hero h1 {
+  color: #1C1530;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: initial;
+  filter: none;
+  text-shadow: none;
+}
+html[data-site-theme="light"] .pub-hero h1 em {
+  font-style: normal;
+  color: #6D3DF5;
+  background: linear-gradient(120deg, #6D3DF5 0%, #A23DE0 55%, #5125C7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* ==========================================================================
+   G. HEADINGS, EYEBROWS, TEXT
+   ========================================================================== */
+
+html[data-site-theme="light"] .section-title,
+html[data-site-theme="light"] .cc-h2 {
+  background: linear-gradient(160deg, #1C1530 30%, #6D3DF5 72%, #A23DE0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: none;
+}
+html[data-site-theme="light"] h2,
+html[data-site-theme="light"] h3,
+html[data-site-theme="light"] h4 { color: var(--color-text); }
+
+html[data-site-theme="light"] .eyebrow,
+html[data-site-theme="light"] .eyebrow-plain {
+  color: #5125C7;
+  background: rgba(109, 61, 245, 0.10);
+  border-color: rgba(109, 61, 245, 0.28);
+}
+html[data-site-theme="light"] .eyebrow-plain::before {
+  background: #6D3DF5;
+  box-shadow: 0 0 0 3px rgba(109, 61, 245, 0.18);
+}
+html[data-site-theme="light"] .section-sub,
+html[data-site-theme="light"] .ed-prose p { color: #6F6A78; }
+
+html[data-site-theme="light"] .pill-list li,
+html[data-site-theme="light"] .cat-chip,
+html[data-site-theme="light"] .cc-cat-chip {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(109, 61, 245, 0.22);
+  color: #3B2265;
+}
+html[data-site-theme="light"] .cat-chip:hover,
+html[data-site-theme="light"] .cc-cat-chip:hover {
+  background: #ffffff;
+  border-color: #6D3DF5;
+  color: #3B2265;
+}
+html[data-site-theme="light"] .cc-cat-chip.is-active {
+  background: linear-gradient(135deg, #6D3DF5, #A23DE0);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 18px -8px rgba(109, 61, 245, 0.7);
+}
+
+/* dividers / hairlines made of gradients */
+html[data-site-theme="light"] section#what-is {
+  box-shadow: none;
+  border-top-color: rgba(109, 61, 245, 0.14);
+}
+
+
+/* ==========================================================================
+   H. CARDS & LIGHT SURFACES
+   White cards, lavender borders, soft indigo shadow.
+   ========================================================================== */
+
+html[data-site-theme="light"] .pub-card,
+html[data-site-theme="light"] .card,
+html[data-site-theme="light"] .hc-card,
+html[data-site-theme="light"] .sk-card,
+html[data-site-theme="light"] .sk-grid li:first-child .sk-card,
+html[data-site-theme="light"] .eco-col,
+html[data-site-theme="light"] .aud-grid li,
+html[data-site-theme="light"] .cc-card,
+html[data-site-theme="light"] .tm-card,
+html[data-site-theme="light"] .tm-teaser,
+html[data-site-theme="light"] .tm-empty,
+html[data-site-theme="light"] .founder-metric,
+html[data-site-theme="light"] .ab-founder-stats li,
+html[data-site-theme="light"] .ct-form-card,
+html[data-site-theme="light"] .ct-methods,
+html[data-site-theme="light"] .hc-state,
+html[data-site-theme="light"] .cc-state,
+html[data-site-theme="light"] .cc-search,
+html[data-site-theme="light"] .cc-page-btn {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+  box-shadow: 0 14px 34px -22px rgba(28, 21, 48, 0.35);
+  color: var(--color-text);
+}
+html[data-site-theme="light"] .hc-card:hover,
+html[data-site-theme="light"] .sk-card:hover,
+html[data-site-theme="light"] .eco-col:hover,
+html[data-site-theme="light"] .aud-grid li:hover,
+html[data-site-theme="light"] .cc-card:hover,
+html[data-site-theme="light"] .tm-card:hover {
+  border-color: rgba(109, 61, 245, 0.45);
+  box-shadow: 0 26px 50px -24px rgba(109, 61, 245, 0.5);
+}
+html[data-site-theme="light"] .sk-grid li:first-child .sk-card {
+  background: linear-gradient(140deg, #F0EBFF 0%, #ffffff 70%);
+}
+html[data-site-theme="light"] .cc-search:hover,
+html[data-site-theme="light"] .cc-search:focus-within {
+  border-color: #6D3DF5;
+  box-shadow: 0 0 0 3px rgba(109, 61, 245, 0.18);
+}
+
+/* card glow blobs / pseudo overlays that were purple-on-black */
+html[data-site-theme="light"] .sk-card::before,
+html[data-site-theme="light"] .sk-card::after,
+html[data-site-theme="light"] .eco-col::before,
+html[data-site-theme="light"] .aud-grid li::before { opacity: 0.35; }
+
+/* course-card thumbnails: periwinkle art instead of near-black */
+html[data-site-theme="light"] .thumb-art,
+html[data-site-theme="light"] .cc-thumb-art {
+  background:
+    radial-gradient(circle at var(--art-x, 30%) var(--art-y, 25%), hsl(var(--art-hue, 252) 85% 72% / 0.75), transparent 62%),
+    radial-gradient(circle at 85% 90%, hsl(calc(var(--art-hue, 252) + 24) 80% 70% / 0.40), transparent 55%),
+    linear-gradient(155deg, #e5e0ff 0%, #cfc8ff 100%);
+}
+html[data-site-theme="light"] .cc-thumb { background: #e5e0ff; }
+html[data-site-theme="light"] .art-initials,
+html[data-site-theme="light"] .cc-art-initials {
+  background: linear-gradient(160deg, #3B2265 0%, #6D3DF5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: none;
+}
+html[data-site-theme="light"] .hc-thumb::after,
+html[data-site-theme="light"] .cc-thumb::after {
+  background: linear-gradient(180deg, transparent, rgba(28, 21, 48, 0.30));
+}
+/* badges sit on top of the thumbnail: keep them dark-navy with white text */
+html[data-site-theme="light"] .hc-badge,
+html[data-site-theme="light"] .cc-badge {
+  background: rgba(28, 21, 48, 0.78);
+  border-color: rgba(232, 210, 240, 0.35);
+  color: #fff;
+}
+html[data-site-theme="light"] .hc-badge-cat { color: #d4c8ff; }
+html[data-site-theme="light"] .cc-price-now,
+html[data-site-theme="light"] .hc-price {
+  background: linear-gradient(135deg, #1C1530, #6D3DF5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-site-theme="light"] .hc-go { background: rgba(109, 61, 245, 0.12); color: #5125C7; }
+
+/* numbered steps / flow */
+html[data-site-theme="light"] .flow-num {
+  background: #ffffff;
+  border: 1px solid rgba(109, 61, 245, 0.35);
+  color: #5125C7;
+  box-shadow: 0 0 0 4px rgba(109, 61, 245, 0.08);
+}
+html[data-site-theme="light"] .flow-step.is-active .flow-num,
+html[data-site-theme="light"] .flow-item.is-active .flow-num,
+html[data-site-theme="light"] .is-active > .flow-num,
+html[data-site-theme="light"] .flow-num.is-active {
+  background: linear-gradient(135deg, #6D3DF5, #A23DE0);
+  color: #fff;
+  border-color: rgba(109, 61, 245, 0.6);
+  box-shadow: 0 0 0 8px rgba(109, 61, 245, 0.12), 0 10px 30px rgba(109, 61, 245, 0.4);
+}
+html[data-site-theme="light"] .diff-num {
+  background: linear-gradient(160deg, #6D3DF5, rgba(162, 61, 224, 0.5));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* founder block */
+html[data-site-theme="light"] .founder-photo { box-shadow: 0 0 0 1px rgba(109, 61, 245, 0.2), 0 30px 60px -28px rgba(28, 21, 48, 0.45); }
+html[data-site-theme="light"] .founder-photo::after { background: linear-gradient(180deg, transparent, rgba(28, 21, 48, 0.55)); }
+html[data-site-theme="light"] .founder-stat {
+  background: rgba(28, 21, 48, 0.92);
+  box-shadow: 0 16px 36px -14px rgba(28, 21, 48, 0.6);
+}
+
+
+/* ==========================================================================
+   I. DARK-NAVY PANELS (club / CTA / feature) — navy with periwinkle glow
+   ========================================================================== */
+
+html[data-site-theme="light"] .club-panel,
+html[data-site-theme="light"] .cta-panel,
+html[data-site-theme="light"] .pub-cta-panel,
+html[data-site-theme="light"] .feature-panel {
+  background:
+    radial-gradient(800px 420px at 90% 0%, rgba(162, 61, 224, 0.55), transparent 62%),
+    radial-gradient(520px 300px at 0% 100%, rgba(162, 61, 224, 0.28), transparent 65%),
+    linear-gradient(160deg, #3B2265 0%, #1C1530 100%);
+  border-color: rgba(162, 61, 224, 0.35);
+  box-shadow: 0 34px 70px -30px rgba(28, 21, 48, 0.7);
+}
+html[data-site-theme="light"] .club-panel h2,
+html[data-site-theme="light"] .club-panel h3,
+html[data-site-theme="light"] .cta-panel h2,
+html[data-site-theme="light"] .cta-panel h3,
+html[data-site-theme="light"] .pub-cta-panel h2,
+html[data-site-theme="light"] .feature-panel h2 {
+  background: none;
+  -webkit-text-fill-color: #ffffff;
+  color: #ffffff;
+  filter: none;
+}
+html[data-site-theme="light"] .club-panel .section-title,
+html[data-site-theme="light"] .cta-panel .section-title,
+html[data-site-theme="light"] .feature-panel .section-title {
+  background: linear-gradient(160deg, #ffffff 40%, #cfc9ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-site-theme="light"] .club-panel p,
+html[data-site-theme="light"] .cta-panel p,
+html[data-site-theme="light"] .pub-cta-panel p,
+html[data-site-theme="light"] .feature-panel p { color: #d6d1f5; }
+html[data-site-theme="light"] .club-panel .eyebrow-plain,
+html[data-site-theme="light"] .cta-panel .eyebrow-plain,
+html[data-site-theme="light"] .feature-panel .eyebrow-plain {
+  color: #e2defd;
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(232, 210, 240, 0.32);
+}
+html[data-site-theme="light"] .club-mark {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(200, 150, 230, 0.55) 60%, rgba(162, 61, 224, 0.25) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+html[data-site-theme="light"] .eco-col-club,
+html[data-site-theme="light"] .ab-club,
+html[data-site-theme="light"] .tm-share {
+  background: linear-gradient(150deg, #3B2265 0%, #1C1530 100%);
+  border-color: rgba(162, 61, 224, 0.4);
+  box-shadow: 0 24px 50px -26px rgba(28, 21, 48, 0.7);
+}
+/* .oc-hero-meta's light-theme background/border/shadow are now owned
+   entirely by one-percent.css (loaded after this file) — see its
+   `html[data-site-theme="light"] .oc-hero-meta` rule. Do not re-add a
+   background override here; it will fight that rule. */
+
+/* generic: any white-ish text-on-dark panels keep working because the dark
+   tokens were restored in section C. */
+
+
+/* ==========================================================================
+   J. FOOTER — deep navy strip, as in the reference
+   ========================================================================== */
+
+html[data-site-theme="light"] .pub-footer {
+  background: linear-gradient(180deg, #3B2265 0%, #1C1530 100%);
+  border-top: 0;
+  box-shadow: none;
+}
+html[data-site-theme="light"] .pub-footer .brand { color: rgba(245, 243, 251, 0.8); }
+html[data-site-theme="light"] .pub-footer .brand span {
+  background: linear-gradient(120deg, #d4c8ff 0%, #a49dff 50%, #e2defd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+html[data-site-theme="light"] .pub-footer .footer-col a:not(.brand):hover { color: #ffffff; }
+html[data-site-theme="light"] .pub-footer .footer-bottom { border-top-color: rgba(232, 210, 240, 0.18); }
+
+
+/* ==========================================================================
+   K. FORMS (contact page etc.)
+   ========================================================================== */
+
+html[data-site-theme="light"] .contact-page .input,
+html[data-site-theme="light"] .input,
+html[data-site-theme="light"] input[type="text"],
+html[data-site-theme="light"] input[type="email"],
+html[data-site-theme="light"] input[type="search"],
+html[data-site-theme="light"] textarea,
+html[data-site-theme="light"] select {
+  background: #ffffff;
+  color: #1C1530;
+  border-color: #D9CEF0;
+}
+html[data-site-theme="light"] .contact-page .input:focus-visible,
+html[data-site-theme="light"] .input:focus-visible,
+html[data-site-theme="light"] input:focus-visible,
+html[data-site-theme="light"] textarea:focus-visible,
+html[data-site-theme="light"] select:focus-visible {
+  background: #ffffff;
+  border-color: #6D3DF5;
+  outline: 2px solid rgba(109, 61, 245, 0.35);
+  outline-offset: 1px;
+}
+html[data-site-theme="light"] ::placeholder { color: #7a74a6; opacity: 1; }
+html[data-site-theme="light"] .contact-page select.input option { background: #ffffff; color: #1C1530; }
+html[data-site-theme="light"] .cc-sort-select {
+  background-color: #ffffff;
+  color: #1C1530;
+  border-color: #D9CEF0;
+}
+html[data-site-theme="light"] label { color: #3B2265; }
+
+
+/* small, pale-lilac captions that disappear on a light background */
+html[data-site-theme="light"] .cc-cat-label { color: #5a5585; }
+html[data-site-theme="light"] .sk-card .sk-num,
+html[data-site-theme="light"] .sk-card [class*="row"],
+html[data-site-theme="light"] .sk-row { color: rgba(109, 61, 245, 0.55); }
+html[data-site-theme="light"] .art-label { color: rgba(28, 21, 48, 0.6); }
+html[data-site-theme="light"] .cc-link,
+html[data-site-theme="light"] .cc-practical a,
+html[data-site-theme="light"] .cc-choose a { text-decoration-color: rgba(109, 61, 245, 0.4); }
+
+/* ==========================================================================
+   L. MISC
+   ========================================================================== */
+
+html[data-site-theme="light"] .skip-link { background: #3B2265; color: #fff; }
+html[data-site-theme="light"] hr { border-color: rgba(109, 61, 245, 0.18); }
+html[data-site-theme="light"] .text-muted { color: var(--color-text-muted); }
+html[data-site-theme="light"] .oc-video-container { box-shadow: 0 18px 44px -20px rgba(28, 21, 48, 0.55); }
+
+/* ==========================================================================
+   M. 1% CLUB PAGE — full light-mode audit
+   Problem: --cream is #f4efe6 (off-white) — invisible on light bg #F7F1FF.
+   All headings, titles, blockquotes using var(--cream) fade away.
+   Fix: remap --cream to a dark navy in light mode, and fix section backgrounds.
+   ========================================================================== */
+
+/* 1. Remap --cream to a readable dark color in light mode */
+html[data-site-theme="light"] .club-page {
+  --cream: #1C1530;
+}
+
+/* 2. Hero background — dark radial gradients invisible on light bg.
+      Replace with a light lavender gradient that matches the page's purple theme. */
+html[data-site-theme="light"] .oc-hero-bg {
+  background:
+    radial-gradient(60% 70% at 78% 30%, rgba(109, 61, 245, 0.18), transparent 70%),
+    radial-gradient(40% 50% at 10% 90%, rgba(162, 61, 224, 0.12), transparent 70%),
+    linear-gradient(rgba(109, 61, 245, 0.06) 1px, transparent 1px) 0 0 / 72px 72px,
+    linear-gradient(90deg, rgba(109, 61, 245, 0.06) 1px, transparent 1px) 0 0 / 72px 72px;
+}
+
+/* 3. Watermark outline text — dark mode uses rgba(196,181,253,.34) which is fine on dark
+      but on light bg it blends. Darken the stroke slightly. */
+html[data-site-theme="light"] .oc-mark {
+  -webkit-text-stroke: 1px rgba(109, 61, 245, 0.22);
+}
+
+/* 4. Kicker label & hero name — already use --color-lavender which is remapped OK.
+      Hero h1 uses --cream which is now fixed. Double-confirm h1/h2 are dark. */
+html[data-site-theme="light"] .club-page h1,
+html[data-site-theme="light"] .club-page h2 {
+  color: var(--cream); /* now resolves to #1C1530 */
+}
+
+/* 5. .oc-alt alternate sections — dark rgba backgrounds disappear on light bg */
+html[data-site-theme="light"] .oc-alt {
+  background: linear-gradient(180deg, rgba(109, 61, 245, 0.06), rgba(109, 61, 245, 0));
+  border-top: 1px solid rgba(109, 61, 245, 0.12);
+}
+
+/* 6. Final CTA section — dark radial gradient invisible in light mode */
+html[data-site-theme="light"] .oc-final {
+  background: radial-gradient(50% 80% at 50% 100%, rgba(109, 61, 245, 0.14), transparent 70%);
+}
+
+/* 7. Review hero bg — same issue as main hero */
+html[data-site-theme="light"] .oc-review-hero .oc-hero-bg {
+  background: radial-gradient(60% 80% at 70% 40%, rgba(109, 61, 245, 0.14), transparent 70%);
+}
+
+/* 8. Course cards — var(--color-surface) is white in light mode, fine.
+      Card titles use --cream (now dark), descriptions use --color-text-muted (fine). */
+html[data-site-theme="light"] .oc-course {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.18);
+  box-shadow: 0 2px 12px -4px rgba(28, 21, 48, 0.10);
+}
+html[data-site-theme="light"] .oc-course:hover {
+  border-color: rgba(109, 61, 245, 0.4);
+  box-shadow: 0 4px 20px -6px rgba(28, 21, 48, 0.18);
+}
+html[data-site-theme="light"] .oc-course.is-on {
+  border-color: #6D3DF5;
+  box-shadow: 0 0 0 1px rgba(109, 61, 245, 0.45), 0 8px 28px -8px rgba(109, 61, 245, 0.3);
+}
+
+/* 9. Comparison table last-column highlight */
+html[data-site-theme="light"] .oc-tbl thead th:last-child,
+html[data-site-theme="light"] .oc-tbl td:last-child {
+  background: rgba(109, 61, 245, 0.07);
+}
+
+/* 10. Step number bubbles — already use --color-accent-500, fine in light mode.
+       Step headings use --cream (now dark navy). */
+
+/* 11. Testimonial quotes use --cream (now dark navy). Cards use --color-surface (white). */
+html[data-site-theme="light"] .oc-proof figure {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+  box-shadow: 0 2px 12px -4px rgba(28, 21, 48, 0.08);
+}
+
+/* 13. Review summary card */
+html[data-site-theme="light"] .oc-review-summary-inner {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.18);
+  box-shadow: 0 4px 20px -6px rgba(28, 21, 48, 0.12);
+}
+
+/* 14. Review plan tag — dark purple bg fine, ensure contrast */
+html[data-site-theme="light"] .oc-review-plan-tag {
+  background: rgba(109, 61, 245, 0.12);
+  border-color: rgba(109, 61, 245, 0.35);
+  color: #5125C7;
+}
+
+/* 15. Error state in review — red text #fca5a5 is too light on white */
+html[data-site-theme="light"] .oc-review-error {
+  background: rgba(220, 38, 38, 0.07);
+  border-color: rgba(220, 38, 38, 0.3);
+  color: #b91c1c;
+}
+
+/* 16. Ecosystem list numbers */
+html[data-site-theme="light"] .oc-n {
+  color: #5125C7;
+}
+
+/* 17. Sticky bar at bottom */
+html[data-site-theme="light"] .oc-sticky {
+  background: rgba(255, 255, 255, 0.92);
+  border-top-color: rgba(109, 61, 245, 0.22);
+  box-shadow: 0 -4px 20px -6px rgba(28, 21, 48, 0.14);
+}
+
+/* 18. Pick/select buttons on course cards */
+html[data-site-theme="light"] .oc-pick {
+  border-color: rgba(109, 61, 245, 0.35);
+  color: #3B2265;
+}
+html[data-site-theme="light"] .oc-pick:hover:not(:disabled) {
+  background: rgba(109, 61, 245, 0.10);
+  border-color: #6D3DF5;
+}
+
+/* 19. Benefits list items */
+html[data-site-theme="light"] .oc-benefit {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+}
+
+/* 20. Coupon note box */
+html[data-site-theme="light"] .oc-review-coupon-note {
+  background: rgba(109, 61, 245, 0.06);
+  border-color: rgba(109, 61, 245, 0.3);
+  color: #5125C7;
+}
+
+/* ==========================================================================
+   N. FULL LIGHT-MODE AUDIT — ALL PAGES
+   Fixes every hardcoded dark color and invisible element across all pages.
+   Color philosophy: dark text = #1C1530 (navy), muted = #6F6A78,
+   accents = #6D3DF5, error = #b91c1c, success = #166534, warning = #92400e
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   N1. HOME PAGE — Founder V2 block
+   .founder-v2-nameplate is an inset chip over the photo; needs dark glass
+   in light mode so it still reads against a bright portrait.
+   .founder-v2-traits is now a plain rail list (no per-item panel bg).
+   -------------------------------------------------------------------------- */
+html[data-site-theme="light"] .founder-v2-nameplate {
+  background: rgba(28, 21, 48, 0.82);
+  border-color: rgba(232, 210, 240, 0.20);
+}
+html[data-site-theme="light"] .founder-v2-nameplate-name {
+  color: #f5f3fb;
+}
+html[data-site-theme="light"] .founder-v2-nameplate-role {
+  color: #c4bde6;
+}
+
+
+/* --------------------------------------------------------------------------
+   N2. HOME PAGE — sk-card (skills grid) dark gradient bg
+   The sk-card uses linear-gradient(160deg, rgba(124,58,237,.10), rgba(20,15,36,.35))
+   which reads as dark purple on dark; on light it becomes a muddy overlay.
+   Already white via card rule — but add explicit bg to beat the gradient.
+   -------------------------------------------------------------------------- */
+html[data-site-theme="light"] .sk-card {
+  background: linear-gradient(160deg, #F0EBFF 0%, #ffffff 70%);
+}
+
+
+/* --------------------------------------------------------------------------
+   N3. COURSES PAGE — discount badge + hero lead + chip active state
+   .cc-off: green (#a0e878) is near-invisible on white bg
+   .cc-cat-chip.is-active: box-shadow uses rgba(0,0,0,.5) -> remove on light
+   -------------------------------------------------------------------------- */
+html[data-site-theme="light"] .cc-off {
+  color: #166534;
+  background: rgba(22, 101, 52, 0.10);
+  border-color: rgba(22, 101, 52, 0.30);
+}
+html[data-site-theme="light"] .cc-cat-chip.is-active {
+  background: linear-gradient(120deg, #6D3DF5 0%, #A23DE0 55%, #E8399B 100%);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px -6px rgba(109, 61, 245, 0.6);
+}
+/* Course hero grid bg fades to near-invisible on light — tone it down */
+html[data-site-theme="light"] .cc-hero-grid {
+  opacity: 0.08;
+}
+
+
+/* --------------------------------------------------------------------------
+   N4. TESTIMONIALS PAGE — program tag + tm-empty panel
+   .tm-program: gold #d9b96a is too pale on white bg
+   .tm-empty: dark gradient bg already overridden to white by card rule,
+              but needs a gentle purple gradient instead of stark white.
+   -------------------------------------------------------------------------- */
+html[data-site-theme="light"] .tm-program {
+  color: #92400e;
+  border-color: rgba(146, 64, 14, 0.35);
+  background: rgba(146, 64, 14, 0.07);
+}
+html[data-site-theme="light"] .tm-empty {
+  background:
+    radial-gradient(700px 320px at 12% 0%, rgba(109, 61, 245, 0.10), transparent 70%),
+    linear-gradient(180deg, #f8f6ff, #ffffff);
+  border-color: rgba(109, 61, 245, 0.16);
+  box-shadow: 0 14px 34px -22px rgba(28, 21, 48, 0.20);
+}
+/* tm-teaser section heading */
+html[data-site-theme="light"] .tm-teaser .section-title {
+  background: linear-gradient(160deg, #1C1530 30%, #6D3DF5 72%, #A23DE0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* --------------------------------------------------------------------------
+   N5. CONTACT PAGE — status colors that are dark-mode only
+   #fecaca (error text), #fcd34d (char limit warning), #bbf7d0 (success icon)
+   are all very pale — need dark-on-light equivalents.
+   -------------------------------------------------------------------------- */
+
+/* Error alert banner */
+html[data-site-theme="light"] .contact-page .ct-alert {
+  background: rgba(185, 28, 28, 0.07);
+  border-color: rgba(185, 28, 28, 0.30);
+  color: #b91c1c;
+}
+html[data-site-theme="light"] .contact-page .ct-alert a {
+  color: #7f1d1d;
+}
+
+/* Field validation error message */
+html[data-site-theme="light"] .contact-page .field-error {
+  color: #b91c1c;
+}
+html[data-site-theme="light"] .contact-page .field.has-error .input {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.4);
+}
+
+/* Character count near-limit warning */
+html[data-site-theme="light"] .ct-count.is-near {
+  color: #92400e;
+}
+
+/* Success state checkmark circle */
+html[data-site-theme="light"] .ct-success-mark {
+  color: #166534;
+  background: rgba(22, 101, 52, 0.10);
+  border-color: rgba(22, 101, 52, 0.35);
+}
+
+/* Contact method cards */
+html[data-site-theme="light"] .ct-methods {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+}
+
+/* Course enquiry chip */
+html[data-site-theme="light"] .ct-course-chip {
+  background: rgba(109, 61, 245, 0.07);
+  border-color: rgba(109, 61, 245, 0.25);
+}
+html[data-site-theme="light"] .ct-chip-x:hover {
+  background: rgba(109, 61, 245, 0.10);
+}
+
+
+/* --------------------------------------------------------------------------
+   N6. PUBLIC / SHARED — pub-cta glass glow + pub-hero background
+   .pub-cta-glow is an absolute decorative blur blob; on light it punches too
+   hard. .pub-hero-bg gradient should read against light bg.
+   -------------------------------------------------------------------------- */
+html[data-site-theme="light"] .pub-cta-glow {
+  opacity: 0.18;
+}
+html[data-site-theme="light"] .pub-hero-bg {
+  opacity: 0.10;
+}
+
+/* pub-hero eyebrow line divider */
+html[data-site-theme="light"] .pub-hero-divider {
+  background: rgba(109, 61, 245, 0.20);
+}
+
+
+/* --------------------------------------------------------------------------
+   N7. HOME PAGE — section backgrounds that used dark rgba overlays
+   Section #what-is already has border fix; these additional sections
+   had subtle dark-tinted backgrounds that disappear on light.
+   -------------------------------------------------------------------------- */
+
+/* "How it works" flow steps section */
+html[data-site-theme="light"] .home-page .flow-section,
+html[data-site-theme="light"] .home-page .section-flow {
+  background: var(--color-surface-alt);
+}
+
+/* Audience / "who is this for" grid items */
+html[data-site-theme="light"] .aud-grid li {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+}
+html[data-site-theme="light"] .aud-grid li strong {
+  color: #1C1530;
+}
+
+/* Diff / differentiator items */
+html[data-site-theme="light"] .diff-item {
+  border-top-color: rgba(109, 61, 245, 0.16);
+}
+html[data-site-theme="light"] .diff-item h3 {
+  color: #1C1530;
+}
+
+
+/* --------------------------------------------------------------------------
+   N8. ABOUT PAGE — ab-story-bridge pill trail already handled in about.css.
+   But courses-page and other pages may share .ab-* or need cross-page fixes.
+   -------------------------------------------------------------------------- */
+
+/* About page approach cards */
+html[data-site-theme="light"] .ab-diff-card {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+  box-shadow: 0 4px 20px -8px rgba(28, 21, 48, 0.12);
+}
+
+
+/* --------------------------------------------------------------------------
+   N9. GLOBAL — any remaining near-invisible elements across all pages
+   -------------------------------------------------------------------------- */
+
+/* Pill tags (skills, topics) that used dark glass */
+html[data-site-theme="light"] .pill-tag,
+html[data-site-theme="light"] .tag-chip {
+  background: rgba(109, 61, 245, 0.10);
+  border-color: rgba(109, 61, 245, 0.25);
+  color: #5125C7;
+}
+
+/* Generic "eyebrow" small label above headings */
+html[data-site-theme="light"] .section-eyebrow {
+  color: #5125C7;
+}
+
+/* Star ratings */
+html[data-site-theme="light"] .star-fill,
+html[data-site-theme="light"] .rating-star.filled {
+  color: #d97706;
+}
+html[data-site-theme="light"] .star-empty,
+html[data-site-theme="light"] .rating-star.empty {
+  color: rgba(109, 61, 245, 0.25);
+}
+
+/* Divider gradient bars */
+html[data-site-theme="light"] .section-divider,
+html[data-site-theme="light"] .div-gradient {
+  background: linear-gradient(90deg, transparent, rgba(109, 61, 245, 0.3), transparent);
+}
+
+/* Scroll progress bar (if any) */
+html[data-site-theme="light"] #scroll-progress,
+html[data-site-theme="light"] .scroll-bar {
+  background: linear-gradient(90deg, #6D3DF5, #A23DE0);
+}
+
+/* Toast / notification */
+html[data-site-theme="light"] .toast,
+html[data-site-theme="light"] .notification {
+  background: #1C1530;
+  color: #f5f3fb;
+  border-color: rgba(109, 61, 245, 0.4);
+  box-shadow: 0 8px 24px -6px rgba(28, 21, 48, 0.35);
+}
+
+/* Back-to-top button */
+html[data-site-theme="light"] .back-top,
+html[data-site-theme="light"] #back-to-top {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.25);
+  color: #6D3DF5;
+  box-shadow: 0 4px 16px -4px rgba(28, 21, 48, 0.20);
+}
+
+/* 404 page */
+html[data-site-theme="light"] .err-code {
+  background: linear-gradient(160deg, #1C1530 30%, #6D3DF5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

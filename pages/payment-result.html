@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <script src="../assets/js/theme-init.js"></script>
+  <title>Payment Result — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/payment-result.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <!-- Protected shell -->
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container">
+
+      <!-- ================================================================
+           STATE: LOADING
+           ================================================================ -->
+      <div id="result-loading" class="payment-result-loading" aria-live="polite" aria-label="Confirming payment">
+        <div class="payment-result-spinner" aria-hidden="true"></div>
+        <p class="payment-result-loading-text">Confirming your payment…</p>
+        <p class="sr-only" aria-live="assertive">Please wait while we confirm your payment.</p>
+      </div>
+
+      <!-- ================================================================
+           STATE: SUCCESS
+           ================================================================ -->
+      <div id="result-success" class="payment-result-card payment-result-success" hidden aria-live="polite">
+
+        <div class="payment-result-icon payment-result-icon--success" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+
+        <h1 class="payment-result-title">Payment Successful!</h1>
+        <p class="payment-result-subtitle">Your order has been confirmed and we've started preparing your courses.</p>
+
+        <div class="payment-result-details" id="success-details">
+          <div class="payment-result-row">
+            <span class="payment-result-label">Order</span>
+            <span class="payment-result-value" id="success-order-number">—</span>
+          </div>
+          <div class="payment-result-row">
+            <span class="payment-result-label">Amount</span>
+            <span class="payment-result-value" id="success-amount">—</span>
+          </div>
+          <div class="payment-result-row">
+            <span class="payment-result-label">Courses</span>
+            <span class="payment-result-value" id="success-course-count">—</span>
+          </div>
+          <div class="payment-result-row">
+            <span class="payment-result-label">Status</span>
+            <span class="payment-result-value payment-result-status-paid">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Payment confirmed
+            </span>
+          </div>
+        </div>
+
+        <!-- Enrollment pending notice: shown when Order is PAID but enrollment
+             hasn't been processed yet (Phase 32 sweeper is async) -->
+        <div class="payment-result-notice" id="success-enrollment-notice" hidden>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Course access will be ready shortly. If it doesn't appear within a few minutes, please refresh your dashboard.</span>
+        </div>
+
+        <div class="payment-result-actions">
+          <a href="dashboard.html" class="btn btn-primary btn-lg">
+            Go to My Learning
+          </a>
+          <a href="orders.html" class="btn btn-outline" id="success-view-order-link">
+            View Order
+          </a>
+        </div>
+
+      </div>
+
+      <!-- ================================================================
+           STATE: PENDING (payment authorized but order not yet PAID)
+           Shown briefly while webhook processes in the background.
+           ================================================================ -->
+      <div id="result-pending" class="payment-result-card payment-result-pending" hidden aria-live="polite">
+
+        <div class="payment-result-icon payment-result-icon--pending" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+
+        <h1 class="payment-result-title">Payment Processing</h1>
+        <p class="payment-result-subtitle">Your payment was received and is being confirmed. This usually takes a moment.</p>
+
+        <div class="payment-result-details">
+          <div class="payment-result-row">
+            <span class="payment-result-label">Order</span>
+            <span class="payment-result-value" id="pending-order-number">—</span>
+          </div>
+          <div class="payment-result-row">
+            <span class="payment-result-label">Status</span>
+            <span class="payment-result-value payment-result-status-pending">Processing…</span>
+          </div>
+        </div>
+
+        <div class="payment-result-notice">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Your payment is being processed. You'll receive access to your courses once confirmation is complete. Check your dashboard in a few minutes.</span>
+        </div>
+
+        <div class="payment-result-actions">
+          <a href="dashboard.html" class="btn btn-primary btn-lg">Go to Dashboard</a>
+          <a href="orders.html" class="btn btn-outline">View Orders</a>
+        </div>
+
+      </div>
+
+      <!-- ================================================================
+           STATE: FAILURE
+           ================================================================ -->
+      <div id="result-failure" class="payment-result-card payment-result-failure" hidden aria-live="polite" role="alert">
+
+        <div class="payment-result-icon payment-result-icon--failure" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+
+        <h1 class="payment-result-title">Payment Could Not Be Completed</h1>
+        <p class="payment-result-subtitle" id="failure-message">Your payment was not processed. No money has been deducted.</p>
+
+        <div class="payment-result-actions">
+          <button type="button" class="btn btn-primary btn-lg" id="failure-retry-btn">Try Again</button>
+          <a href="cart.html" class="btn btn-outline">Back to Cart</a>
+        </div>
+
+      </div>
+
+      <!-- ================================================================
+           STATE: ERROR (can't determine order status)
+           ================================================================ -->
+      <div id="result-error" class="payment-result-card payment-result-failure" hidden aria-live="polite" role="alert">
+
+        <div class="payment-result-icon payment-result-icon--failure" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+
+        <h1 class="payment-result-title">Unable to Confirm Payment</h1>
+        <p class="payment-result-subtitle">We couldn't load your order status right now. Please check your orders page or contact support.</p>
+
+        <div class="payment-result-actions">
+          <a href="orders.html" class="btn btn-primary btn-lg">View My Orders</a>
+          <a href="dashboard.html" class="btn btn-outline">Go to Dashboard</a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/payment-result.js"></script>
+</body>
+</html>
