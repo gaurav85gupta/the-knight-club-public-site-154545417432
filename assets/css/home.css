@@ -1520,20 +1520,45 @@ html[data-site-theme="light"] main#main > section#founder.section-block {
   transition: opacity 0.05s linear;
 }
 
-/* Mobile: the hero is a natural-height text block + image band (see the
-   640px breakpoint above), not a full-viewport panel the next section
-   slides over — so the sticky pin and the scroll-driven blur/zoom FX,
-   which are both built around that full-height overlap, are switched off
-   rather than left to fight the new layout. */
+/* Mobile: hero keeps the same sticky-pin cinematic overlap as desktop —
+   it stays fixed in place while the next section (#founder) scrolls up
+   and slides over it. The hero itself is still the natural-height text
+   stack from the 640px breakpoint above (no forced full-viewport height),
+   so the "pinned" distance is short and the overlap reads as a quick,
+   deliberate reveal rather than a long scrub. Intensities are toned down
+   from desktop (less blur/zoom/translate) since the hero is shorter here
+   and the ambient ::after/::before image layer is off on mobile anyway. */
 @media (max-width: 640px) {
-  .home-page .hero.hero-v2 { position: relative !important; }
-  .home-page .hero.hero-v2::after,
-  .hero-v2-inner,
-  .hero-scroll-hint {
-    filter: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-    transition: none !important;
+  .home-page .hero.hero-v2 {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 0 !important;
+  }
+
+  .hero-v2-copy {
+    opacity: calc(1 - var(--hero-scroll) * 1.1);
+    transform:
+      translateY(calc(var(--hero-scroll) * -28px))
+      scale(calc(1 - var(--hero-scroll) * 0.04));
+    filter: blur(calc(var(--hero-scroll) * 4px));
+    transition: opacity 0.05s linear, transform 0.05s linear, filter 0.05s linear;
+  }
+
+  .hero-scroll-hint { display: none; }
+}
+
+/* Founder section is the one that slides up and visually covers the
+   pinned hero — give it a rounded top edge on mobile too (desktop keeps
+   square corners/just a shadow) so the overlap reads as a distinct
+   "sheet" sliding over the hero, not just a hard rectangular cut. */
+@media (max-width: 640px) {
+  main#main > section#founder.section-block {
+    position: relative;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    box-shadow: 0 -16px 40px -12px rgba(0, 0, 0, 0.5);
+  }
+  html[data-site-theme="light"] main#main > section#founder.section-block {
+    box-shadow: 0 -14px 34px -14px rgba(28, 21, 48, 0.25);
   }
 }
 
