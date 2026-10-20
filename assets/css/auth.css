@@ -108,7 +108,6 @@
   max-width: 460px;
   perspective: 1800px;
 }
-.auth-flip-scene.is-wide { max-width: 720px; }
 
 .auth-flip-card {
   position: relative;
@@ -228,22 +227,7 @@
   grid-template-columns: 1fr;
   gap: var(--space-3);
 }
-/* Signup form is long, so it goes two columns from the smallest screens
-   (not just tablet+) to cut vertical scrolling; fields that need the full
-   width (section titles, name, address, submit) opt in via .full. */
-.form-grid.two-col { grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-3); }
-.form-section-title {
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-accent-600);
-  margin: var(--space-2) 0 0;
-}
-.form-section-title:first-child { margin-top: 0; }
-
 .field { display: flex; flex-direction: column; gap: 2px; }
-.field.full { grid-column: 1 / -1; }
 
 .field label {
   font-weight: 600;
@@ -503,12 +487,6 @@ textarea.input { resize: vertical; min-height: 56px; }
   /* Prioritize the form over the artwork on small screens; keep the purple
      brand identity via the fallback radial glow rather than the full crop. */
   .auth-page::before { background-position: center 15%, center 15%; opacity: 0.55; }
-}
-
-/* Very narrow screens: two columns get too cramped for comfortable typing,
-   so the signup form drops back to one column here only. */
-@media (max-width: 360px) {
-  .form-grid.two-col { grid-template-columns: 1fr; }
 }
 
 /* Respect users who ask for less motion */

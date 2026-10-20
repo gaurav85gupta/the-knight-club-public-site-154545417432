@@ -31,29 +31,17 @@
   // ---- Client-side validation (feedback only; the server re-validates) ----
   const validators = {
     userId: (f) => Forms.check.userId(f.userId.value),
-    mobile: (f) => Forms.check.mobile(f.mobile.value),
-    password: (f) => Forms.check.password(f.password.value),
-    confirmPassword: (f) =>
-      f.confirmPassword.value === f.password.value ? '' : 'Passwords do not match.',
     fullName: (f) => {
       const v = f.fullName.value.trim();
       if (v.length < 2) return 'Please provide your full name.';
       if (!/\p{L}/u.test(v)) return 'Please provide your full name.';
       return '';
     },
-    dateOfBirth: (f) => {
-      const v = f.dateOfBirth.value;
-      if (!v) return 'Please provide your date of birth.';
-      if (Number.isNaN(Date.parse(v))) return 'Please provide a valid date of birth.';
-      return '';
-    },
-    gender: (f) => (f.gender.value ? '' : 'Please select a gender option.'),
-    address: (f) =>
-      f.address.value.trim().length >= 5 ? '' : 'Please provide your address.',
-    city: (f) => (f.city.value.trim().length >= 2 ? '' : 'Please provide your city.'),
+    mobile: (f) => Forms.check.mobile(f.mobile.value),
     state: (f) => (f.state.value.trim().length >= 2 ? '' : 'Please provide your state.'),
-    pincode: (f) =>
-      /^[1-9]\d{5}$/.test(f.pincode.value.trim()) ? '' : 'Please provide a valid 6-digit pincode.',
+    password: (f) => Forms.check.password(f.password.value),
+    confirmPassword: (f) =>
+      f.confirmPassword.value === f.password.value ? '' : 'Passwords do not match.',
   };
 
   /** Validates one field. Returns true when valid. */
@@ -88,9 +76,6 @@
     });
   }
 
-  // The DOB picker must not offer future dates.
-  form.dateOfBirth.max = new Date().toISOString().slice(0, 10);
-
   /**
    * The backend answers a duplicate with 409 and a MESSAGE (not a field
    * name), so route it to the right input by message. Anything not
@@ -123,14 +108,9 @@
       fullName: form.fullName.value,
       mobile: form.mobile.value,
       userId: form.userId.value,
+      state: form.state.value,
       password: form.password.value,
       confirmPassword: form.confirmPassword.value,
-      dateOfBirth: form.dateOfBirth.value,
-      gender: form.gender.value,
-      address: form.address.value,
-      city: form.city.value,
-      state: form.state.value,
-      pincode: form.pincode.value,
     };
 
     Forms.setLoading(submitBtn, true, 'Creating account…');

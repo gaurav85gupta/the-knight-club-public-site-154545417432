@@ -2,10 +2,10 @@
  * Profile controller — personal information (read-only).
  *
  * DATA: the same `user` object Auth.requireAuth() gets from GET /auth/me,
- * rendering exactly the fields the old dashboard "Profile" section showed
- * (User ID, name, mobile, date of birth, city/state, role, status). The
- * mobile number arrives ALREADY MASKED by the server; nothing here unmasks
- * it. No password, hash, token or internal field is ever rendered.
+ * rendering exactly the fields the signup form collects (User ID, name,
+ * mobile, state, role, status). The mobile number arrives ALREADY MASKED
+ * by the server; nothing here unmasks it. No password, hash, token or
+ * internal field is ever rendered.
  *
  * NO EDITING: the codebase has no profile-update code or API call, and the
  * refactor brief says not to grow this UI task into a new profile-management
@@ -29,13 +29,11 @@
   role.textContent = user.role || '';
   role.hidden = !user.role;
 
-  const cityState = [user.city, user.state].filter(Boolean).join(', ');
   const rows = [
     ['Full name', user.fullName],
     ['User ID', user.userId],
     ['Mobile', user.mobile],
-    ['Date of birth', user.dateOfBirth],
-    ['City', cityState],
+    ['State', user.state],
     ['Account status', user.status],
   ];
 

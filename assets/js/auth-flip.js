@@ -107,11 +107,10 @@
   resizeObserver.observe(faceSignup);
 
   // Viewport width changes (orientation change, resizing a desktop window)
-  // can reflow a face's content (e.g. the two-column signup grid collapsing
-  // to one column), which the ResizeObserver above already catches via the
-  // face's own box, but window resize is listened for too as a fallback
-  // for browsers where that reflow doesn't register as the observed box
-  // changing immediately.
+  // can reflow a face's content, which the ResizeObserver above already
+  // catches via the face's own box, but window resize is listened for too
+  // as a fallback for browsers where that reflow doesn't register as the
+  // observed box changing immediately.
   window.addEventListener('resize', () => syncHeight(scene.dataset.active));
 
   // Exposed so signup.js can flip to the Sign In face in place after a
