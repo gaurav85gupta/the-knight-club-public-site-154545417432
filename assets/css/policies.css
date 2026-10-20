@@ -1,0 +1,223 @@
+/* ============================================================
+   Policies pages (Refund / Terms / Intellectual Property / Privacy)
+   ============================================================ */
+
+.policies-main {
+  padding: var(--space-10) 0 var(--space-16);
+  min-height: 60vh;
+}
+
+.policies-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+/* ---- Sidebar nav ---- */
+.policies-nav {
+  position: sticky;
+  top: calc(var(--space-6) + 72px);
+}
+
+.policies-nav-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3);
+  padding-left: var(--space-4);
+}
+
+.policies-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.policies-nav-link {
+  display: block;
+  padding: 0.7rem var(--space-4);
+  border-radius: 10px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.policies-nav-link:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--color-text);
+}
+
+.policies-nav-link.is-active {
+  background: var(--color-accent-500);
+  color: var(--color-text-on-accent);
+}
+
+/* ---- Content card ---- */
+.policies-content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: var(--space-8);
+}
+
+.policies-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.policies-head-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124, 92, 255, 0.15);
+  color: var(--color-accent-500);
+}
+
+.policies-title {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.policies-updated {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.policies-body h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.policies-body h2:first-child {
+  margin-top: 0;
+}
+
+.policies-body p {
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  margin: 0 0 var(--space-3);
+}
+
+.policies-body ul {
+  margin: 0 0 var(--space-3);
+  padding-left: 0;
+  list-style: none;
+}
+
+.policies-body ul li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin-bottom: 0.6rem;
+}
+
+.policies-body ul li svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--color-accent-500);
+}
+
+.policies-divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-6) 0;
+}
+
+.policies-contact-title {
+  font-weight: 700;
+  margin: 0 0 var(--space-2);
+}
+
+.policies-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  font-size: 0.92rem;
+}
+
+.policies-contact-row a,
+.policies-contact-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.policies-contact-row a:hover {
+  color: var(--color-accent-500);
+}
+
+/* ---- Notice banner ---- */
+.policies-notice {
+  margin-top: var(--space-8);
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: 12px;
+  background: rgba(240, 180, 41, 0.08);
+  border: 1px solid rgba(240, 180, 41, 0.3);
+}
+
+.policies-notice svg {
+  flex-shrink: 0;
+  color: #f0b429;
+  margin-top: 2px;
+}
+
+.policies-notice-title {
+  font-weight: 700;
+  color: #f0b429;
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+}
+
+.policies-notice p {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.policies-notice a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+@media (max-width: 860px) {
+  .policies-layout {
+    grid-template-columns: 1fr;
+  }
+  .policies-nav {
+    position: static;
+  }
+  .policies-nav-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-radius: 0;
+  }
+  .policies-nav-link {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}

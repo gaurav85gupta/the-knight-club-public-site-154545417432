@@ -118,6 +118,61 @@
     row.innerHTML = parts.map((p, i) => (i === 0 ? p : `<span class="dot">•</span>${p}`)).join(' ');
   }
 
+  /**
+   * The admin editor for course.description is a plain textarea — instructors
+   * write "headings" and "bullets" the way anyone types in a text box: a
+   * short line as a heading, lines starting with •/-/* as a list, blank
+   * lines between paragraphs. Previously this all went into one <p> via
+   * textContent (CSS white-space: pre-line kept the line breaks but not
+   * the structure), so bullets rendered as a wall of "• " characters
+   * in-line instead of an actual list, and heading lines looked identical
+   * to body text. This turns that same plain text into real <h3>/<ul>/<p>
+   * markup — still 100% escaped, never raw admin HTML — so it reads the
+   * way it was evidently intended to.
+   */
+  function renderDescription(course) {
+    const container = document.getElementById('course-description');
+    const raw = (course.description || course.shortDescription || '').trim();
+    if (!raw) { container.innerHTML = ''; return; }
+
+    const BULLET_RE = /^[•\-*]\s+/;
+    // A short line (no terminal punctuation, under ~60 chars) that isn't
+    // itself a bullet reads as a heading the admin typed inline — e.g.
+    // "🔑 Key Pillars of Social Media Marketing".
+    function looksLikeHeading(line) {
+      if (BULLET_RE.test(line)) return false;
+      if (line.length > 70) return false;
+      if (/[.!?,;:]$/.test(line)) return false;
+      return true;
+    }
+
+    const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
+    const htmlParts = [];
+    let listBuffer = [];
+
+    function flushList() {
+      if (!listBuffer.length) return;
+      htmlParts.push(`<ul class="cd-desc-list">${listBuffer.map((item) => `<li>${Format.escapeHtml(item)}</li>`).join('')}</ul>`);
+      listBuffer = [];
+    }
+
+    lines.forEach((line) => {
+      if (BULLET_RE.test(line)) {
+        listBuffer.push(line.replace(BULLET_RE, ''));
+        return;
+      }
+      flushList();
+      if (looksLikeHeading(line)) {
+        htmlParts.push(`<h3 class="cd-desc-heading">${Format.escapeHtml(line)}</h3>`);
+      } else {
+        htmlParts.push(`<p>${Format.escapeHtml(line)}</p>`);
+      }
+    });
+    flushList();
+
+    container.innerHTML = htmlParts.join('');
+  }
+
   function renderOutcomesAndRequirements(course) {
     const outcomes = (course.metadata && course.metadata.learningOutcomes) || [];
     const requirements = (course.metadata && course.metadata.requirements) || [];
@@ -143,6 +198,71 @@
     }
   }
 
+  /**
+   * The buy card has exactly ONE primary action visible at a time — never
+   * a stack of "In Cart" + "Enroll now" + "Start Learning" + "View Cart"
+   * together (that was the bug: nothing ever hid the other three once one
+   * of them turned on). This is the single place that decides which one.
+   *
+   * States, in priority order:
+   *   OWNED      — student already has access -> only "Start Learning"
+   *   IN_CART    — paid course sitting in the cart -> "In Cart" (disabled)
+   *                + "View Cart"
+   *   DEFAULT    — not owned, not in cart -> "Enroll now" (+ "Add to Cart"
+   *                for paid courses, wired separately in wireAddToCartButton)
+   */
+  function setBuyCardState(state, course) {
+    const enrollBtn = document.getElementById('enroll-btn');
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    const startLink = document.getElementById('start-learning-link');
+    const goToCartLink = document.getElementById('go-to-cart-link');
+    const secureNote = document.getElementById('buy-secure-note');
+
+    if (state === 'owned') {
+      enrollBtn.hidden = true;
+      addToCartBtn.hidden = true;
+      goToCartLink.hidden = true;
+      startLink.hidden = false;
+      startLink.href = `learn.html?courseId=${encodeURIComponent(course.id)}`;
+      if (secureNote) secureNote.hidden = true; // nothing to pay for anymore
+    } else if (state === 'in-cart') {
+      startLink.hidden = true;
+      enrollBtn.hidden = true;
+      if (addToCartBtn) {
+        addToCartBtn.hidden = false;
+        addToCartBtn.disabled = true;
+        const label = addToCartBtn.querySelector('.label');
+        if (label) label.textContent = 'In Cart';
+      }
+      goToCartLink.hidden = false;
+    } else {
+      startLink.hidden = true;
+      goToCartLink.hidden = true;
+      enrollBtn.hidden = false;
+      // addToCartBtn's own hidden/disabled state is managed by
+      // wireAddToCartButton (it stays hidden for free courses entirely).
+    }
+  }
+
+  /**
+   * Checks whether the signed-in student already owns this course, via the
+   * same /students/me/dashboard + myLearnings lookup home.js uses for its
+   * course cards (spec-consistent: no separate "am I enrolled" endpoint
+   * exists, and this one is already authenticated + already proven out).
+   * Guests and API failures both resolve to "not owned" — never block the
+   * default buy flow on this secondary check.
+   */
+  async function checkOwnership(course) {
+    if (!Auth.isAuthenticated()) return false;
+    try {
+      const dash = await Api.get('/students/me/dashboard');
+      const owned = new Set((dash.myLearnings || []).map((l) => l.slug).filter(Boolean));
+      return owned.has(course.slug);
+    } catch {
+      return false; // never block the page on this
+    }
+  }
+
   function renderBuyCard(course) {
     const original = Format.originalPrice(course.pricing);
     document.getElementById('buy-price').textContent = Format.price(course.pricing);
@@ -151,17 +271,39 @@
       originalEl.hidden = false;
       originalEl.textContent = original;
     }
+    // Discount % badge next to the price (purely cosmetic — derived from
+    // existing pricing fields, no new data dependency). Left unset (no
+    // badge) for free courses or when there's no discount.
+    const priceRow = document.getElementById('buy-price') && document.getElementById('buy-price').closest('.cd-price-row');
+    if (priceRow) {
+      const p = course.pricing;
+      if (p && !p.isFree && p.basePrice > p.salePrice) {
+        const pct = Math.round((1 - p.salePrice / p.basePrice) * 100);
+        priceRow.setAttribute('data-discount', `${pct}%`);
+      } else {
+        priceRow.removeAttribute('data-discount');
+      }
+    }
     if (course.thumbnail) {
       const wrap = document.getElementById('buy-thumb-wrap');
       wrap.hidden = false;
       document.getElementById('buy-thumb').src = course.thumbnail;
       document.getElementById('buy-thumb').alt = course.title;
     }
+    setBuyCardState('default', course);
     wireEnrollButton(course);
     // Phase 29: Add to Cart button. Wired after the enroll button so both
     // CTAs are handled in one place. The Add to Cart button is only shown
     // for paid, available courses where the student is not already enrolled.
     wireAddToCartButton(course);
+
+    // Ownership check is async and secondary to the rest of the card —
+    // the default (not-owned) state is already correct and on-screen the
+    // moment this resolves, this only upgrades it if the student already
+    // has the course.
+    checkOwnership(course).then((owned) => {
+      if (owned) setBuyCardState('owned', course);
+    });
   }
 
   /**
@@ -195,7 +337,15 @@
     btn.hidden = false;
 
     let _inCart = false;
+    const enrollBtn = document.getElementById('enroll-btn');
+    const startLink = document.getElementById('start-learning-link');
 
+    // BUGFIX: this used to only hide enroll-btn, leaving start-learning-link
+    // (hidden only by setBuyCardState's own 'in-cart' branch, which this
+    // function never calls) still visible — so "In Cart" + "Enroll now" +
+    // "Start Learning" + "View Cart" could all render stacked at once. This
+    // is the second place the card's buttons get toggled (the first is
+    // setBuyCardState above), so it must hide the exact same set.
     function setInCartState(inCart) {
       _inCart = inCart;
       const labelEl = btn.querySelector('.label');
@@ -203,10 +353,16 @@
         if (labelEl) labelEl.textContent = 'In Cart';
         btn.disabled = true; // already in cart — no re-add
         if (goToCartLink) goToCartLink.hidden = false;
+        // One primary action at a time: once it's in the cart, "Enroll
+        // now" and "Start Learning" (both competing actions) step aside
+        // in favour of "View Cart" -> checkout.
+        if (enrollBtn) enrollBtn.hidden = true;
+        if (startLink) startLink.hidden = true;
       } else {
         if (labelEl) labelEl.textContent = 'Add to Cart';
         btn.disabled = false;
         if (goToCartLink) goToCartLink.hidden = true;
+        if (enrollBtn) enrollBtn.hidden = false;
       }
     }
 
@@ -249,11 +405,9 @@
         //   400                  → course unavailable
         //   401                  → not authenticated (should not reach here)
         if (err && err.status === 409) {
-          // Already purchased → hide Add to Cart, show Start Learning.
-          btn.hidden = true;
-          if (goToCartLink) goToCartLink.hidden = true;
-          const startLink = document.getElementById('start-learning-link');
-          if (startLink) startLink.hidden = false;
+          // Already purchased -> collapse the whole card down to the one
+          // state that's actually true now: "Start Learning", nothing else.
+          setBuyCardState('owned', course);
         } else if (err && err.status === 401) {
           Auth.handleSessionError(err);
         } else {
@@ -484,7 +638,7 @@
       document.getElementById('course-title').textContent = course.title;
       document.getElementById('course-short-desc').textContent = course.shortDescription || '';
       renderMetaRow(course);
-      document.getElementById('course-description').textContent = course.description || course.shortDescription || '';
+      renderDescription(course);
       renderOutcomesAndRequirements(course);
       renderBuyCard(course);
       renderRelatedCourses(data.relatedCourses);

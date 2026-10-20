@@ -1,19 +1,31 @@
 /* ==========================================================================
-   THE KNIGHT CLUB — Course Detail Page (course.html)
+   THE KNIGHT CLUB — Course Detail Page (course.html) — Premium Redesign
 
    Loaded by course.html, after public.css/courses.css/theme-futuristic.css.
    Namespace: cd- for everything specific to this page. Reuses existing
-   shared primitives (.pub-hero, .cc-h2, .cc-section-head, .pub-eyebrow,
-   .course-grid/.course-card from the Related Courses block) rather than
-   duplicating them, matching Phase R2's shared-CSS-ownership rule.
+   shared primitives (.cc-h2, .cc-section-head, .pub-eyebrow, .course-grid/
+   .course-card from the Related Courses block) rather than duplicating
+   them, matching Phase R2's shared-CSS-ownership rule.
 
    Colours/spacing/motion come from tokens.css only, so Dark and Light
    both work without extra overrides here beyond the few surface flips
    called out below.
+
+   STRUCTURE (matches the rebuilt course.html markup):
+     1. Loading / error states
+     2. Hero — breadcrumb + title/meta (left) + framed course image (right)
+     3. Body grid — content column + sticky buy card
+     4. Content cards (about / outcomes / curriculum / requirements / tags)
+     5. Buy card
+     6. Related courses
+     7. Mobile sticky CTA bar
+     8. Responsive
+     9. Light theme
+     10. Reduced motion
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   0. PAGE-LEVEL ATMOSPHERE (mirrors courses.css section 0)
+   0. PAGE-LEVEL ATMOSPHERE
    -------------------------------------------------------------------------- */
 
 .course-page {
@@ -82,12 +94,17 @@
 .cd-state-panel p { margin: 0 0 var(--space-6); color: var(--color-text-muted); line-height: 1.6; }
 
 /* ==========================================================================
-   3. HERO
+   3. HERO — breadcrumb + title/meta + framed course image
    ========================================================================== */
 
 .cd-hero {
-  text-align: left;
-  padding-bottom: var(--space-10);
+  position: relative;
+  /* Extra clearance below the floating sticky header so hero copy never
+     sits flush under the pill — was var(--space-8) (32px), too tight once
+     the pill's own blur/shadow is accounted for. */
+  padding-top: calc(var(--pub-header-height) + var(--space-10));
+  padding-bottom: var(--space-14, var(--space-12));
+  overflow: clip;
 }
 
 .cd-hero-bg {
@@ -99,18 +116,19 @@
 .cd-hero-bg::before {
   content: '';
   position: absolute;
-  top: -220px;
+  top: -260px;
   left: 50%;
-  width: 1100px;
-  height: 640px;
+  width: 1300px;
+  height: 720px;
   transform: translateX(-50%);
   background:
-    radial-gradient(ellipse 55% 50% at 50% 0%, rgba(139, 69, 255, 0.16) 0%, transparent 70%),
-    radial-gradient(ellipse 35% 28% at 20% 55%, rgba(80, 40, 180, 0.07) 0%, transparent 60%);
+    radial-gradient(ellipse 50% 50% at 30% 10%, rgba(139, 69, 255, 0.20) 0%, transparent 65%),
+    radial-gradient(ellipse 38% 40% at 80% 25%, rgba(6, 182, 212, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 28% at 15% 60%, rgba(80, 40, 180, 0.08) 0%, transparent 60%);
 }
 
 .cd-breadcrumbs {
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-6);
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
@@ -128,11 +146,20 @@
   vertical-align: bottom;
 }
 
+.cd-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.cd-hero-copy { min-width: 0; }
+
 .cd-title {
   margin: 0 0 var(--space-4);
-  max-width: 24ch;
-  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
-  line-height: 1.1;
+  max-width: 22ch;
+  font-size: clamp(2.3rem, 3.8vw, 3.3rem);
+  line-height: 1.06;
   letter-spacing: -0.03em;
   font-weight: 800;
   color: #f3effa;
@@ -141,10 +168,18 @@
 
 .cd-short-desc {
   margin: 0 0 var(--space-6);
-  max-width: 640px;
+  max-width: 56ch;
   font-size: var(--font-size-lg);
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--color-text-muted);
+}
+
+/* Meta row ("by X • duration • EN") gets a touch more presence so it
+   reads as a credibility strip, not an afterthought caption. */
+.cd-meta-row {
+  padding-top: var(--space-5);
+  margin-top: var(--space-1);
+  border-top: 1px solid var(--color-border-soft);
 }
 
 .cd-meta-row {
@@ -159,24 +194,69 @@
 .cd-meta-row .dot { color: var(--color-border-strong); }
 
 /* Category / level badges rendered into #detail-meta-top */
-#detail-meta-top .course-card-meta { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4); }
+#detail-meta-top .course-card-meta { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-5); }
 #detail-meta-top .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.3rem 0.8rem;
+  padding: 0.34rem 0.9rem;
   border-radius: var(--radius-full);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   color: var(--color-lavender);
-  background: rgba(139, 69, 255, 0.12);
-  border: 1px solid rgba(139, 69, 255, 0.35);
+  background: rgba(139, 69, 255, 0.14);
+  border: 1px solid rgba(139, 69, 255, 0.4);
 }
 #detail-meta-top .badge-muted {
   color: var(--color-text-muted);
   background: var(--color-surface-alt);
   border-color: var(--color-border-soft);
+  text-transform: none;
 }
+
+/* ---- Framed course image (hero media) ---- */
+
+.cd-hero-media { position: relative; }
+
+.cd-banner-inner {
+  position: relative;
+  aspect-ratio: 4 / 3.1;
+  overflow: hidden;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 40px 90px -30px rgba(0, 0, 0, 0.75),
+    0 0 90px -30px rgba(139, 69, 255, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  transform: rotate(1.2deg);
+  transition: transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out);
+}
+.cd-hero-media:hover .cd-banner-inner {
+  transform: rotate(0deg) scale(1.015);
+  box-shadow:
+    0 48px 110px -28px rgba(0, 0, 0, 0.8),
+    0 0 70px -20px rgba(139, 69, 255, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+.cd-banner-inner[hidden] { display: none; }
+.cd-banner-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cd-media-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(200deg, transparent 55%, rgba(7, 5, 15, 0.55) 100%);
+}
+/* No thumbnail: hide the media column entirely rather than leaving a
+   floating empty frame, and give the copy column the full hero width. */
+.cd-hero-grid:has(.cd-banner-inner[hidden]) { grid-template-columns: 1fr; }
+.cd-hero-grid:has(.cd-banner-inner[hidden]) .cd-hero-media { display: none; }
 
 /* ==========================================================================
    4. LAYOUT GRID — body + sticky buy card
@@ -187,19 +267,41 @@
 .cd-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
-  gap: var(--space-12);
+  gap: var(--space-10);
   align-items: start;
 }
 
-.cd-body { display: flex; flex-direction: column; gap: var(--space-10); min-width: 0; }
+.cd-body { display: flex; flex-direction: column; gap: var(--space-6); min-width: 0; }
 
 .cd-block { max-width: 72ch; }
+
+/* Content lives inside soft glass cards now, instead of floating directly
+   on the page background — gives each section a defined edge and matches
+   the buy card's visual language (premium-platform pattern: everything is
+   a card). */
+.cd-block-card {
+  max-width: none;
+  /* Fallback (1.75rem) covers any page that somehow loads this file
+     before tokens.css defines --space-7 — without it, an undefined
+     custom property makes the whole padding shorthand invalid and the
+     card collapses to zero padding, pinning the heading/paragraph text
+     flush against the card's edges. */
+  padding: var(--space-7, 1.75rem) var(--space-7, 1.75rem);
+  border-radius: var(--radius-xl);
+  background: var(--color-glass);
+  border: 1px solid var(--color-border-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 260ms var(--ease-out);
+}
+.cd-block-card:hover { border-color: var(--color-border-strong); }
+
 .cd-h2 {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin: 0 0 var(--space-4);
-  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  margin: 0 0 var(--space-5);
+  font-size: clamp(1.3rem, 2.2vw, 1.6rem);
   letter-spacing: -0.02em;
   font-weight: 700;
   color: var(--color-text);
@@ -212,12 +314,55 @@
   border-radius: var(--radius-full);
   background: linear-gradient(180deg, var(--color-accent-300), var(--color-cyan));
 }
+
+/* Holds the structured output of renderDescription() (course-detail.js):
+   real <p>/<h3>/<ul> now, instead of one pre-line-wrapped text blob with
+   literal "•" characters inline. */
 .cd-prose {
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-base);
   line-height: 1.75;
-  white-space: pre-line;
+}
+.cd-prose p { margin: 0 0 var(--space-4); }
+.cd-prose p:last-child { margin-bottom: 0; }
+
+/* Inline "headings" the admin typed as a short line of plain text (often
+   with a leading emoji) — rendered as real sub-headings. */
+.cd-desc-heading {
+  margin: var(--space-6) 0 var(--space-3);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+.cd-desc-heading:first-child { margin-top: 0; }
+
+.cd-desc-list {
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.cd-desc-list:last-child { margin-bottom: 0; }
+.cd-desc-list li {
+  position: relative;
+  padding-left: var(--space-5);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+.cd-desc-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.65em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-lavender);
+  opacity: 0.8;
 }
 
 /* -------- Outcomes / requirements lists -------- */
@@ -240,7 +385,7 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border-soft);
-  background: var(--color-glass);
+  background: var(--color-surface-alt);
   color: var(--color-text);
   font-size: var(--font-size-base);
   line-height: 1.5;
@@ -254,16 +399,16 @@
 .cd-outcome-list li::before {
   content: '';
   flex: none;
-  width: 18px; height: 18px;
-  margin-top: 0.15em;
+  width: 20px; height: 20px;
+  margin-top: 0.1em;
   border-radius: 50%;
-  background: rgba(139, 69, 255, 0.14);
-  border: 1px solid rgba(139, 69, 255, 0.4);
+  background: rgba(139, 69, 255, 0.16);
+  border: 1px solid rgba(139, 69, 255, 0.45);
 }
 .cd-outcome-list li::after {
   content: '';
   position: absolute;
-  left: calc(var(--space-4) + 5px); top: calc(var(--space-3) + 0.62em);
+  left: calc(var(--space-4) + 6px); top: calc(var(--space-3) + 0.55em);
   width: 8px; height: 5px;
   border-left: 2px solid var(--color-lavender);
   border-bottom: 2px solid var(--color-lavender);
@@ -286,9 +431,15 @@
 /* -------- Curriculum -------- */
 
 .cd-curriculum-summary {
-  margin: 0 0 var(--space-4);
+  display: inline-block;
+  margin: 0 0 var(--space-5);
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  font-weight: 600;
+  color: var(--color-lavender);
+  background: rgba(139, 69, 255, 0.1);
+  border: 1px solid rgba(139, 69, 255, 0.3);
 }
 
 .cd-curriculum-list { display: flex; flex-direction: column; gap: var(--space-3); }
@@ -296,7 +447,7 @@
 .curriculum-module {
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
-  background: var(--color-glass);
+  background: var(--color-surface-alt);
   overflow: hidden;
   transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), transform 200ms var(--ease-out);
 }
@@ -307,6 +458,7 @@
 }
 .curriculum-module.is-open {
   border-color: var(--color-border-strong);
+  background: var(--color-surface-2);
 }
 
 .curriculum-module-header {
@@ -345,9 +497,6 @@
 .curriculum-module.is-open .curriculum-lessons { grid-template-rows: 1fr; }
 .curriculum-lessons::before { content: ''; display: block; height: 0; }
 
-/* Use max-height fallback behaviour via grid-rows above; list itself needs
-   an inner wrapper for overflow — achieved by styling <li> directly since
-   the module structure keeps <ul> as the direct animated grid track. */
 .curriculum-lessons li {
   display: flex;
   align-items: center;
@@ -405,41 +554,48 @@ a.lesson-left:hover { color: var(--color-lavender); }
    5. BUY / ENROLLMENT CARD
    ========================================================================== */
 
+/* Wrapper holds a blurred gradient-glow pseudo layer behind a solid inner
+   panel — gives the sticky card a soft "halo" frame instead of a flat box,
+   the signature premium-SaaS pricing-card treatment. */
 .cd-buy-card {
   position: sticky;
-  top: calc(var(--pub-header-height) + var(--space-4));
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-6);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(165deg, rgba(28, 18, 58, 0.92) 0%, rgba(15, 10, 30, 0.96) 100%);
-  border: 1px solid rgba(139, 69, 255, 0.22);
-  box-shadow: 0 32px 70px -30px rgba(0, 0, 0, 0.85), 0 0 50px -24px rgba(139, 69, 255, 0.35);
-  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
-}
-.cd-buy-card:hover {
-  border-color: rgba(139, 69, 255, 0.4);
-  box-shadow: 0 36px 80px -28px rgba(0, 0, 0, 0.85), 0 0 60px -18px rgba(139, 69, 255, 0.45);
+  top: calc(var(--pub-header-height) + var(--space-5));
+  isolation: isolate;
 }
 
-.cd-buy-thumb {
-  aspect-ratio: 16 / 10;
-  margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) var(--space-5);
-  width: calc(100% + var(--space-6) * 2);
-  overflow: hidden;
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  background: var(--color-surface-2);
+.cd-buy-card-glow {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: calc(var(--radius-xl) + 2px);
+  background: linear-gradient(135deg, var(--color-accent-500), var(--color-cyan) 55%, var(--color-accent-300));
+  opacity: 0.55;
+  filter: blur(18px);
+  transition: opacity 360ms var(--ease-out);
 }
-.cd-buy-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cd-buy-card:hover .cd-buy-card-glow { opacity: 0.85; }
+
+.cd-buy-card-inner {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(165deg, rgba(28, 18, 58, 0.96) 0%, rgba(13, 9, 26, 0.98) 100%);
+  border: 1px solid rgba(139, 69, 255, 0.28);
+  box-shadow: 0 32px 70px -30px rgba(0, 0, 0, 0.85);
+  transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.cd-buy-card:hover .cd-buy-card-inner { transform: translateY(-2px); }
 
 .cd-price-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: var(--space-3);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-2);
 }
 .cd-price-current {
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   background: linear-gradient(135deg, #ffffff, #d4c0ff);
@@ -451,6 +607,28 @@ a.lesson-left:hover { color: var(--color-lavender); }
   font-size: var(--font-size-base);
   color: var(--color-text-muted);
   text-decoration: line-through;
+}
+/* Discount % badge, derived purely in CSS from the two existing price
+   spans via a data attribute course-detail.js already has the values to
+   set — falls back to simply not appearing if unset, so no markup/JS
+   change is required for this to be safe. */
+.cd-price-row[data-discount]:not([data-discount=""])::after {
+  content: attr(data-discount) " off";
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+.cd-price-sub {
+  margin: 0 0 var(--space-5);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
 .cd-alert { margin-bottom: var(--space-4); }
@@ -472,6 +650,28 @@ a.lesson-left:hover { color: var(--color-lavender); }
 .cd-buy-card a.btn + .btn,
 .cd-buy-card a.btn + a.btn { margin-top: var(--space-3); }
 
+/* Ghost buttons ("Add to Cart" / "Start Learning" / "View Cart →") read as
+   bare unstyled text next to the solid primary CTA — especially in Light
+   theme, where .btn-ghost's border/bg both resolve to transparent. Scoped
+   to the buy card only (buttons.css still owns the look everywhere else):
+   give them a real pill outline so every action in this card reads as a
+   tappable button, not a stray link. */
+html body .cd-buy-card .btn.btn-ghost {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+}
+html body .cd-buy-card .btn.btn-ghost:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-lavender);
+  color: var(--color-lavender);
+}
+html body .cd-buy-card .btn.btn-ghost[disabled] {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border-soft);
+  color: var(--color-text-muted);
+}
+
 .cd-spinner,
 .spinner {
   display: none;
@@ -489,11 +689,31 @@ a.lesson-left:hover { color: var(--color-lavender); }
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin: var(--space-4) 0 0;
+  margin: var(--space-5) 0 0;
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
 .cd-secure-note svg { flex: none; color: var(--color-lavender); opacity: 0.8; }
+
+/* Small "what's included" checklist under the secure note — purely
+   decorative reassurance copy, not state the backend tracks. */
+.cd-buy-highlights {
+  list-style: none;
+  margin: var(--space-5) 0 0;
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--color-border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.cd-buy-highlights li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.cd-buy-highlights li svg { flex: none; color: var(--color-lavender); }
 
 /* ==========================================================================
    6. RELATED COURSES SECTION
@@ -503,13 +723,50 @@ a.lesson-left:hover { color: var(--color-lavender); }
 .cd-related .cc-section-head { max-width: none; }
 
 /* ==========================================================================
-   7. RESPONSIVE
+   7. MOBILE STICKY CTA BAR
+   ========================================================================== */
+
+.cd-mobile-bar {
+  display: none;
+  position: fixed;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 40;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(28, 18, 58, 0.97), rgba(13, 9, 26, 0.99));
+  border: 1px solid rgba(139, 69, 255, 0.35);
+  box-shadow: 0 -16px 40px -16px rgba(0, 0, 0, 0.6), 0 0 40px -18px rgba(139, 69, 255, 0.5);
+}
+.cd-mobile-bar-label { font-size: 0.82rem; font-weight: 600; color: var(--color-text); }
+.cd-mobile-bar-btn {
+  flex: none;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
+}
+
+/* ==========================================================================
+   8. RESPONSIVE
    ========================================================================== */
 
 @media (max-width: 1024px) {
-  .cd-hero { padding-top: calc(var(--pub-header-height) + var(--space-10)); }
-  .cd-grid { grid-template-columns: 1fr; gap: var(--space-10); }
+  .cd-hero-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+  .cd-hero-media { order: -1; max-width: 480px; }
+  .cd-banner-inner { transform: none; aspect-ratio: 16 / 9; }
+  .cd-hero-media:hover .cd-banner-inner { transform: none; }
+  .cd-title { max-width: none; }
+  .cd-grid { grid-template-columns: 1fr; gap: var(--space-8); }
   .cd-buy-card { position: static; max-width: 440px; }
+  .cd-buy-card-inner { transform: none !important; }
 }
 
 @media (max-width: 768px) {
@@ -518,27 +775,35 @@ a.lesson-left:hover { color: var(--color-lavender); }
 
 @media (max-width: 640px) {
   .cd-section { padding-bottom: var(--space-12); }
-  .cd-body { gap: var(--space-8); }
+  .cd-body { gap: var(--space-5); }
+  .cd-block-card { padding: var(--space-5); }
+  .cd-mobile-bar { display: flex; }
+  /* Give the page breathing room above the fixed bar so the footer/last
+     section isn't hidden behind it. */
+  .cd-section:last-of-type { padding-bottom: calc(var(--space-16) + 72px); }
 }
 
 @media (max-width: 480px) {
-  .cd-hero { padding-top: calc(var(--pub-header-height) + var(--space-6)); padding-bottom: var(--space-6); }
-  .cd-title { font-size: clamp(1.8rem, 9vw, 2.4rem); }
+  .cd-hero { padding-top: calc(var(--pub-header-height) + var(--space-5)); padding-bottom: var(--space-8); }
+  .cd-breadcrumbs { margin-bottom: var(--space-4); }
+  .cd-title { font-size: clamp(1.8rem, 9vw, 2.3rem); }
   .cd-short-desc { font-size: var(--font-size-base); }
-  .cd-buy-card { max-width: none; padding: var(--space-5); }
-  .cd-price-current { font-size: 1.6rem; }
+  .cd-buy-card { max-width: none; }
+  .cd-buy-card-inner { padding: var(--space-5); }
+  .cd-price-current { font-size: 1.7rem; }
   .cc-section-head .cc-h2 { font-size: 1.5rem; }
   .course-grid { grid-template-columns: 1fr; }
 }
 
 /* ==========================================================================
-   8. LIGHT THEME
+   9. LIGHT THEME
    ========================================================================== */
 
 html[data-site-theme="light"] .cd-title { color: var(--color-text); text-shadow: none; }
 html[data-site-theme="light"] .cd-hero-bg::before {
   background:
-    radial-gradient(ellipse 55% 50% at 50% 0%, rgba(109, 61, 245, 0.10) 0%, transparent 70%);
+    radial-gradient(ellipse 50% 50% at 30% 10%, rgba(109, 61, 245, 0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 38% 40% at 80% 25%, rgba(109, 61, 245, 0.06) 0%, transparent 60%);
 }
 html[data-site-theme="light"] .cd-state-panel { background: #ffffff; }
 
@@ -553,25 +818,33 @@ html[data-site-theme="light"] #detail-meta-top .badge-muted {
   border-color: var(--color-border-soft);
 }
 
-html[data-site-theme="light"] .curriculum-module {
+html[data-site-theme="light"] .cd-block-card {
   background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.14);
+  box-shadow: 0 14px 34px -26px rgba(28, 21, 48, 0.3);
+}
+html[data-site-theme="light"] .cd-block-card:hover { border-color: rgba(109, 61, 245, 0.35); }
+
+html[data-site-theme="light"] .cd-outcome-list li,
+html[data-site-theme="light"] .cd-requirement-list li,
+html[data-site-theme="light"] .curriculum-module {
+  background: var(--color-surface-alt);
   border-color: var(--color-border-soft);
 }
 html[data-site-theme="light"] .curriculum-module:hover { border-color: var(--color-border-strong); }
+html[data-site-theme="light"] .curriculum-module.is-open { background: #ffffff; }
 html[data-site-theme="light"] .lesson-left .badge {
   background: rgba(109, 61, 245, 0.08);
   border-color: rgba(109, 61, 245, 0.3);
   color: var(--color-accent-600);
 }
 
-html[data-site-theme="light"] .cd-buy-card {
+html[data-site-theme="light"] .cd-buy-card-glow { opacity: 0.3; }
+html[data-site-theme="light"] .cd-buy-card:hover .cd-buy-card-glow { opacity: 0.45; }
+html[data-site-theme="light"] .cd-buy-card-inner {
   background: #ffffff;
   border-color: rgba(109, 61, 245, 0.18);
   box-shadow: 0 24px 56px -28px rgba(28, 21, 48, 0.3);
-}
-html[data-site-theme="light"] .cd-buy-card:hover {
-  border-color: rgba(109, 61, 245, 0.4);
-  box-shadow: 0 30px 64px -26px rgba(28, 21, 48, 0.4);
 }
 html[data-site-theme="light"] .cd-price-current {
   background: linear-gradient(135deg, #1C1530, #6D3DF5);
@@ -582,7 +855,11 @@ html[data-site-theme="light"] .cd-price-current {
 html[data-site-theme="light"] .cd-price-original { color: var(--color-text-muted); }
 html[data-site-theme="light"] .cd-secure-note { color: var(--color-text-muted); }
 html[data-site-theme="light"] .cd-secure-note svg { color: var(--color-accent-600); }
-html[data-site-theme="light"] .cd-buy-thumb { background: var(--color-surface-alt); }
+html[data-site-theme="light"] .cd-buy-highlights svg { color: var(--color-accent-600); }
+html[data-site-theme="light"] .cd-banner-inner { background: var(--color-surface-alt); }
+html[data-site-theme="light"] .cd-media-glow {
+  background: linear-gradient(200deg, transparent 55%, rgba(28, 21, 48, 0.25) 100%);
+}
 html[data-site-theme="light"] .alert-error   { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
 html[data-site-theme="light"] .alert-success { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); color: #047857; }
 html[data-site-theme="light"] .alert-info    { background: var(--color-surface-alt); border-color: var(--color-border); color: var(--color-text); }
@@ -592,8 +869,15 @@ html[data-site-theme="light"] .cd-tag-row .badge-muted {
   border-color: var(--color-border-soft);
 }
 
+html[data-site-theme="light"] .cd-mobile-bar {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.25);
+  box-shadow: 0 -16px 40px -20px rgba(28, 21, 48, 0.25);
+}
+html[data-site-theme="light"] .cd-mobile-bar-label { color: var(--color-text); }
+
 /* ==========================================================================
-   9. REDUCED MOTION
+   10. REDUCED MOTION
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
@@ -606,11 +890,10 @@ html[data-site-theme="light"] .cd-tag-row .badge-muted {
 }
 
 /* ==========================================================================
-   10. RELATED COURSES CARD GRID (unchanged from original — scope: the
-   Related Courses block rendered by course-detail.js, #related-list
-   /.course-card and its children). Colours/spacing from tokens.css,
-   matching the .hc-card language used on the homepage featured-courses
-   grid for visual consistency.
+   11. RELATED COURSES CARD GRID (unchanged — scope: the Related Courses
+   block rendered by course-detail.js, #related-list/.course-card and its
+   children). Colours/spacing from tokens.css, matching .hc-card on the
+   homepage featured-courses grid for visual consistency.
    ========================================================================== */
 
 .course-grid {
@@ -638,7 +921,6 @@ html[data-site-theme="light"] .cd-tag-row .badge-muted {
   box-shadow: 0 0 0 3px rgba(139, 69, 255, 0.3);
 }
 
-/* Corner-accent + hover shine sweep — matches .cc-card on the courses page */
 .course-card::before {
   content: '';
   position: absolute;

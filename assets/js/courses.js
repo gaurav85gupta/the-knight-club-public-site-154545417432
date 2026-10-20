@@ -121,12 +121,29 @@
   const ARROW_SVG =
     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 
-  // One primary action per card. There is no cart in this codebase, so no
-  // Add to Cart / View Cart state exists; purchase happens on course.html.
+  // Same glyph used by the navbar's cart icon (public-shell.js) and the
+  // course detail page's Add to Cart button, so the icon reads consistently
+  // everywhere it appears.
+  const CART_SVG =
+    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+  const CHECK_SVG =
+    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  // One primary action per card ("View Course" / "Go to Learning"), plus a
+  // small secondary Add to Cart icon-button for paid courses the student
+  // doesn't already own — mirrors the buy-card on course.html (Cart.js),
+  // just compact enough to sit in a catalogue card footer.
   function ctaHtml(slug, owned) {
     return owned
       ? `<a class="cc-cta cc-cta-owned" href="learning.html">Go to Learning ${ARROW_SVG}</a>`
       : `<a class="cc-cta" href="course.html?slug=${encodeURIComponent(slug)}">View Course ${ARROW_SVG}</a>`;
+  }
+
+  function cartBtnHtml(course) {
+    const canAddToCart = Boolean(course.id) && course.pricing && !course.pricing.isFree;
+    return canAddToCart
+      ? `<button type="button" class="cc-cart-btn" data-course-id="${esc(course.id)}" aria-label="Add ${esc(course.title)} to cart" title="Add to cart">${CART_SVG}</button>`
+      : '';
   }
 
   // Best-effort, signed-in only: swap the CTA on courses the student owns.
@@ -151,6 +168,9 @@
       if (!owned.has(card.dataset.slug)) return;
       const slot = card.querySelector('.cc-cta-slot');
       if (slot) slot.innerHTML = ctaHtml(card.dataset.slug, true);
+      // Already owned: no point offering Add to Cart on this card.
+      const cartBtn = card.querySelector('.cc-cart-btn');
+      if (cartBtn) cartBtn.remove();
     });
   }
 
@@ -189,7 +209,10 @@
               ${original ? `<span class="cc-price-was">${esc(original)}</span>` : ''}
               ${pct ? `<span class="cc-off">${pct}% off</span>` : ''}
             </span>
-            <span class="cc-cta-slot">${ctaHtml(course.slug, false)}</span>
+            <span class="cc-cta-group">
+              ${cartBtnHtml(course)}
+              <span class="cc-cta-slot">${ctaHtml(course.slug, false)}</span>
+            </span>
           </div>
         </div>
       </article>`;
@@ -426,6 +449,55 @@
     }
   }
 
+  // ---- Add to Cart (catalogue cards) ---------------------------------------
+  //
+  // One delegated listener on the list container — course cards are
+  // re-rendered wholesale on every load() (filter/search/page change), so a
+  // per-card listener would be lost each time. Mirrors the course detail
+  // page's Add to Cart button (course-detail.js): same Cart.addToCart call,
+  // same 401/409 handling, same Auth.requireAuth() gate on click.
+  function wireCartButtons() {
+    if (!listEl || typeof Cart === 'undefined') return;
+    listEl.addEventListener('click', async (e) => {
+      const btn = e.target.closest('.cc-cart-btn');
+      if (!btn || btn.disabled) return;
+      const courseId = btn.dataset.courseId;
+      if (!courseId) return;
+
+      try {
+        await Auth.requireAuth();
+      } catch {
+        return; // requireAuth handles the redirect
+      }
+
+      btn.disabled = true;
+      btn.classList.add('is-loading');
+
+      try {
+        await Cart.addToCart(courseId);
+        btn.classList.remove('is-loading');
+        btn.classList.add('is-added');
+        btn.innerHTML = CHECK_SVG;
+        btn.setAttribute('aria-label', 'Already in cart');
+        btn.title = 'In cart';
+        if (typeof StudentUI !== 'undefined' && StudentUI.toast) {
+          StudentUI.toast('Added to cart!', 'success');
+        }
+      } catch (err) {
+        btn.classList.remove('is-loading');
+        if (err && err.status === 409) {
+          // Already purchased — nothing useful left for this button to do.
+          btn.remove();
+        } else if (err && err.status === 401) {
+          Auth.handleSessionError(err);
+        } else {
+          // Recoverable: let the student try again.
+          btn.disabled = false;
+        }
+      }
+    });
+  }
+
   function clearFilters() {
     state.search = '';
     state.category = '';
@@ -491,6 +563,7 @@
       scrollToCatalog();
     });
 
+    wireCartButtons();
     loadCategoryChips();
     load();
   }

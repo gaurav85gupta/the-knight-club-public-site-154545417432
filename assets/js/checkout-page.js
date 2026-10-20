@@ -87,6 +87,8 @@
     summaryDiscountRow: document.getElementById('summary-discount-row'),
     summaryDiscount:    document.getElementById('summary-discount'),
     summaryTotal:       document.getElementById('summary-total'),
+    // Policy agreement
+    agreeCheckbox:      document.getElementById('checkout-agree-terms'),
     // Payment CTA
     paymentBtn:         document.getElementById('checkout-payment-btn'),
     paymentBtnText:     document.getElementById('checkout-payment-btn-text'),
@@ -138,12 +140,29 @@
     dom.paymentError.hidden = true;
   }
 
+  /**
+   * The payment button may only be enabled when: no payment/cancel request
+   * is in flight, AND the student has ticked the policy-agreement checkbox.
+   * Every place that would otherwise "enable" the button goes through this
+   * instead, so the agreement gate can never be bypassed by a later
+   * dom.paymentBtn.disabled = false.
+   */
+  function syncPaymentBtnState() {
+    const agreed = !!(dom.agreeCheckbox && dom.agreeCheckbox.checked);
+    const shouldEnable = agreed && !isPaymentInFlight;
+    dom.paymentBtn.disabled = !shouldEnable;
+    if (shouldEnable) {
+      dom.paymentBtn.removeAttribute('aria-disabled');
+    } else {
+      dom.paymentBtn.setAttribute('aria-disabled', 'true');
+    }
+  }
+
   function resetPaymentBtn() {
     isPaymentInFlight = false;
-    dom.paymentBtn.disabled = false;
-    dom.paymentBtn.removeAttribute('aria-disabled');
     dom.paymentBtnText.textContent = 'Continue to Payment';
     dom.paymentNotice.hidden = true;
+    syncPaymentBtnState();
   }
 
   /**
@@ -459,9 +478,8 @@
       resetCouponUI();
     }
 
-    // Enable the payment button (Phase 31)
-    dom.paymentBtn.disabled = false;
-    dom.paymentBtn.removeAttribute('aria-disabled');
+    // Enable the payment button (Phase 31) — gated on policy agreement
+    syncPaymentBtnState();
     hidePaymentError();
 
     document.title = `Checkout — ${order.orderNumber} — The Knight Club`;
@@ -634,6 +652,12 @@
   async function initiatePayment() {
     if (isPaymentInFlight) return;
     if (!currentOrder) return;
+    // Hard gate: payment can never start without the policy agreement
+    // ticked, regardless of the button's disabled attribute.
+    if (!dom.agreeCheckbox || !dom.agreeCheckbox.checked) {
+      syncPaymentBtnState();
+      return;
+    }
 
     hidePaymentError();
     setPaymentProcessing('Preparing payment…');
@@ -766,6 +790,12 @@
 
   // ---- Event wiring -------------------------------------------------------
   dom.paymentBtn.addEventListener('click', initiatePayment);
+
+  // Policy agreement: button only ever becomes enabled through
+  // syncPaymentBtnState(), which always re-checks this box's state.
+  if (dom.agreeCheckbox) {
+    dom.agreeCheckbox.addEventListener('change', syncPaymentBtnState);
+  }
 
   dom.retryBtn.addEventListener('click', async () => {
     const url = new URL(window.location.href);

@@ -4,9 +4,10 @@
  * ONE request loads the newest published courses (Catalog.listCourses).
  * No polling, no extra calls (spec 33, 68).
  *
- * That single response feeds the Featured Courses grid and the hero
- * product-showcase visual (which uses the first real course), so the
- * redesign does not add network traffic.
+ * That single response feeds both the Featured Courses grid (first
+ * FEATURED_LIMIT items — same slice, same order a dedicated 3-item request
+ * would have returned) and the hero course orbit (up to ORBIT_LIMIT items),
+ * so the redesign does not add network traffic.
  *
  * DATA INTEGRITY: nothing here is hardcoded. Titles, prices, instructors and
  * categories all come from the API. Any optional field that is missing is
@@ -24,6 +25,9 @@
 
 (function initHomePage() {
   const FEATURED_LIMIT = 3;
+  // Orbit needs more cards than the 3-up Featured grid to read as a ring;
+  // same single request still covers both (see loadFeaturedCourses below).
+  const ORBIT_LIMIT = 8;
 
   // ---- tiny helpers -------------------------------------------------------
 
@@ -97,12 +101,27 @@
    * One primary action per card, never two conflicting states:
    *   owned      -> "Go to Learning"  (pages/learning.html)
    *   otherwise  -> "View Course"     (pages/course.html; purchase happens there)
-   * There is no cart in this codebase, so no Add to Cart / View Cart state exists.
+   * Paid, not-yet-owned courses additionally get a small secondary Add to
+   * Cart icon-button (see cartBtnHtml) — same Cart.js used on course.html.
    */
   function ctaHtml(course, owned) {
     return owned
       ? '<a class="hc-cta hc-cta-owned" href="pages/learning.html">Go to Learning</a>'
       : `<a class="hc-cta" href="pages/course.html?slug=${encodeURIComponent(course.slug)}">View Course</a>`;
+  }
+
+  // Same glyph as the navbar's cart icon (public-shell.js) and the course
+  // detail page's Add to Cart button.
+  const CART_SVG =
+    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+  const CHECK_SVG =
+    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  function cartBtnHtml(course) {
+    const canAddToCart = Boolean(course.id) && course.pricing && !course.pricing.isFree;
+    return canAddToCart
+      ? `<button type="button" class="hc-cart-btn" data-course-id="${esc(course.id)}" aria-label="Add ${esc(course.title)} to cart" title="Add to cart">${CART_SVG}</button>`
+      : '';
   }
 
   function courseCardHtml(course) {
@@ -130,7 +149,10 @@
               ${original ? `<span class="hc-price-was">${esc(original)}</span>` : ''}
               ${pct ? `<span class="hc-off">${pct}% off</span>` : ''}
             </span>
-            <span class="hc-cta-slot">${ctaHtml(course, false)}</span>
+            <span class="hc-cta-group">
+              ${cartBtnHtml(course)}
+              <span class="hc-cta-slot">${ctaHtml(course, false)}</span>
+            </span>
           </div>
         </div>
       </article>`;
@@ -146,8 +168,130 @@
         if (!owned.has(card.dataset.slug)) return;
         const slot = card.querySelector('.hc-cta-slot');
         if (slot) slot.innerHTML = ctaHtml({ slug: card.dataset.slug }, true);
+        // Already owned: no point offering Add to Cart on this card.
+        const cartBtn = card.querySelector('.hc-cart-btn');
+        if (cartBtn) cartBtn.remove();
       });
     } catch { /* keep "View Course" — never block the catalog on this */ }
+  }
+
+  // ---- Add to Cart (featured course cards) ---------------------------------
+  //
+  // One delegated listener on #featured-courses — mirrors the course detail
+  // page's Add to Cart button (course-detail.js): same Cart.addToCart call,
+  // same 401/409 handling, same Auth.requireAuth() gate on click.
+  function wireCartButtons() {
+    const el = document.getElementById('featured-courses');
+    if (!el || typeof Cart === 'undefined') return;
+    el.addEventListener('click', async (e) => {
+      const btn = e.target.closest('.hc-cart-btn');
+      if (!btn || btn.disabled) return;
+      const courseId = btn.dataset.courseId;
+      if (!courseId) return;
+
+      try {
+        await Auth.requireAuth();
+      } catch {
+        return; // requireAuth handles the redirect
+      }
+
+      btn.disabled = true;
+      btn.classList.add('is-loading');
+
+      try {
+        await Cart.addToCart(courseId);
+        btn.classList.remove('is-loading');
+        btn.classList.add('is-added');
+        btn.innerHTML = CHECK_SVG;
+        btn.setAttribute('aria-label', 'Already in cart');
+        btn.title = 'In cart';
+        if (typeof StudentUI !== 'undefined' && StudentUI.toast) {
+          StudentUI.toast('Added to cart!', 'success');
+        }
+      } catch (err) {
+        btn.classList.remove('is-loading');
+        if (err && err.status === 409) {
+          // Already purchased — nothing useful left for this button to do.
+          btn.remove();
+        } else if (err && err.status === 401) {
+          Auth.handleSessionError(err);
+        } else {
+          // Recoverable: let the student try again.
+          btn.disabled = false;
+        }
+      }
+    });
+  }
+  wireCartButtons();
+
+  // ---- hero course orbit (desktop ring + mobile scroll strip) -------------
+  //
+  // Both share one card markup and the same courses array passed in from
+  // loadFeaturedCourses — no separate request. The desktop ring additionally
+  // needs --i/--n (this card's index / total count) for its CSS placement
+  // transform (home.css §COURSE ORBIT), and a `data-front` flag that lets
+  // CSS keep the card(s) nearest the viewer at full opacity. Because the
+  // ring spins continuously, "front" is reassessed on an interval rather
+  // than once, so the depth cue stays correct as the rotation progresses.
+
+  function orbitCardHtml(course) {
+    const href = `pages/course.html?slug=${encodeURIComponent(course.slug)}`;
+    const price = Format.price(course.pricing);
+    return `
+      <a class="hero-orbit-card-face" href="${href}" aria-label="${esc(course.title)}">
+        <div class="hero-orbit-thumb">
+          ${thumbHtml(course)}
+          ${course.category ? `<span class="hero-orbit-badge">${esc(course.category.name)}</span>` : ''}
+        </div>
+        <div class="hero-orbit-body">
+          <h3 class="hero-orbit-title">${esc(course.title)}</h3>
+          ${price ? `<span class="hero-orbit-price">${esc(price)}</span>` : ''}
+        </div>
+      </a>`;
+  }
+
+  /** Marks the card(s) closest to rotation angle 0 (facing the viewer) as front. */
+  function updateOrbitFront(track, n) {
+    if (!n) return;
+    const styles = getComputedStyle(track);
+    const m = /matrix3d\(([^)]+)\)/.exec(styles.transform);
+    let angle = 0;
+    if (m) {
+      const v = m[1].split(',').map(Number);
+      // matrix3d[0] and [8] give enough to recover the Y rotation.
+      angle = Math.atan2(v[8], v[0]);
+    }
+    const step = (Math.PI * 2) / n;
+    const frontIndex = ((Math.round(-angle / step) % n) + n) % n;
+    track.querySelectorAll('.hero-orbit-card').forEach((card, i) => {
+      card.dataset.front = String(i === frontIndex);
+    });
+  }
+
+  function populateOrbit(items) {
+    // Desktop/tablet 3D ring only — mobile shows the Featured Courses grid
+    // below the hero instead (#featured-courses), so there is no separate
+    // mobile track to populate here (see the 640px breakpoint in home.css).
+    const region = document.getElementById('hero-orbit');
+    const track = document.getElementById('hero-orbit-track');
+    if (!region || !track) return;
+    if (!items.length) return; // intentional empty state: stay hidden, no fabricated cards
+
+    const n = items.length;
+    track.innerHTML = items
+      .map((course, i) => `<div class="hero-orbit-card" style="--i:${i};--n:${n}">${orbitCardHtml(course)}</div>`)
+      .join('');
+
+    region.hidden = false;
+    region.removeAttribute('aria-hidden');
+
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reducedMotion) {
+      updateOrbitFront(track, n);
+      window.setInterval(() => updateOrbitFront(track, n), 600);
+    } else {
+      track.querySelectorAll('.hero-orbit-card').forEach((card) => { card.dataset.front = 'true'; });
+    }
   }
 
   function skeletonCards(n) {
@@ -173,7 +317,10 @@
     if (!el) return;
     el.innerHTML = skeletonCards(3);
     try {
-      const data = await Catalog.listCourses({ sort: 'newest', limit: FEATURED_LIMIT, page: 1 });
+      // One request serves both: Featured Courses (first FEATURED_LIMIT) and
+      // the hero orbit (up to ORBIT_LIMIT, the same published-newest list —
+      // see populateOrbit). No second network call added for the orbit.
+      const data = await Catalog.listCourses({ sort: 'newest', limit: ORBIT_LIMIT, page: 1 });
       const items = (data && data.items) || [];
       if (!items.length) {
         el.innerHTML = `
@@ -181,10 +328,11 @@
             <h3>No courses yet</h3>
             <p>New courses will appear here as soon as they are published.</p>
           </div>`;
-        return;
+        return; // populateOrbit is never called: no courses to show, no fallback content invented
       }
-      el.innerHTML = items.map(courseCardHtml).join('');
+      el.innerHTML = items.slice(0, FEATURED_LIMIT).map(courseCardHtml).join('');
       markOwnedCourses(el);
+      populateOrbit(items);
     } catch (err) {
       el.innerHTML = `
         <div class="hc-state">

@@ -200,7 +200,8 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
   width: 100%;
-  max-width: none;
+  max-width: var(--max-width);
+  margin: 0 auto;
   height: 100%;
 }
 
@@ -332,12 +333,6 @@
   background: var(--color-border-soft);
 }
 
-/* Mobile-only founder visual band (hidden on desktop/tablet; shown and
-   laid out at the 640px mobile breakpoint below). */
-.hero-v2-mobile-art {
-  display: none;
-}
-
 /* Scroll indicator */
 .hero-scroll-hint {
   position: absolute;
@@ -371,6 +366,184 @@
 }
 
 
+/* ==========================================================================
+   1b. HERO COURSE ORBIT — right-side hero visual, desktop only.
+   Real published courses (home.js, same Catalog.listCourses response as
+   Featured Courses) arranged on a continuous 3D circular path.
+
+   Structure: .hero-orbit (region, column 2 of .hero-v2-inner) >
+   .hero-orbit-stage (perspective) > .hero-orbit-track (the rotating ring,
+   one authoritative animation: hero-orbit-spin) > .hero-orbit-card (one
+   per course; positioned around the ring by an inline --i/--n angle, with
+   its own counter-rotation so the card face and its text stay upright
+   regardless of ring rotation — the "separate inner transform" required
+   so text never goes sideways).
+
+   One animation drives the whole ring; cards never animate individually.
+   Colors, borders and glass surfaces all route through tokens.css, so
+   dark/light need no separate rule set here — only the two theme files'
+   small, declared-once adjustments (glow intensity, thumb overlay).
+   ========================================================================== */
+
+.hero-orbit {
+  grid-column: 2 / 3;
+  position: relative;
+  height: min(74vh, 620px);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-orbit-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 480px;
+  perspective: 1400px;
+}
+
+.hero-orbit-track {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: hero-orbit-spin 38s linear infinite;
+}
+
+@keyframes hero-orbit-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+/* Pause on hover/focus (Phase 4 requirement) — one declaration, no JS
+   timer needed since CSS animations respect animation-play-state. */
+.hero-orbit-stage:hover .hero-orbit-track,
+.hero-orbit-track:focus-within {
+  animation-play-state: paused;
+}
+
+.hero-orbit-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  margin: -84px 0 0 -100px;
+  /* Placed on the ring by JS via --i (index) and --n (count) as inline
+     custom properties; the transform itself lives here so there is one
+     authoritative placement rule, not one per card. */
+  transform:
+    rotateY(calc(360deg / var(--n) * var(--i)))
+    translateZ(var(--hero-orbit-radius, 220px));
+  backface-visibility: hidden;
+}
+
+/* Inner face counter-rotates against the ring so the card content stays
+   upright and forward-facing at every point in the rotation — the
+   dedicated inner transform the brief requires. */
+.hero-orbit-card-face {
+  display: block;
+  transform-style: preserve-3d;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, var(--color-surface-2), var(--color-surface));
+  border: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+.hero-orbit-card-face:hover,
+.hero-orbit-card-face:focus-visible {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--glow-soft);
+  outline: none;
+}
+.hero-orbit-card-face:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+.hero-orbit-thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--color-surface-2);
+  overflow: hidden;
+}
+.hero-orbit-thumb img,
+.hero-orbit-thumb .thumb-art {
+  width: 100%;
+  height: 100%;
+}
+.hero-orbit-thumb img { object-fit: cover; display: block; }
+.hero-orbit-thumb::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  background: linear-gradient(180deg, transparent, var(--color-scrim-thumb));
+  pointer-events: none;
+}
+
+.hero-orbit-badge {
+  position: absolute;
+  left: var(--space-2);
+  bottom: var(--space-2);
+  z-index: 1;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-lavender);
+  background: var(--color-scrim-card);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.hero-orbit-body {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+.hero-orbit-title {
+  margin: 0 0 2px;
+  font-size: 0.86rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.hero-orbit-price {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-lavender);
+}
+
+/* Depth cue: cards nearer the back of the ring read smaller/quieter so the
+   front cards stay most prominent, without any per-frame JS measurement —
+   driven purely by each card's own placement angle via --i/--n. */
+.hero-orbit-card:nth-child(odd)  { z-index: 2; }
+.hero-orbit-card { opacity: 0.55; }
+.hero-orbit-card[data-front="true"] { opacity: 1; }
+
+@media (hover: hover) {
+  .hero-orbit-card-face:hover { transform: translateY(-4px); }
+}
+
+/* Reduced motion / no JS: a single still, readable frame — ring stops,
+   every card shown at full opacity, exactly the "stable arrangement"
+   Phase 7 requires. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-track {
+    animation: none;
+  }
+  .hero-orbit-card {
+    opacity: 1;
+  }
+}
 
 /* ==========================================================================
    2. EDITORIAL TWO-COLUMN (What is / Why practical)
@@ -706,11 +879,49 @@ html[data-site-theme="light"] .sv-error p {
   border: 1px solid var(--color-border-soft);
   transition: background 280ms var(--ease-out), transform 280ms var(--ease-out), box-shadow 280ms var(--ease-out);
 }
+.hc-cta-group { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: var(--space-2); }
 .hc-cta-slot { position: relative; z-index: 2; }
 .hc-cta { display: inline-flex; align-items: center; padding: 0.4rem var(--space-3); border: 1px solid var(--color-border-strong); border-radius: var(--radius-full); font-size: 0.8125rem; font-weight: 600; color: var(--color-text); transition: background 280ms var(--ease-out), border-color 280ms var(--ease-out), color 280ms var(--ease-out), box-shadow 280ms var(--ease-out); }
 .hc-cta:hover { background: linear-gradient(135deg, var(--bx-from) 0%, var(--bx-via) 50%, var(--bx-to) 100%); border-color: transparent; color: #fff; }
 .hc-cta-owned { background: linear-gradient(135deg, var(--bx-from) 0%, var(--bx-via) 50%, var(--bx-to) 100%); border-color: transparent; color: #fff; }
 .hc-cta-owned:hover { background: linear-gradient(135deg, var(--bx-from-h) 0%, var(--bx-via-h) 50%, var(--bx-to-h) 100%); }
+
+/* Secondary Add to Cart icon-button — compact, sits beside the primary CTA. */
+.hc-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-strong);
+  background: rgba(139, 92, 246, 0.12);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background 280ms var(--ease-out), border-color 280ms var(--ease-out), color 280ms var(--ease-out), transform 120ms var(--ease-out);
+}
+.hc-cart-btn:hover, .hc-cart-btn:focus-visible {
+  background: linear-gradient(135deg, var(--bx-from) 0%, var(--bx-via) 50%, var(--bx-to) 100%);
+  border-color: transparent;
+  color: #fff;
+}
+.hc-cart-btn:active { transform: translateY(1px); }
+.hc-cart-btn:disabled { cursor: default; }
+.hc-cart-btn.is-loading { opacity: 0.6; animation: hc-cart-pulse 900ms ease-in-out infinite; }
+.hc-cart-btn.is-added {
+  background: rgba(100, 200, 80, 0.14);
+  border-color: rgba(100, 200, 80, 0.35);
+  color: #a0e878;
+}
+.hc-cart-btn.is-added:hover { background: rgba(100, 200, 80, 0.14); color: #a0e878; }
+@keyframes hc-cart-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-cart-btn.is-loading { animation: none; }
+}
 
 /* Hover only on devices that can hover — avoids sticky-hover on touch.
    Colour/shadow change only — no movement or scaling. */
@@ -1059,8 +1270,12 @@ html[data-site-theme="light"] .sv-error p {
   .aud-grid { grid-template-columns: repeat(2, 1fr); }
 
   /* Hero: give the copy column more of the width before the 768px full
-     stack, so the headline doesn't wrap too tightly against the photo. */
+     stack, and shrink the orbit's radius/card size to match its smaller
+     column rather than letting it crowd the headline. */
   .hero-v2-inner { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .hero-orbit-stage { max-width: 360px; }
+  .hero-orbit-card { width: 150px; margin: -64px 0 0 -75px; }
+  :root { --hero-orbit-radius: 160px; }
 }
 
 @media (max-width: 1024px) {
@@ -1083,17 +1298,16 @@ html[data-site-theme="light"] .sv-error p {
   }
 }
 
-/* Tablet: hero's two text/art columns collapse into one; the portrait photo
-   becomes a full-bleed background behind the (now full-width) copy instead
-   of a side-by-side column, so the founder stays visible without competing
-   with the headline for width. 2 course columns. */
+/* Tablet: hero's two columns collapse into one; the continuous 3D orbit is
+   desktop-only (Phase 6), so it hides here and the horizontally
+   scrollable mobile course strip takes over instead. 2 course columns. */
 @media (max-width: 768px) {
   .section-block { padding: var(--space-12) 0; }
   .section-tight { padding-bottom: var(--space-12); }
-  .home-page .hero.hero-v2 { min-height: 760px; height: auto; }
+  .home-page .hero.hero-v2 { min-height: 0; height: auto; }
   .hero-v2-inner { grid-template-columns: 1fr; }
-  .hero-v2-copy { grid-column: 1 / -1; max-width: 560px; }
-  .hero.hero-v2::after { background-position: 72% center; }
+  .hero-v2-copy { grid-column: 1 / -1; max-width: 560px; padding: 0 var(--space-4); }
+  .hero-orbit { display: none; }
   .hc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
   /* .founder-v2-panel / .founder-v2-card tablet stacking now in public.css */
   .club-panel { grid-template-columns: 1fr; text-align: center; }
@@ -1113,13 +1327,14 @@ html[data-site-theme="light"] .sv-error p {
    into either neighbor would leave those grids 2-column through part of the
    480-768px phone/tablet range, a real visual regression there. */
 @media (max-width: 640px) {
-  /* ---- Hero: clean text area + dedicated image band, not a full-bleed
-     photo behind the copy. The hero stops being a fixed-viewport-height
-     flex-centered panel and becomes a natural-height stack: header offset,
-     then copy, then the founder art, then the next section. The desktop
-     photo layer (.hero.hero-v2::after / ::before) is switched off here
-     rather than re-positioned, since a cover-cropped wide photo behind
-     stacked text is exactly what reads as noise on a narrow screen. */
+  /* ---- Hero: clean, center-aligned text area; no visual column, no
+     orbit. The hero stops being a fixed-viewport-height flex-centered
+     panel and becomes a natural-height stack: header offset, then copy,
+     then the next section (Featured Courses — the real published course
+     grid already below the hero in the page's normal flow). The desktop
+     ambient layer (.hero.hero-v2::after / ::before) is switched off here
+     rather than re-positioned, since it was sized for the wide desktop
+     orbit and reads as noise on a narrow screen. */
   .home-page .hero.hero-v2 {
     min-height: 0;
     height: auto;
@@ -1135,60 +1350,54 @@ html[data-site-theme="light"] .sv-error p {
     display: block;
     height: auto;
   }
+  /* Copy block: center-aligned stack (eyebrow, headline, lead, CTAs,
+     stats all share this one alignment context instead of each
+     re-declaring center/left). */
   .hero-v2-copy {
     max-width: none;
     padding: 0 var(--space-5);
+    align-items: center;
+    text-align: center;
   }
 
-  .home-page .hero h1.hero-v2-title { font-size: clamp(2.3rem, 10vw, 3.2rem); }
+  .home-page .hero h1.hero-v2-title {
+    font-size: clamp(2.3rem, 10vw, 3.2rem);
+    max-width: none;
+  }
+  .hero-v2-lead { max-width: 480px; }
 
-  /* Stats: horizontal row while they fit three-up at this width; the
-     dividers keep them from reading as three disconnected numbers. */
+  /* Stats: compact, evenly spaced horizontal row, centered under the CTAs. */
   .hero-stats {
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: nowrap;
     gap: var(--space-5);
     margin-top: var(--space-10);
   }
-  .hero-stat { gap: 1px; }
+  .hero-stat { align-items: center; gap: 1px; }
   .hero-stat strong { font-size: 1.25rem; }
   .hero-stat span { font-size: 0.64rem; }
   .hero-stat-div { height: 28px; }
 
-  /* Secondary CTA reads quieter than primary: no stretch-to-full-width
-     block, sits inline and smaller so "Explore Courses" stays the clear
-     primary action. */
+  /* CTAs: stacked and centered; primary goes full-width within the capped
+     column, secondary sits centered beneath it. Destinations are unchanged
+     — only layout/alignment is touched here. */
   .home-page .hero-v2-actions.hero-actions {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     width: 100%;
     max-width: 320px;
+    margin: 0 auto;
   }
   .home-page .hero-v2-actions .btn.btn-primary { width: 100%; }
   .home-page .hero-v2-actions .btn.hero-v2-btn-outline {
     width: auto;
-    align-self: flex-start;
+    align-self: center;
     padding-left: 0;
     padding-right: 0;
     border-color: transparent;
     background: none;
-  }
-
-  /* Dedicated founder visual area below the text/actions — a bounded,
-     cropped image band (not a background behind anything), theme image
-     set in theme-futuristic.css / site.css alongside the desktop photo. */
-  .hero-v2-mobile-art {
-    display: block;
-    margin: var(--space-10) var(--space-5) 0;
-    height: 56vw;
-    max-height: 320px;
-    min-height: 220px;
-    border-radius: var(--radius-xl);
-    background-repeat: no-repeat;
-    background-position: center 22%;
-    background-size: cover;
   }
 
   .hero-scroll-hint { display: none; }
@@ -1291,8 +1500,12 @@ html[data-site-theme="light"] main#main > section#founder.section-block {
 }
 
 /* Copy block: fades, drifts up a little, and softens as it disappears
-   behind the next section. */
-.hero-v2-inner {
+   behind the next section. Scoped to .hero-v2-copy (not the whole
+   .hero-v2-inner grid) so the orbit — a separate visual region living in
+   the grid's other column — is unaffected and stays readable/clickable
+   through the scroll, instead of fading and blurring along with the text
+   it was never meant to be coupled to. */
+.hero-v2-copy {
   opacity: calc(1 - var(--hero-scroll) * 1.15);
   transform:
     translateY(calc(var(--hero-scroll) * -48px))

@@ -785,7 +785,51 @@
 }
 
 /* CTA link button */
+.cc-cta-group { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: var(--space-2); }
 .cc-cta-slot { position: relative; z-index: 2; }
+
+/* Secondary Add to Cart icon-button — sits beside the primary CTA, never
+   competes with it for attention. Three states: idle, loading (brief spin),
+   added (filled + check, left in place as quiet confirmation). */
+.cc-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 69, 255, 0.35);
+  background: rgba(139, 69, 255, 0.08);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    color 160ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+.cc-cart-btn:hover, .cc-cart-btn:focus-visible {
+  background: linear-gradient(135deg, var(--bx-from) 0%, var(--bx-via) 50%, var(--bx-to) 100%);
+  border-color: transparent;
+  color: #fff;
+}
+.cc-cart-btn:active { transform: translateY(1px); }
+.cc-cart-btn:disabled { cursor: default; }
+.cc-cart-btn.is-loading { opacity: 0.6; animation: cc-cart-pulse 900ms ease-in-out infinite; }
+.cc-cart-btn.is-added {
+  background: rgba(100, 200, 80, 0.14);
+  border-color: rgba(100, 200, 80, 0.35);
+  color: #a0e878;
+}
+.cc-cart-btn.is-added:hover { background: rgba(100, 200, 80, 0.14); color: #a0e878; }
+@keyframes cc-cart-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-cart-btn.is-loading { animation: none; }
+}
 .cc-cta {
   display: inline-flex;
   align-items: center;

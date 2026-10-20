@@ -75,13 +75,18 @@
 }
 
 /* ---- Shell layout --------------------------------------------------------- */
+/* Outer page gutter: every other page uses .container's var(--space-6) side
+   padding so content never touches the browser edge. The learn shell is its
+   own grid (not .container), so it needs the same gutter applied here. */
 
 .learn-shell {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 300px 1fr;
   align-items: start;
+  gap: var(--space-8);
   max-width: var(--max-width);
   margin: 0 auto;
+  padding: var(--space-6) var(--space-6) var(--space-16);
   min-height: calc(100vh - 64px);
 }
 
@@ -92,13 +97,15 @@
 /* ---- Sidebar: course navigator --------------------------------------------- */
 
 .learn-sidebar {
-  border-right: 1px solid var(--color-border-soft);
-  height: calc(100vh - 64px);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  height: calc(100vh - 64px - var(--space-6) * 2);
   position: sticky;
-  top: 64px;
+  top: calc(64px + var(--space-6));
   overflow-y: auto;
   padding: var(--space-6) var(--space-4) var(--space-8);
   background: var(--color-surface-alt);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
 }
@@ -301,8 +308,12 @@
 /* ---- Main lesson area -------------------------------------------------------- */
 
 .learn-content {
-  padding: var(--space-8) var(--space-8) var(--space-16);
+  padding: var(--space-8);
   max-width: 920px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .learn-content-state {
@@ -516,6 +527,7 @@
 
   .learn-shell {
     display: block;
+    padding: var(--space-4) var(--space-4) var(--space-12);
   }
 
   .learn-sidebar {
@@ -528,7 +540,8 @@
     transform: translateX(-100%);
     transition: transform var(--dur-base) var(--ease-out);
     box-shadow: var(--shadow-lg);
-    border-right: none;
+    border: none;
+    border-radius: 0;
   }
 
   .learn-sidebar.is-open {
@@ -548,8 +561,10 @@
   }
 
   .learn-content {
-    padding: var(--space-6) var(--space-4) var(--space-12);
+    padding: var(--space-6) var(--space-4);
+    margin-top: var(--space-4);
     max-width: 100%;
+    border-radius: var(--radius-md);
   }
 
   .lesson-title {
@@ -582,8 +597,12 @@
 }
 
 @media (max-width: 480px) {
+  .learn-shell {
+    padding: var(--space-3) var(--space-3) var(--space-10);
+  }
+
   .learn-content {
-    padding: var(--space-5) var(--space-3) var(--space-10);
+    padding: var(--space-4) var(--space-3);
   }
 
   .lesson-locked {

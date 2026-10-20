@@ -81,14 +81,14 @@ html:not([data-site-theme="light"]) .pub-header.is-open {
 
 
 /* ====================================================================
-   4. HERO — dark background photo, headline, CTA
+   4. HERO — dark ambient background, headline, CTA, course orbit
 
-   The hero's right side is the supplied dark workspace photograph,
-   assets/images/knight-club-hero-dark.jpg, shown via .hero.hero-v2::after
-   (geometry declared once in home.css). A left-weighted scrim is layered
-   under it, in the same declaration, purely for text legibility over the
-   photo's own highlights — not a decorative glow, and not layered as a
-   second background element.
+   The hero's right side holds the course orbit (see home.css §COURSE
+   ORBIT for the orbit component itself). This block only sets the dark
+   theme's ambient backdrop behind it: a radial glow anchored where the
+   orbit sits, declared once here as the single dark authoritative
+   background for .hero.hero-v2::after (geometry declared once in
+   home.css). No photograph, no second background element.
    ==================================================================== */
 
 html:not([data-site-theme="light"]) .home-page .hero.hero-v2 {
@@ -97,22 +97,9 @@ html:not([data-site-theme="light"]) .home-page .hero.hero-v2 {
 
 html:not([data-site-theme="light"]) .home-page .hero.hero-v2::after {
   background-image:
-    linear-gradient(90deg, rgba(7, 5, 15, 0.92) 0%, rgba(7, 5, 15, 0.84) 36%, rgba(7, 5, 15, 0.50) 54%, rgba(7, 5, 15, 0.10) 70%, transparent 82%),
-    url("../images/knight-club-hero-dark.jpg");
+    radial-gradient(ellipse 60% 70% at 78% 50%, rgba(124, 58, 237, 0.22) 0%, rgba(124, 58, 237, 0.08) 45%, transparent 75%),
+    linear-gradient(90deg, rgba(7, 5, 15, 0.70) 0%, rgba(7, 5, 15, 0.20) 45%, transparent 62%);
   background-color: var(--color-bg);
-}
-
-/* Below 640px the hero stops using the photo as a background behind the
-   text (home.css switches .hero.hero-v2::after off there) and instead
-   shows it in its own dedicated visual band, .hero-v2-mobile-art, below
-   the copy/actions. A closer mobile-specific crop (same photoshoot, no
-   distortion) keeps the founder's face and desk the focus instead of the
-   wide desktop framing shrunk down. No scrim: it's no longer sitting under
-   text, so legibility isn't a concern here, only a clean, readable crop. */
-@media (max-width: 640px) {
-  html:not([data-site-theme="light"]) .hero-v2-mobile-art {
-    background-image: url("../images/knight-club-hero-dark-mobile.jpg");
-  }
 }
 
 /* Headline — solid off-white with a soft purple glow consistent with the

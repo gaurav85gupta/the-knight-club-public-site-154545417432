@@ -69,16 +69,36 @@
 
     <!-- Course content -->
     <div id="course-content" hidden>
-      <section class="pub-hero cd-hero" aria-labelledby="course-title">
+
+      <!-- PREMIUM HERO — breadcrumb + title/meta on the left, course image
+           framed as a floating card on the right (same banner
+           "studio-shot" composition premium course platforms use). The
+           thumbnail keeps its original #buy-thumb-wrap/#buy-thumb IDs —
+           course-detail.js's renderBuyCard() needs no change, only a new
+           home for the markup. -->
+      <section class="cd-hero" aria-labelledby="course-title">
         <div class="cd-hero-bg" aria-hidden="true"></div>
-        <div class="container">
+        <div class="container cd-hero-inner">
+
           <p class="breadcrumbs cd-breadcrumbs">
             <a href="../index.html">Home</a> <span class="cd-crumb-sep" aria-hidden="true">/</span> <a href="courses.html">Courses</a> <span class="cd-crumb-sep" aria-hidden="true">/</span> <span id="crumb-title"></span>
           </p>
-          <div id="detail-meta-top"></div>
-          <h1 class="course-title-xl cd-title" id="course-title"></h1>
-          <p id="course-short-desc" class="cd-short-desc"></p>
-          <div class="course-meta-row cd-meta-row" id="course-meta-row"></div>
+
+          <div class="cd-hero-grid">
+            <div class="cd-hero-copy">
+              <div id="detail-meta-top"></div>
+              <h1 class="course-title-xl cd-title" id="course-title"></h1>
+              <p id="course-short-desc" class="cd-short-desc"></p>
+              <div class="course-meta-row cd-meta-row" id="course-meta-row"></div>
+            </div>
+
+            <div class="cd-hero-media">
+              <div class="cd-banner-inner" id="buy-thumb-wrap" hidden>
+                <img id="buy-thumb" src="" alt="" />
+                <span class="cd-media-glow" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -86,25 +106,25 @@
         <div class="container">
           <div class="course-detail-grid cd-grid">
             <div class="detail-body cd-body">
-              <div class="cd-block">
+              <div class="cd-block cd-block-card">
                 <h2 class="cd-h2">About this course</h2>
-                <p id="course-description" class="cd-prose"></p>
+                <div id="course-description" class="cd-prose"></div>
               </div>
 
-              <div id="outcomes-block" class="cd-block" hidden>
+              <div id="outcomes-block" class="cd-block cd-block-card" hidden>
                 <h2 class="cd-h2">What you'll learn</h2>
                 <ul class="outcome-list cd-outcome-list" id="outcomes-list"></ul>
               </div>
 
-              <div id="requirements-block" class="cd-block" hidden>
-                <h2 class="cd-h2">Requirements</h2>
-                <ul class="requirement-list cd-requirement-list" id="requirements-list"></ul>
-              </div>
-
-              <div id="curriculum-block" class="cd-block" hidden>
+              <div id="curriculum-block" class="cd-block cd-block-card" hidden>
                 <h2 class="cd-h2">Curriculum</h2>
                 <div id="curriculum-summary" class="cd-curriculum-summary"></div>
                 <div class="curriculum-list cd-curriculum-list" id="curriculum-list"></div>
+              </div>
+
+              <div id="requirements-block" class="cd-block cd-block-card" hidden>
+                <h2 class="cd-h2">Requirements</h2>
+                <ul class="requirement-list cd-requirement-list" id="requirements-list"></ul>
               </div>
 
               <div id="tags-block" class="cd-block" hidden>
@@ -112,31 +132,40 @@
               </div>
             </div>
 
-            <aside class="buy-card cd-buy-card" aria-label="Enroll">
-              <div class="thumb cd-buy-thumb" id="buy-thumb-wrap" hidden>
-                <img id="buy-thumb" src="" alt="" />
-              </div>
-              <div class="price-row cd-price-row">
-                <span class="price-current cd-price-current" id="buy-price"></span>
-                <span class="price-original cd-price-original" id="buy-original" hidden></span>
-              </div>
+            <aside class="buy-card cd-buy-card" id="buy-card-anchor" aria-label="Enroll">
+              <div class="cd-buy-card-glow" aria-hidden="true"></div>
 
-              <div id="buy-alert" class="alert cd-alert" role="alert" hidden></div>
-              <!-- Phase 29: Add to Cart CTA -->
-              <button class="btn btn-ghost btn-block" id="add-to-cart-btn" type="button" hidden>
-                <span class="spinner cd-spinner" aria-hidden="true"></span>
-                <span class="label">Add to Cart</span>
-              </button>
-              <button class="btn btn-primary btn-block" id="enroll-btn" type="button">
-                <span class="spinner cd-spinner" aria-hidden="true"></span>
-                <span class="label">Enroll now</span>
-              </button>
-              <a class="btn btn-ghost btn-block" id="start-learning-link" href="#" hidden>Start Learning</a>
-              <a class="btn btn-ghost btn-block" id="go-to-cart-link" href="cart.html" hidden>View Cart →</a>
-              <p class="cd-secure-note" id="buy-secure-note">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Secure payment via Razorpay.
-              </p>
+              <div class="cd-buy-card-inner">
+                <div class="price-row cd-price-row">
+                  <span class="price-current cd-price-current" id="buy-price"></span>
+                  <span class="price-original cd-price-original" id="buy-original" hidden></span>
+                </div>
+
+                <div id="buy-alert" class="alert cd-alert" role="alert" hidden></div>
+
+                <!-- Phase 29: Add to Cart CTA -->
+                <button class="btn btn-ghost btn-block" id="add-to-cart-btn" type="button" hidden>
+                  <span class="spinner cd-spinner" aria-hidden="true"></span>
+                  <span class="label">Add to Cart</span>
+                </button>
+                <button class="btn btn-primary btn-block" id="enroll-btn" type="button">
+                  <span class="spinner cd-spinner" aria-hidden="true"></span>
+                  <span class="label">Enroll now</span>
+                </button>
+                <a class="btn btn-ghost btn-block" id="start-learning-link" href="#" hidden>Start Learning</a>
+                <a class="btn btn-ghost btn-block" id="go-to-cart-link" href="cart.html" hidden>View Cart →</a>
+
+                <p class="cd-secure-note" id="buy-secure-note">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Secure payment via Razorpay.
+                </p>
+
+                <ul class="cd-buy-highlights" aria-hidden="true">
+                  <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Lifetime access</li>
+                  <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Learn at your own pace</li>
+                  <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Certificate on completion</li>
+                </ul>
+              </div>
             </aside>
           </div>
         </div>
@@ -151,6 +180,16 @@
           <div id="related-list" class="course-grid"></div>
         </div>
       </section>
+
+      <!-- Sticky mobile CTA bar — small-screen companion to the buy card
+           (which goes static/non-sticky below 1024px). Tapping it scrolls
+           straight to the real buy card, so every actual action (Enroll,
+           Add to Cart, Start Learning) still runs through course-detail.js
+           unchanged — this bar only ever links, it never duplicates state. -->
+      <a href="#buy-card-anchor" class="cd-mobile-bar" id="cd-mobile-bar">
+        <span class="cd-mobile-bar-label">Ready to start?</span>
+        <span class="cd-mobile-bar-btn">Enroll now →</span>
+      </a>
     </div>
   </main>
 

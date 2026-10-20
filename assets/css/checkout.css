@@ -185,6 +185,35 @@
   border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
+/* ---- Policy agreement checkbox (required before payment) --------------- */
+
+.checkout-agree-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.checkout-agree-checkbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--color-accent-600);
+  cursor: pointer;
+}
+.checkout-agree-row a {
+  color: var(--color-lavender);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.checkout-agree-row a:hover {
+  color: var(--color-accent-500);
+}
+
 /* ---- Payment CTA (Phase 31: enabled) ------------------------------------ */
 
 .checkout-payment-cta {

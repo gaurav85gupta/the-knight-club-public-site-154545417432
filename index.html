@@ -93,13 +93,19 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Mobile-only founder visual: a dedicated image band below the
-           copy/actions, not a full-bleed background behind the text. Image
-           itself is set per theme in CSS (home.css §CINEMATIC/mobile hero),
-           same single-declaration-per-theme pattern as the desktop photo. -->
-      <div class="hero-v2-mobile-art" role="img" aria-label="Aditya Srivastava, founder of The Knight Club, working at his desk"></div>
+        <!-- Course orbit: right-side hero visual, desktop/tablet only (hidden
+             on mobile — see the 640px breakpoint in home.css). Real published
+             courses, populated by home.js from the same Catalog.listCourses
+             response that feeds Featured Courses (no extra request). Empty
+             until JS runs; home.js fills #hero-orbit-track and reveals this
+             region, so nothing renders if the catalog has no public courses. -->
+        <div class="hero-orbit" id="hero-orbit" aria-hidden="true" hidden>
+          <div class="hero-orbit-stage">
+            <div class="hero-orbit-track" id="hero-orbit-track"></div>
+          </div>
+        </div>
+      </div>
 
       <!-- Scroll indicator -->
       <div class="hero-scroll-hint" aria-hidden="true">

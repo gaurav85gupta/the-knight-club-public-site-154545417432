@@ -244,12 +244,26 @@
               </div>
               <!-- /Coupon section -->
 
+              <!-- ---- Policy agreement (required before payment) ---- -->
+              <label class="checkout-agree-row" for="checkout-agree-terms">
+                <input type="checkbox" id="checkout-agree-terms" class="checkout-agree-checkbox" />
+                <span>
+                  I have read and agree to the
+                  <a href="policy-terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a>,
+                  <a href="policy-refund.html" target="_blank" rel="noopener">Refund Policy</a>,
+                  and
+                  <a href="policy-privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+                </span>
+              </label>
+
               <!-- ---- Payment CTA (Phase 31: enabled) ---- -->
               <button
                 type="button"
                 id="checkout-payment-btn"
                 class="btn btn-primary btn-lg checkout-payment-cta"
                 aria-label="Continue to payment"
+                disabled
+                aria-disabled="true"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                 <span id="checkout-payment-btn-text">Continue to Payment</span>
