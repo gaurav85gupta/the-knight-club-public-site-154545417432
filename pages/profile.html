@@ -47,6 +47,32 @@
         </div>
       </header>
 
+      <section class="s-card" aria-labelledby="profile-photo-title">
+        <h2 class="s-card-title" id="profile-photo-title">Profile photo</h2>
+        <p class="s-card-desc">Shown on your account and anywhere your name appears.</p>
+
+        <div id="photo-alert" class="alert" role="alert" hidden></div>
+
+        <div class="photo-row" id="photo-row">
+          <div class="photo-preview-wrap">
+            <span class="avatar avatar-lg" id="photo-preview" aria-hidden="true"></span>
+            <span class="photo-progress-ring" aria-hidden="true"></span>
+          </div>
+          <div class="photo-actions">
+            <div class="photo-actions-buttons">
+              <button type="button" class="btn btn-outline btn-sm" id="photo-choose-btn">
+                <span class="label">Choose photo</span>
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" id="photo-remove-btn" hidden>
+                <span class="label">Remove photo</span>
+              </button>
+            </div>
+            <p class="photo-hint">JPEG, PNG or WebP. Up to 10&nbsp;MB.</p>
+            <input type="file" class="photo-input" id="photo-input" accept="image/jpeg,image/jpg,image/png,image/webp" aria-label="Choose a profile photo" />
+          </div>
+        </div>
+      </section>
+
       <section class="s-card" aria-labelledby="profile-info-title">
         <h2 class="s-card-title" id="profile-info-title">Personal information</h2>
         <p class="s-card-desc">The details on your Knight Club account.</p>
@@ -65,6 +91,7 @@
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/forms.js"></script>
   <script src="../assets/js/theme-toggle.js"></script>
   <script src="../assets/js/cart.js"></script>
   <script src="../assets/js/student-shell.js"></script>

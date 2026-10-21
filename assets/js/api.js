@@ -207,13 +207,89 @@ const Api = (() => {
     }
   }
 
+  /**
+   * Uploads a raw file body (e.g. a profile photo) to a backend endpoint
+   * that expects the file's bytes directly as the request body — NOT
+   * multipart/form-data. This is the student-facing counterpart of the
+   * super admin's MembershipApi#uploadImage: the backend's raw-binary-body
+   * image routes (see backend/src/controllers/student.controller.js,
+   * adminMembershipMedia.controller.js) read Content-Type as the declared
+   * MIME and a `fileName` query parameter for the extension, so this
+   * cannot reuse `request()`, which always sends JSON.
+   *
+   * Same session-refresh-and-retry-once behaviour as request()/send(): a
+   * 401 triggers exactly one silent refresh attempt before giving up.
+   *
+   * @param {string} path      API path, e.g. '/students/me/photo'
+   * @param {File|Blob} file   the raw file to upload
+   * @returns {Promise<object>} the unwrapped `data` field of the response
+   */
+  async function uploadFile(path, file) {
+    const url = `${CONFIG.API_BASE_URL}${path}${path.includes('?') ? '&' : '?'}fileName=${encodeURIComponent(file.name || 'upload')}`;
+
+    async function doFetch() {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+      try {
+        return await fetch(url, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': file.type || 'application/octet-stream',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+          body: file,
+          credentials: 'include',
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    let res;
+    try {
+      res = await doFetch();
+    } catch (err) {
+      const timedOut = err && err.name === 'AbortError';
+      throw new ApiError(
+        timedOut
+          ? 'The upload took too long. Please check your connection and try again.'
+          : 'Unable to reach the server. Please check your connection and try again.',
+        { status: 0, errorCode: timedOut ? 'TIMEOUT' : 'NETWORK_ERROR' }
+      );
+    }
+
+    if (res.status === 401) {
+      const refreshed = await refreshOnce();
+      if (refreshed) res = await doFetch();
+    }
+
+    const payload = await res.json().catch(() => null);
+    if (!res.ok || !payload || payload.success === false) {
+      throw new ApiError(
+        (payload && payload.message) || `Upload failed (${res.status}).`,
+        {
+          status: res.status,
+          errorCode: (payload && payload.errorCode) || 'UNKNOWN',
+          errors: (payload && Array.isArray(payload.errors) && payload.errors) || [],
+          requestId: payload && payload.requestId,
+        }
+      );
+    }
+    return payload.data;
+  }
+
   return {
     request,
     refreshOnce,
     sendOnUnload,
+    uploadFile,
     get: (path) => request(path, { method: 'GET' }),
     post: (path, body) => request(path, { method: 'POST', body: body === undefined ? {} : body }),
     // Phase 14: used by learn.js to persist lesson progress/position.
     patch: (path, body) => request(path, { method: 'PATCH', body: body === undefined ? {} : body }),
+    delete: (path, body) => request(path, { method: 'DELETE', body: body === undefined ? {} : body }),
   };
 })();

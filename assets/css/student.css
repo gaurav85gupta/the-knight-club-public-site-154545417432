@@ -153,6 +153,14 @@
 .avatar-sm { width: 30px; height: 30px; font-size: 0.8125rem; box-shadow: none; }
 .avatar-lg { width: 88px; height: 88px; font-size: 2.25rem; }
 
+/* Photo-filled avatar: same circle, sizes and positions exactly like the
+   initials avatar above (so no layout ever shifts between the two states),
+   but with a real <img> instead of a letter. object-fit: cover keeps a
+   stable aspect ratio for any source image; the gradient background stays
+   visible underneath while the image loads. */
+.avatar-photo { padding: 0; background: var(--color-surface-alt, #241b3a); overflow: hidden; }
+.avatar-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
 .account-panel {
   position: absolute;
   top: calc(100% + 10px);
@@ -538,6 +546,31 @@ body.drawer-open { overflow: hidden; }
 .profile-name { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 var(--space-1); letter-spacing: -0.02em; overflow-wrap: anywhere; }
 .profile-sub { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); align-items: center; color: var(--color-text-muted); font-size: var(--font-size-sm); }
 @media (max-width: 480px) { .profile-header { flex-direction: column; text-align: center; padding: var(--space-6); } .profile-sub { justify-content: center; } }
+
+/* ---- Profile photo section ------------------------------------------------------------ */
+
+.photo-row { display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
+.photo-preview-wrap { position: relative; width: 88px; height: 88px; flex-shrink: 0; }
+/* Reuses .avatar/.avatar-lg/.avatar-photo exactly — the preview is the same
+   component the navbar and profile header already render, never a second
+   implementation of "show the student's photo". */
+.photo-preview-wrap .avatar { width: 100%; height: 100%; }
+.photo-progress-ring {
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.12);
+  border-top-color: var(--color-accent-500);
+  animation: photo-spin 0.8s linear infinite;
+  display: none;
+}
+.photo-row.is-uploading .photo-progress-ring { display: block; }
+.photo-row.is-uploading .photo-preview-wrap .avatar { opacity: 0.55; }
+@keyframes photo-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .photo-progress-ring { animation: none; } }
+
+.photo-actions { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.photo-actions-buttons { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.photo-hint { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.photo-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---- Settings cards ----------------------------------------------------------------------- */
 

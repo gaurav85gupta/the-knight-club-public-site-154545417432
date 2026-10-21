@@ -152,82 +152,60 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* ---- 1% Club: golden text with a soft, static glow --------
-   NOT a pill / selected-state look: no border, no fill, no outline. The link
-   is just golden text; the glow is a blurred radial aura living BEHIND it
-   (::before). Pure CSS, no JavaScript. Specificity
-   (0,3,1) beats the generic `.pub-header .nav-links a` rules above. */
+/* ---- 1% Club: premium gold badge (slim) --------
+   A small, crisp gold-outlined chip — same height/padding rhythm as the
+   plain nav links around it, so it reads as "one tier up" rather than a
+   bulky pill stuck in the middle of the bar. Thin hairline border (no
+   doubled gradient-border layers), tight glow, no moving shine — just a
+   calm, confident gold accent. Specificity (0,3,1) beats the generic
+   `.pub-header .nav-links a` rules above. */
 .pub-header .nav-links a.nav-club {
-  --gold-1: #fff1b8;
+  --gold-1: #ffe9ad;
   --gold-2: #f5c542;
-  --gold-3: #d99a1a;
-  isolation: isolate;
-  font-weight: 500;
+  --gold-3: #c9881c;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.45em 0.85em;
+  font-weight: 600;
   letter-spacing: 0.01em;
-  color: var(--gold-2);
-  background: transparent;
-  box-shadow: none;
-  text-shadow: 0 0 10px rgba(255, 200, 70, 0.45);
-}
-
-/* Gold gradient on the text itself (solid gold above is the fallback). */
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .pub-header .nav-links a.nav-club {
-    background: linear-gradient(100deg, var(--gold-1) 0%, var(--gold-2) 45%, var(--gold-3) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
-/* The glow: a blurred golden aura living behind the text, static. */
-.pub-header .nav-links a.nav-club::before {
-  content: "";
-  position: absolute;
-  inset: -6px -14px;
-  z-index: -1;
+  color: var(--gold-1);
+  background: rgba(245, 197, 66, 0.07);
+  border: 1px solid rgba(245, 197, 66, 0.4);
   border-radius: var(--radius-full);
-  background: radial-gradient(closest-side, rgba(255, 196, 60, 0.75), rgba(245, 170, 30, 0.35) 55%, rgba(245, 170, 30, 0) 100%);
-  filter: blur(9px);
-  opacity: 0.6;
-  pointer-events: none;
+  box-shadow: 0 0 10px rgba(201, 136, 28, 0.2);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
-/* Hover: no box appears; the aura just gets brighter and the text lighter. */
+/* Small star glyph marks it as a tier badge, not a page link. */
+.pub-header .nav-links a.nav-club::before {
+  content: "\2726";
+  font-size: 0.72em;
+  line-height: 1;
+  color: var(--gold-2);
+}
+
+/* Hover / focus / active: brighten the fill and ring a touch. No lift,
+   no shine sweep — stays calm next to the other nav links. */
 .pub-header .nav-links a.nav-club:hover,
 .pub-header .nav-links a.nav-club:focus-visible,
 .pub-header .nav-links a.nav-club[aria-current="page"] {
-  background-color: transparent;
-  box-shadow: none;
-  text-shadow: 0 0 14px rgba(255, 220, 120, 0.7);
-}
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .pub-header .nav-links a.nav-club:hover,
-  .pub-header .nav-links a.nav-club:focus-visible,
-  .pub-header .nav-links a.nav-club[aria-current="page"] {
-    background: linear-gradient(100deg, #fffbe0 0%, var(--gold-1) 50%, var(--gold-2) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
-}
-.pub-header .nav-links a.nav-club:hover::before,
-.pub-header .nav-links a.nav-club:focus-visible::before {
-  opacity: 0.9;
+  color: var(--gold-1);
+  background: rgba(245, 197, 66, 0.14);
+  border-color: rgba(245, 197, 66, 0.65);
+  box-shadow: 0 0 14px rgba(201, 136, 28, 0.35);
 }
 .pub-header .nav-links a.nav-club:focus-visible {
   outline: 2px solid var(--gold-2);
   outline-offset: 2px;
 }
 
-/* Mobile menu: the link is full-width there, so keep the aura hugging the
-   text (left-aligned, sized to the label) instead of smearing across the row. */
+/* Mobile menu: badge stays compact and left-aligned rather than full-width. */
 @media (max-width: 768px) {
   .pub-header .nav-links a.nav-club {
     align-self: flex-start;
     width: auto;
-  }
-  .pub-header .nav-links a.nav-club::before {
-    inset: -4px -12px;
   }
 }
 

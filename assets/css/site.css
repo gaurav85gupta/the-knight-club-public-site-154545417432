@@ -197,26 +197,24 @@ html[data-site-theme="light"] .pub-header .nav-links a.is-active {
   box-shadow: 0 6px 16px -6px rgba(162, 61, 224, 0.55);
 }
 
-/* 1% Club link: the bright gold is unreadable on lavender, so use a deeper
-   amber gradient on the text and a soft golden aura behind it. */
+/* 1% Club badge on lavender: light gold text is unreadable here, so use a
+   deep amber on a soft gold-tinted chip instead — same slim shape as dark
+   mode, just recoloured for contrast. */
 html[data-site-theme="light"] .pub-header .nav-links a.nav-club {
-  --gold-1: #d9941a;
-  --gold-2: #b86e00;
-  --gold-3: #8a5000;
-  text-shadow: none;
-}
-html[data-site-theme="light"] .pub-header .nav-links a.nav-club::before {
-  background: radial-gradient(closest-side, rgba(245, 190, 79, 0.65), rgba(245, 190, 79, 0.28) 55%, rgba(245, 190, 79, 0) 100%);
+  --gold-1: #8a5a00;
+  --gold-2: #b8740f;
+  --gold-3: #b8740f;
+  background: rgba(184, 116, 15, 0.1);
+  border-color: rgba(184, 116, 15, 0.4);
+  box-shadow: 0 0 8px rgba(184, 116, 15, 0.12);
 }
 html[data-site-theme="light"] .pub-header .nav-links a.nav-club:hover,
 html[data-site-theme="light"] .pub-header .nav-links a.nav-club:focus-visible,
 html[data-site-theme="light"] .pub-header .nav-links a.nav-club[aria-current="page"] {
-  background: linear-gradient(100deg, #b86e00 0%, #8a5000 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  box-shadow: none;
-  text-shadow: none;
+  color: var(--gold-1);
+  background: rgba(184, 116, 15, 0.18);
+  border-color: rgba(184, 116, 15, 0.65);
+  box-shadow: 0 0 12px rgba(184, 116, 15, 0.22);
 }
 
 html[data-site-theme="light"] .pub-header .nav-toggle {
@@ -999,8 +997,8 @@ html[data-site-theme="light"] .diff-item h3 {
    But courses-page and other pages may share .ab-* or need cross-page fixes.
    -------------------------------------------------------------------------- */
 
-/* About page approach cards */
-html[data-site-theme="light"] .ab-diff-card {
+/* About page trust strip */
+html[data-site-theme="light"] .ab-trust-panel {
   background: #ffffff;
   border-color: rgba(109, 61, 245, 0.16);
   box-shadow: 0 4px 20px -8px rgba(28, 21, 48, 0.12);

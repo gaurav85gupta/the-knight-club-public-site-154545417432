@@ -256,7 +256,7 @@
   font-size: clamp(2.6rem, 4.6vw, 3.6rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
-  font-weight: 500;
+  font-weight: 800;
   color: var(--color-text);
   text-wrap: balance;
   text-shadow:
@@ -407,7 +407,7 @@
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  animation: hero-orbit-spin 24s linear infinite;
+  animation: hero-orbit-spin 16s linear infinite;
 }
 
 @keyframes hero-orbit-spin {
@@ -426,16 +426,16 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 232px;
-  margin: -97px 0 0 -116px;
+  width: 268px;
+  margin: -112px 0 0 -134px;
   /* Placed on the ring by JS via --i (index) and --n (count) as inline
      custom properties; the transform itself lives here so there is one
-     authoritative placement rule, not one per card. Radius pulled in a
-     bit (was 220px) so the larger cards sit closer together on the ring
-     instead of spreading out with more gap between them. */
+     authoritative placement rule, not one per card. Radius bumped along
+     with the larger card width so bigger cards still clear each other
+     around the ring instead of overlapping. */
   transform:
     rotateY(calc(360deg / var(--n) * var(--i)))
-    translateZ(var(--hero-orbit-radius, 185px));
+    translateZ(var(--hero-orbit-radius, 210px));
   backface-visibility: hidden;
 }
 

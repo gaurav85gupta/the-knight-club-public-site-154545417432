@@ -113,35 +113,39 @@
 .ab-split-intro { position: sticky; top: 120px; }
 
 /* ==========================================================================
-   BRAND STATEMENT — full-width
+   BRAND STATEMENT — a quiet pull-quote, not a second hero.
+   Sized well below the page's actual H1 so it reads as a supporting line,
+   matching how this same sentence appears on the homepage (a line inside a
+   paragraph, not display type).
    ========================================================================== */
 .ab-statement {
   position: relative;
-  padding: var(--space-24) 0;
+  padding: var(--space-16) 0;
   text-align: center;
-  background: radial-gradient(ellipse 70% 80% at 50% 0%, rgba(124,58,237,.22), transparent 70%);
+  background: radial-gradient(ellipse 70% 80% at 50% 0%, rgba(124,58,237,.16), transparent 70%);
   border-block: 1px solid var(--color-border-soft);
 }
 
+.ab-statement-inner { max-width: 640px; margin-inline: auto; }
+.ab-statement-inner blockquote { margin: 0; }
+
 .ab-statement-title {
-  font-size: clamp(2.5rem, 7vw, 5.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  margin: var(--space-4) 0 var(--space-16);
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-style: italic;
+  color: var(--color-text);
+  margin: var(--space-4) 0 var(--space-5);
 }
 
-.ab-statement-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-8);
-  text-align: left;
+.ab-statement-sub {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1.75;
 }
-.ab-statement-grid > div {
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--color-border-strong);
-}
-.ab-statement-grid h3 { margin: 0 0 var(--space-2); font-size: 1.05rem; }
-.ab-statement-grid p  { margin: 0; color: var(--color-text-muted); line-height: 1.7; }
+
 .ab-statement a,
 .ab-note a,
 .ab-club a:not(.btn) { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
@@ -193,36 +197,57 @@
    ========================================================================== */
 
 /* ==========================================================================
-   APPROACH CARDS — numbered 2×2 grid
+   TRUST STRIP — one compact panel instead of a full heading+grid section.
+   Keeps "how courses are built" from repeating the same eyebrow/H2/4-grid
+   rhythm already used twice above (Philosophy, Learning Loop).
    ========================================================================== */
-.ab-diff-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
-}
-
-.ab-diff-card {
-  position: relative;
-  padding: var(--space-8) var(--space-8) var(--space-8) calc(var(--space-8) + 0.5rem);
+.ab-trust-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-10);
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border-soft);
   background: var(--color-surface-alt);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.ab-diff-card:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: 0 8px 32px -12px rgba(124, 58, 237, 0.3);
 }
 
-.ab-diff-num {
+.ab-trust-title {
+  flex: 1 1 260px;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  max-width: 20ch;
+}
+
+.ab-trust-strip {
+  display: flex;
+  flex: 2 1 480px;
+  flex-wrap: wrap;
+  gap: var(--space-6) var(--space-8);
+}
+.ab-trust-strip li {
+  flex: 1 1 180px;
+  min-width: 150px;
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--color-accent-600);
+}
+.ab-trust-strip strong {
   display: block;
-  margin-bottom: var(--space-4);
-  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
-  color: var(--color-accent-600);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  margin-bottom: 0.2em;
+}
+.ab-trust-strip span {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
 }
 
-.ab-diff-card h3 { margin: 0 0 var(--space-3); font-size: 1.1rem; }
-.ab-diff-card p  { margin: 0; color: var(--color-text-muted); line-height: 1.7; font-size: 0.95rem; }
+.ab-trust-cta { flex: 0 0 auto; }
 
 /* ==========================================================================
    VALUES — 4-column numbered rail
@@ -269,14 +294,22 @@
 .ab-center { text-align: center; margin: 0; }
 
 /* ==========================================================================
-   1% CLUB CONTEXT
+   1% CLUB CONTEXT — same animated premium glow as the homepage's
+   .club-panel (home.css, index-only, not loaded here), re-created under
+   .ab-club so About gets the identical "alive" gradient-border + pulsing
+   halo treatment instead of a flat panel.
    ========================================================================== */
 .ab-club {
+  position: relative;
+  isolation: isolate;
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--space-8); flex-wrap: wrap;
   padding: var(--space-10);
   border: 1px solid var(--color-border-strong); border-radius: var(--radius-xl);
-  background: linear-gradient(160deg, rgba(124,58,237,.16), rgba(20,15,36,.5));
+  background:
+    radial-gradient(900px 500px at 90% 10%, rgba(124, 58, 237, 0.32), transparent 65%),
+    linear-gradient(180deg, rgba(30, 18, 58, 0.95), rgba(15, 10, 30, 0.98));
+  box-shadow: 0 0 0 1px rgba(192, 160, 255, 0.12), inset 0 1px 0 rgba(192, 160, 255, 0.10);
 }
 .ab-club > div { max-width: 60ch; }
 .ab-club-title { margin: 0 0 var(--space-3); font-size: 1.6rem; }
@@ -284,6 +317,49 @@
 .ab-club p:last-child { margin-bottom: 0; }
 .ab-club-eq    { font-size: 0.9rem; font-weight: 500; color: var(--color-text-muted); letter-spacing: 0.02em; }
 .ab-club-eq strong { color: var(--color-lavender); }
+
+/* Animated gradient-border accent — position fixed, colors shift through
+   the brand's purple/violet/gold/pink palette over time. */
+.ab-club::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-xl) + 1px);
+  background: linear-gradient(90deg,
+    rgba(139, 69, 255, 0.6),
+    rgba(192, 160, 255, 0.5),
+    rgba(255, 196, 102, 0.55),
+    rgba(236, 72, 153, 0.5),
+    rgba(124, 58, 237, 0.6),
+    rgba(139, 69, 255, 0.6));
+  background-size: 300% 100%;
+  z-index: -1;
+  animation: ab-club-glow-colorshift 8s ease-in-out infinite;
+}
+/* Soft diffuse halo that breathes in and out behind the panel. */
+.ab-club::after {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  z-index: -2;
+  border-radius: calc(var(--radius-xl) + 16px);
+  background: radial-gradient(60% 60% at 50% 50%, rgba(139, 69, 255, 0.35), transparent 70%);
+  filter: blur(32px);
+  animation: ab-club-glow-pulse 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes ab-club-glow-colorshift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes ab-club-glow-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab-club::before { animation: none; background-position: 0% 50%; }
+  .ab-club::after { animation: none; opacity: 0.7; }
+}
 
 /* ==========================================================================
    BRAND PROMISE — closing statement
@@ -324,9 +400,11 @@
   .ab-split-intro    { position: static; }
   .ab-split-flip     { grid-template-columns: 1fr; }
   .ab-split-flip .ab-split-intro { order: 0; }
-  .ab-statement      { padding: var(--space-16) 0; }
-  .ab-statement-grid { grid-template-columns: 1fr; }
-  .ab-diff-cards     { grid-template-columns: 1fr; }
+  .ab-statement      { padding: var(--space-12) 0; }
+  .ab-trust-panel    { flex-direction: column; align-items: stretch; text-align: center; padding: var(--space-6); }
+  .ab-trust-title    { max-width: none; }
+  .ab-trust-strip li { text-align: left; }
+  .ab-trust-cta      { align-self: center; }
   /* .founder-v2-panel / .founder-v2-card tablet stacking now in public.css */
 }
 
@@ -354,7 +432,7 @@ html[data-site-theme="light"] .ab-story-bridge {
   background: rgba(240, 230, 250, 0.6);
 }
 
-html[data-site-theme="light"] .ab-diff-card {
+html[data-site-theme="light"] .ab-trust-panel {
   background: var(--color-surface);
 }
 
@@ -362,7 +440,113 @@ html[data-site-theme="light"] .ab-values-section {
   background: var(--color-surface-alt);
 }
 
-html[data-site-theme="light"] .ab-club {
-  background: linear-gradient(160deg, rgba(109,61,245,.12), rgba(162,61,224,.08));
+/* NOTE: .ab-club's light-theme background is owned by site.css (loaded
+   before this file), which already gives it a dark fill to match the
+   near-white text tokens it re-declares for this panel. Do not add a
+   lighter/near-transparent background override here — about.css loads
+   after site.css and would silently win, making the copy unreadable
+   (this happened once already; keep this note so it doesn't regress). */
+
+/* ==========================================================================
+   HERO — entrance motion
+   Same .is-visible-on-load convention as the rest of this file's reveals,
+   but fires immediately (no scroll needed) since the hero is always the
+   first thing on screen. Driven purely by CSS — no JS required.
+   ========================================================================== */
+.about-page .ab-hero .ab-hero-text > * {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: ab-fade-up 0.7s var(--ease-out, ease) forwards;
+}
+.about-page .ab-hero .pub-eyebrow      { animation-delay: .05s; }
+.about-page .ab-hero h1                { animation-delay: .14s; }
+.about-page .ab-hero .pub-hero-lead    { animation-delay: .24s; }
+.about-page .ab-hero .ab-hero-actions  { animation-delay: .34s; }
+
+@keyframes ab-fade-up {
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* ==========================================================================
+   SCROLL REVEAL — applied via .ab-reveal + .is-visible (toggled by
+   about-reveal.js using the same IntersectionObserver pattern as
+   founder-card.js / one-percent.js's .is-visible convention). No-op,
+   fully visible content if JS never runs (progressive enhancement).
+   ========================================================================== */
+.ab-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s var(--ease-out, ease), transform .7s var(--ease-out, ease);
+}
+.ab-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .about-page .ab-hero .ab-hero-text > * { animation: none; opacity: 1; transform: none; }
+  .ab-reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ==========================================================================
+   FOUNDER CARD — premium polish
+   Builds on public.css's shared .founder-v2-* base: adds a soft ambient
+   glow behind the photo and a crisper lift on hover/focus so the card
+   reads as a deliberate "signature" moment rather than a generic grid tile.
+   ========================================================================== */
+.founder-v2-panel { position: relative; }
+
+.founder-v2-card {
+  position: relative;
+  isolation: isolate;
+}
+.founder-v2-card::before {
+  content: "";
+  position: absolute;
+  inset: -24px;
+  z-index: -1;
+  background: radial-gradient(60% 60% at 50% 40%, rgba(139, 69, 255, 0.28), transparent 72%);
+  filter: blur(28px);
+  opacity: 0;
+  transition: opacity .6s var(--ease-out, ease);
+  pointer-events: none;
+}
+.founder-v2-card.is-visible::before { opacity: 1; }
+
+.founder-v2-photo-wrap {
+  box-shadow: 0 24px 60px -24px rgba(124, 58, 237, 0.45);
+  transition: box-shadow .4s var(--ease-out, ease);
+}
+.founder-v2-card:hover .founder-v2-photo-wrap,
+.founder-v2-card:focus-within .founder-v2-photo-wrap {
+  box-shadow: 0 32px 72px -22px rgba(124, 58, 237, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .founder-v2-card::before { transition: none; opacity: 1; }
+  .founder-v2-photo-wrap { transition: none; }
+}
+
+/* ==========================================================================
+   TYPOGRAPHY & SPACING REFINEMENT
+   Slightly more generous section rhythm and tighter heading tracking so
+   the page breathes instead of reading as uniform stacked blocks.
+   ========================================================================== */
+.about-page .pub-section + .pub-section,
+.about-page .ab-statement + .pub-section {
+  padding-top: var(--space-4);
+}
+
+.about-page .pub-title,
+.about-page .ab-story-heading,
+.about-page .founder-v2-name {
+  letter-spacing: -0.025em;
+}
+
+.about-page .pub-row h3,
+.about-page .ab-loop h3,
+.about-page .ab-who h3 {
+  letter-spacing: -0.01em;
+}
+
+.about-page .pub-sub,
+.about-page .ab-prose-lead {
+  letter-spacing: -0.005em;
+}

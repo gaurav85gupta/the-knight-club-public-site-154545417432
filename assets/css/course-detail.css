@@ -571,6 +571,7 @@ a.lesson-left:hover { color: var(--color-lavender); }
   background: linear-gradient(135deg, var(--color-accent-500), var(--color-cyan) 55%, var(--color-accent-300));
   opacity: 0.55;
   filter: blur(18px);
+  pointer-events: none;
   transition: opacity 360ms var(--ease-out);
 }
 .cd-buy-card:hover .cd-buy-card-glow { opacity: 0.85; }
@@ -765,7 +766,8 @@ html body .cd-buy-card .btn.btn-ghost[disabled] {
   .cd-hero-media:hover .cd-banner-inner { transform: none; }
   .cd-title { max-width: none; }
   .cd-grid { grid-template-columns: 1fr; gap: var(--space-8); }
-  .cd-buy-card { position: static; max-width: 440px; }
+  /* relative (NOT static): the glow child is position:absolute, so the card must stay its containing block or the glow stretches over the whole page and blocks taps */
+  .cd-buy-card { position: relative; top: auto; max-width: 440px; }
   .cd-buy-card-inner { transform: none !important; }
 }
 

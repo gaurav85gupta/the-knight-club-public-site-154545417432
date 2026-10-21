@@ -109,6 +109,38 @@ const StudentShell = (() => {
     return (displayName(user).charAt(0) || '?').toUpperCase();
   }
 
+  /**
+   * Builds one avatar element: the student's uploaded photo when present,
+   * else the initials circle exactly as before. This is the ONE place that
+   * decides "photo or initials" for every avatar this header renders (the
+   * desktop trigger and the mobile drawer identity), so the two can never
+   * drift — and profile.html's own preview reuses the same `.avatar` /
+   * `.avatar-photo` classes (see student.css) for the same reason.
+   * @param {object} user
+   * @param {string} className  e.g. 'avatar avatar-sm'
+   */
+  function avatarEl(user, className) {
+    const span = el('span', className);
+    span.setAttribute('aria-hidden', 'true');
+    if (user && user.photoUrl) {
+      span.classList.add('avatar-photo');
+      const img = document.createElement('img');
+      img.src = user.photoUrl;
+      img.alt = '';
+      img.addEventListener('error', () => {
+        // Broken/unreachable image: fall back to initials rather than a
+        // broken-image icon, same rule profile.js's preview follows.
+        span.classList.remove('avatar-photo');
+        span.replaceChildren();
+        span.textContent = initial(user);
+      });
+      span.appendChild(img);
+    } else {
+      span.textContent = initial(user);
+    }
+    return span;
+  }
+
   /** Human label for the role field, only if the API actually supplied one. */
   function roleLabel(user) {
     const r = user && user.role ? String(user.role) : '';
@@ -138,8 +170,7 @@ const StudentShell = (() => {
     trigger.setAttribute('aria-haspopup', 'true');
     trigger.setAttribute('aria-expanded', 'false');
     trigger.setAttribute('aria-controls', 'account-panel');
-    const avatar = el('span', 'avatar avatar-sm', initial(user));
-    avatar.setAttribute('aria-hidden', 'true');
+    const avatar = avatarEl(user, 'avatar avatar-sm');
     const triggerName = el('span', 'account-trigger-name', displayName(user));
     const chev = svg('chevron', 16);
     chev.classList.add('account-chevron');
@@ -230,8 +261,7 @@ const StudentShell = (() => {
 
     const top = el('div', 'mobile-drawer-top');
     const idWrap = el('div', 'mobile-identity');
-    const avatar = el('span', 'avatar', initial(user));
-    avatar.setAttribute('aria-hidden', 'true');
+    const avatar = avatarEl(user, 'avatar');
     const text = el('div');
     text.appendChild(el('p', 'account-who-name', displayName(user)));
     const role = roleLabel(user);
@@ -402,8 +432,26 @@ const StudentShell = (() => {
     if (footerHost) footerHost.replaceChildren(buildFooter());
 
     // Signing out in another tab signs this one out too (same as dashboard.js).
+    // Also keeps the header/drawer avatar in sync when the SAME tab updates
+    // its own photo (profile.js calls Auth.updateUser() after a successful
+    // upload/remove) — swapping just the <img>/initials in place, never a
+    // full re-mount, so the open account menu / drawer state isn't disturbed.
+    let lastPhotoUrl = user && user.photoUrl;
     Auth.onChange((u) => {
-      if (!u) window.location.replace(Auth.urlFor(Auth.PATHS.login));
+      if (!u) {
+        window.location.replace(Auth.urlFor(Auth.PATHS.login));
+        return;
+      }
+      if (u.photoUrl === lastPhotoUrl) return;
+      lastPhotoUrl = u.photoUrl;
+      if (headerHost) {
+        headerHost.querySelectorAll('.account-trigger .avatar').forEach((old) => {
+          old.replaceWith(avatarEl(u, old.className));
+        });
+        headerHost.querySelectorAll('.mobile-identity .avatar').forEach((old) => {
+          old.replaceWith(avatarEl(u, old.className));
+        });
+      }
     });
 
     // Phase 29: Initialize cart badge count and subscribe to changes.
@@ -429,5 +477,5 @@ const StudentShell = (() => {
     }
   }
 
-  return { mount, displayName, initial, svg, el };
+  return { mount, displayName, initial, avatarEl, svg, el };
 })();

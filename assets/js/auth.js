@@ -215,6 +215,21 @@ const Auth = (() => {
   }
 
   /**
+   * Merges a server-returned profile into the in-memory user and notifies
+   * listeners (StudentShell's avatar, any open onChange subscriber). Used
+   * after profile-photo upload/removal so the navbar avatar updates
+   * immediately without a second GET /auth/me round trip. Does NOT call the
+   * server itself — callers pass the `data` already returned by the
+   * profile/photo endpoint they just called, so this can never show a
+   * field the backend didn't actually send.
+   * @param {object} partial  safe profile fields from a students/me* response
+   */
+  function updateUser(partial) {
+    if (!currentUser || !partial) return;
+    setUser({ ...currentUser, ...partial });
+  }
+
+  /**
    * Route guard for protected pages. Call at the top of the page script:
    *
    *     const user = await Auth.requireAuth();   // redirects if not signed in
@@ -353,6 +368,7 @@ const Auth = (() => {
     login,
     logout,
     changePassword,
+    updateUser,
     requireAuth,
     redirectIfAuthenticated,
     handleSessionError,

@@ -10,8 +10,8 @@
 
    Variants : .btn-primary  .btn-outline  .btn-ghost
    Sizes    : .btn-sm  (default)  .btn-lg      Modifier: .btn-block
-   Static only — no hover lift, scale, or shine-sweep. Hover changes colour
-   only, matching what every page already shows.
+   Hover changes colour AND plays a springy "ball bounce" keyframe
+   animation (section 6b) — on every .btn, everywhere.
 
    Theming is done with --bx-* variables so one set of rules serves:
      - public Dark  (default)
@@ -165,7 +165,7 @@ html body .btn.btn-ghost {
   color: var(--bx-g-fg);
 }
 
-/* ---------- 6. Hover — colour change only, no movement ---------- */
+/* ---------- 6. Hover — colour change + bounce ---------- */
 html body .btn.btn-primary:hover {
   background: linear-gradient(135deg, var(--bx-from-h) 0%, var(--bx-via-h) 50%, var(--bx-to-h) 100%);
   color: #fff;
@@ -179,6 +179,28 @@ html body .btn.btn-outline:hover {
 html body .btn.btn-ghost:hover {
   color: var(--bx-g-fg-h);
   border-color: var(--bx-g-bd-h);
+}
+
+/* ---------- 6b. Bounce-on-hover (ball-drop feel, like it's landing) ----------
+   Applies to every .btn on hover: scales/translates in a springy keyframe
+   sequence so the button looks like a ball bouncing when the cursor lands
+   on it. Respects reduced-motion preference. ---------- */
+html body .btn:hover {
+  animation: btn-bounce 0.55s cubic-bezier(0.28, 0.84, 0.42, 1);
+  transform-origin: center bottom;
+}
+@keyframes btn-bounce {
+  0%   { transform: translateY(0) scale(1); }
+  25%  { transform: translateY(-14px) scale(1.04, 0.96); }
+  45%  { transform: translateY(0) scale(0.96, 1.06); }
+  65%  { transform: translateY(-6px) scale(1.02, 0.98); }
+  82%  { transform: translateY(0) scale(0.99, 1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .btn:hover {
+    animation: none;
+  }
 }
 
 /* ---------- 7. Keyboard focus ---------- */
@@ -239,8 +261,8 @@ html[data-site-theme="light"] .pub-cta-panel .btn.btn-outline:hover {
    SAME RULE APPLIES TO JS: no page-specific script (e.g. home.js,
    scroll-animations.js, hero-bg.js) may attach mousemove/hover-driven
    transforms, GSAP tweens, or any animation to .btn/.btn-primary/
-   .btn-outline/.btn-ghost. Buttons stay static everywhere — the only
-   motion allowed is base.css's :active press (translateY(1px)) and the
-   colour-only :hover already defined below. This keeps every page,
-   including the homepage, visually and behaviourally identical.
+   .btn-outline/.btn-ghost. The only motion allowed is base.css's :active
+   press (translateY(1px)) and the hover bounce defined in section 6b
+   above. This keeps every page, including the homepage, visually and
+   behaviourally identical.
    ========================================================================== */
