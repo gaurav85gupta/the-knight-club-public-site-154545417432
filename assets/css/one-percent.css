@@ -3,8 +3,57 @@
 /* =========================================================================
    CLUB PAGE BASE
    ========================================================================= */
-.club-page{--cream:#f4efe6;--disp:var(--font-family-h1);--serif:'Cormorant Garamond',Garamond,serif}
-.club-page h1,.club-page h2{font-family:var(--disp);letter-spacing:-.035em;color:var(--cream)}
+.club-page{--cream:#f4efe6;--disp:var(--font-family-h1);--serif:'Cormorant Garamond',Garamond,serif;--gold:#f0c674}
+.club-page h1,.club-page h2{font-family:var(--disp);letter-spacing:normal;color:var(--cream)}
+html[data-site-theme="light"] .club-page{--gold:#a9780f}
+
+/* =========================================================================
+   HERO — flagship badge, centered layout, gradient headline, price pill
+   ========================================================================= */
+.oc-hero-in-center{text-align:center;display:flex;flex-direction:column;align-items:center}
+
+.oc-flag-badge{display:inline-flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-6);padding:.4rem .9rem;border:1px solid rgba(240,198,116,.35);border-radius:var(--radius-full);background:rgba(240,198,116,.08);color:var(--gold);font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.oc-flag-badge svg{flex-shrink:0}
+
+h1.oc-h1-centered{margin:0 auto var(--space-6)!important;max-width:100%!important;font-size:clamp(1.3rem,3.4vw,3rem);line-height:1.12;font-weight:400;white-space:nowrap;text-align:center}
+.oc-h1-gradient{font-style:italic;background:linear-gradient(100deg,var(--gold) 0%,var(--color-lavender) 55%,var(--color-accent-600) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+.oc-lead-centered{max-width:56ch;margin:0 auto}
+
+.oc-price-pill{display:flex;align-items:baseline;gap:var(--space-3);flex-wrap:wrap;justify-content:center;margin-top:var(--space-8);padding:var(--space-3) var(--space-5);border:1px solid var(--color-border-strong);border-radius:var(--radius-full);background:var(--color-glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.oc-price-pill-compare{font-size:1rem;color:var(--color-text-muted);text-decoration:line-through}
+.oc-price-pill-amount{font:800 1.8rem/1 var(--disp);color:var(--cream)}
+.oc-price-pill-chip{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:var(--radius-full);background:rgba(240,198,116,.15);color:var(--gold);font-size:.74rem;font-weight:500}
+
+.oc-actions-centered{justify-content:center;margin-top:var(--space-6)}
+.oc-actions-centered .btn svg:first-child{margin-right:.4rem}
+
+.oc-hero-real-cta{margin-top:var(--space-4);padding:0;border:0;background:none;color:var(--color-text-muted);font-size:.85rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.oc-hero-real-cta:disabled{cursor:default;opacity:.7}
+.oc-hero-real-cta:not(:disabled):hover{color:var(--cream)}
+
+.oc-offer-note{max-width:48ch;margin:var(--space-5) auto 0;color:var(--color-text-muted);font-size:.85rem;line-height:1.5}
+.oc-offer-note[hidden]{display:none}
+
+/* =========================================================================
+   SECTION 2 EYEBROW + VIDEO BOX
+   ========================================================================= */
+.oc-eyebrow-gold{display:inline-flex;align-items:center;gap:var(--space-2);margin:0 0 var(--space-3);color:var(--gold);font-size:.78rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+
+.oc-video-outer{margin-top:var(--space-10)}
+.oc-video-box{position:relative;max-width:900px;margin:0 auto;padding:var(--space-4);border-radius:var(--radius-xl);border:1px solid var(--color-border-strong);background:radial-gradient(120% 140% at 50% 0%,rgba(124,58,237,.28),transparent 60%),linear-gradient(180deg,rgba(30,18,58,.9),rgba(10,7,18,.98));box-shadow:var(--shadow-float)}
+
+.oc-video-container-wrap{aspect-ratio:16/9;border-radius:var(--radius-lg);overflow:hidden;background:#000}
+.oc-video-container{position:relative;width:100%;height:100%}
+
+.oc-video-empty{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-lg);background:radial-gradient(60% 80% at 50% 40%,rgba(124,58,237,.22),transparent 70%)}
+.oc-video-empty[hidden]{display:none}
+.oc-video-play{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;border:1px solid var(--color-border-strong);background:rgba(28,22,52,.85);color:var(--cream);cursor:default}
+.oc-video-play svg{margin-left:3px}
+
+.oc-video-caption{margin-top:var(--space-4);padding:0 var(--space-2);display:flex;flex-direction:column;gap:2px}
+.oc-video-caption strong{color:var(--cream);font-size:.92rem}
+.oc-video-caption span{color:var(--color-text-muted);font-size:.82rem}
 
 /* =========================================================================
    HIDDEN ATTRIBUTE FIX
@@ -58,10 +107,10 @@
 .oc-mark{position:absolute;z-index:-1;right:-2vw;top:50%;transform:translateY(-46%);font:800 clamp(14rem,34vw,32rem)/.8 var(--disp);letter-spacing:-.08em;color:transparent;-webkit-text-stroke:1px rgba(196,181,253,.34);animation:oc-reveal 1.4s var(--ease-out) both;pointer-events:none;user-select:none}
 .oc-hero-in{position:relative}
 .oc-kicker{margin:0 0 var(--space-6);color:var(--color-lavender);font-size:.85rem;letter-spacing:.14em;text-transform:uppercase}
-.oc-hero h1{margin:0 0 var(--space-6);max-width:15ch;font-size:clamp(2.6rem,7vw,5.6rem);line-height:1;font-weight:800}
+.oc-hero h1{margin:0 0 var(--space-6);max-width:20ch;font-size:clamp(2.1rem,4.8vw,3.8rem);line-height:1.1;font-weight:400;text-wrap:balance}
 .oc-h1-name{display:block;margin-bottom:var(--space-3);font:italic 500 clamp(1.6rem,3.4vw,2.6rem)/1.1 var(--serif);letter-spacing:0;color:var(--color-lavender)}
 .oc-h1-line{display:block}
-.oc-lead{max-width:52ch;color:var(--color-text-muted);font-size:1.2rem;line-height:1.65}
+.oc-lead{max-width:52ch;color:var(--color-text-muted);font-size:1.05rem;line-height:1.7}
 .oc-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-8)}
 
 /* Hero meta (price + rule) — opacity raised from .55 to .78 so the glass
@@ -118,26 +167,29 @@ html[data-site-theme="light"] .oc-hero-meta{
    ========================================================================= */
 .oc-sec{padding:var(--space-16) 0}
 .oc-alt{background:linear-gradient(180deg,rgba(23,17,42,.7),rgba(10,7,20,0));border-top:1px solid var(--color-border-soft)}
-.club-page h2{margin:0 0 var(--space-5);font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.05;font-weight:800}
+.club-page h2{margin:0 0 var(--space-5);font-size:clamp(1.9rem,4.2vw,3.1rem);line-height:1.05;font-weight:600}
 .club-page .oc-h2b{margin-top:0}
 .oc-p{max-width:60ch;color:var(--color-text-muted);font-size:1.08rem;line-height:1.75}
 .oc-p strong{color:var(--cream)}
 .oc-p a,.oc-note a{color:var(--color-lavender);border-bottom:1px solid var(--color-border-strong)}
 .oc-narrow{margin-bottom:var(--space-10)}
 .oc-note{max-width:60ch;margin-top:var(--space-5);padding-left:var(--space-4);border-left:1px solid var(--color-border-strong);color:var(--color-text-muted);font-size:.95rem}
-.oc-split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-16);align-items:start}
 .oc-what-center{text-align:center;max-width:70ch;margin:0 auto}
-.oc-what-center .oc-p-center{max-width:none;margin-left:auto;margin-right:auto}
-.oc-split-photo{grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);align-items:start}
-.oc-photo{width:100%;height:auto;border-radius:var(--radius-xl);border:1px solid var(--color-border-strong);box-shadow:var(--shadow-float)}
-.oc-flow{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-8);color:var(--color-text-muted)}
-.oc-flow b{font:800 2.6rem/1 var(--disp);color:var(--cream);margin-right:.3rem}
-.oc-flow i{flex:1;max-width:120px;height:1px;background:linear-gradient(90deg,var(--color-border-strong),var(--color-accent-600))}
+.oc-p-center{max-width:none;margin-left:auto;margin-right:auto}
+.oc-eyebrow-center{justify-content:center}
+
+/* Choose-your-courses head: centers the eyebrow/heading/intro copy, then
+   releases back to full width for the picker bar + course grid that follow
+   it inside the same .container (text-align isn't inherited by them since
+   they set their own flex/grid layouts). */
+.oc-choose-head{text-align:center}
+.oc-choose-head h2{margin-left:auto;margin-right:auto}
+.oc-choose-head .oc-narrow{max-width:60ch;margin-left:auto;margin-right:auto;margin-bottom:var(--space-8)}
 
 /* =========================================================================
    COURSE PICKER BAR + COUNTER
    ========================================================================= */
-.oc-picker-bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-5);align-items:baseline}
+.oc-picker-bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-5);align-items:center;padding:var(--space-3) var(--space-4);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);background:var(--color-surface)}
 .oc-picker-right{display:flex;gap:var(--space-2);align-items:center}
 .oc-count{margin:0;font:700 1.4rem var(--disp);color:var(--cream)}
 .oc-count.is-full{color:var(--color-lavender)}
@@ -146,54 +198,83 @@ html[data-site-theme="light"] .oc-hero-meta{
 /* =========================================================================
    COURSE GRID + CARDS
    ========================================================================= */
-.oc-courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--space-4)}
+.oc-courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-3)}
 .oc-state{grid-column:1/-1;padding:var(--space-8);border:1px dashed var(--color-border-strong);border-radius:var(--radius-lg);color:var(--color-text-muted);text-align:center}
-.oc-course{display:flex;flex-direction:column;overflow:hidden;background:var(--color-surface);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);transition:border-color var(--dur-base),box-shadow var(--dur-base);cursor:pointer}
+
+/* Compact row-style card: small square icon tile on the left, title/desc/
+   actions stacked on the right — denser than the old banner-thumbnail
+   card, matching a chip-grid course picker. */
+.oc-course{display:flex;align-items:flex-start;gap:var(--space-3);overflow:hidden;background:var(--color-surface);border:1px solid var(--color-border-soft);border-radius:var(--radius-md);padding:var(--space-3);transition:border-color var(--dur-base),box-shadow var(--dur-base);cursor:pointer}
 .oc-course:hover{border-color:var(--color-border-strong)}
 .oc-course.is-on{border-color:var(--color-accent-600);box-shadow:var(--glow-soft)}
-.oc-thumb{aspect-ratio:16/9;background:linear-gradient(135deg,var(--color-accent-100),var(--color-bg));display:grid;place-items:center;font:800 2rem var(--disp);color:var(--color-lavender);overflow:hidden}
+
+.oc-thumb{flex-shrink:0;width:40px;height:40px;aspect-ratio:1/1;border-radius:var(--radius-md);background:linear-gradient(135deg,var(--color-accent-100),var(--color-bg));display:grid;place-items:center;font:800 1rem var(--disp);color:var(--color-lavender);overflow:hidden}
 .oc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.oc-thumb-initials{font:800 2rem/1 var(--disp);color:var(--color-lavender)}
-.oc-cbody{display:flex;flex-direction:column;flex:1;padding:var(--space-4)}
-.oc-ctitle{margin:0 0 var(--space-2);font-size:1.05rem;font-weight:700;color:var(--cream)}
-.oc-cdesc{margin:0 0 var(--space-2);color:var(--color-text-muted);font-size:.88rem;line-height:1.55}
-.oc-meta{font-size:.8rem!important;color:var(--color-lavender)!important}
-.oc-cfoot{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);margin-top:auto;padding-top:var(--space-3);border-top:1px solid var(--color-border-soft)}
-.oc-clink{font-size:.83rem;color:var(--color-lavender);text-decoration:none;flex-shrink:0}
+.oc-thumb-initials{font:800 1rem/1 var(--disp);color:var(--color-lavender)}
+
+.oc-cbody{display:flex;flex-direction:column;flex:1;min-width:0;padding:0}
+.oc-ctitle{margin:0 0 2px;font-size:.92rem;font-weight:500;color:var(--cream);line-height:1.3}
+.oc-cdesc{margin:0;color:var(--color-text-muted);font-size:.78rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.oc-meta{font-size:.74rem!important;color:var(--color-lavender)!important}
+
+.oc-cfoot{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);margin-top:var(--space-2);padding-top:0;border-top:none}
+.oc-clink{font-size:.72rem;color:var(--color-lavender);text-decoration:none;flex-shrink:0}
 .oc-clink:hover{text-decoration:underline}
-.oc-pick{padding:.45rem .9rem;border-radius:var(--radius-full);border:1px solid var(--color-border-strong);background:transparent;color:var(--color-text);font:600 .83rem var(--font-family-base);cursor:pointer;transition:background var(--dur-fast),border-color var(--dur-fast),color var(--dur-fast);flex-shrink:0}
+.oc-pick{padding:.3rem .7rem;border-radius:var(--radius-full);border:1px solid var(--color-border-strong);background:transparent;color:var(--color-text);font:600 .76rem var(--font-family-base);cursor:pointer;transition:background var(--dur-fast),border-color var(--dur-fast),color var(--dur-fast);flex-shrink:0}
 .oc-pick:hover:not(:disabled){background:rgba(124,58,237,.15);border-color:var(--color-accent-600)}
 .oc-pick[aria-pressed=true]{background:var(--color-accent-500);border-color:var(--color-accent-500);color:#fff}
 .oc-pick[aria-pressed=true]::before{content:'\2713  '}
 .oc-pick:disabled{opacity:.38;cursor:not-allowed}
 
-/* Benefits (from API) */
-.oc-benefits-heading{margin:var(--space-10) 0 var(--space-4);font-size:1.5rem;color:var(--cream)}
+/* =========================================================================
+   "WHAT YOU GET" BENEFIT ICON-GRID (static, 9 cards)
+   ========================================================================= */
+.oc-benefit-grid{list-style:none;margin:var(--space-10) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-4)}
+.oc-bcard{padding:var(--space-5);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);background:var(--color-surface);transition:border-color var(--dur-base)}
+.oc-bcard:hover{border-color:var(--color-border-strong)}
+.oc-bicon{display:grid;place-items:center;width:40px;height:40px;margin-bottom:var(--space-3);border-radius:var(--radius-md);background:rgba(124,58,237,.16);color:var(--color-lavender)}
+.oc-bcard h3{margin:0 0 var(--space-1);font-size:1rem;color:var(--cream)}
+.oc-bcard p{margin:0;color:var(--color-text-muted);font-size:.88rem;line-height:1.5}
+
+/* Founder photo strip beneath the grid */
+.oc-founder-strip{display:flex;align-items:center;gap:var(--space-4);margin-top:var(--space-8);padding:var(--space-4);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);background:var(--color-surface)}
+.oc-founder-strip-img{flex-shrink:0;width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid var(--color-border-strong)}
+.oc-founder-strip p{margin:0;color:var(--color-text-muted);font-size:.92rem}
+.oc-founder-strip p strong{color:var(--cream)}
+
+/* Benefits (from API) — supplementary list shown beneath the static grid
+   above, only when the admin has configured plan.benefits. */
+.oc-benefits-dynamic{margin-top:var(--space-8)}
+.oc-benefits-heading{margin:0 0 var(--space-4);font-size:1.1rem;color:var(--cream)}
 .oc-benefits-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-2)}
 .oc-benefit{padding:var(--space-3) var(--space-4);border:1px solid var(--color-border-soft);border-radius:var(--radius-md);background:var(--color-surface);color:var(--color-text-muted);font-size:.95rem}
-.oc-benefit::before{content:'\2713  ';color:var(--color-accent-600);font-weight:700}
-
-/* =========================================================================
-   ECOSYSTEM LIST
-   ========================================================================= */
-.oc-eco{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0 var(--space-10);counter-reset:none}
-.oc-eco li{display:grid;grid-template-columns:44px 1fr;gap:var(--space-3);padding:var(--space-5) 0;border-top:1px solid var(--color-border-soft)}
-.oc-n{font:700 .8rem var(--disp);letter-spacing:.14em;color:var(--color-accent-700);padding-top:.35rem}
-.oc-eco h3{margin:0 0 var(--space-1);font-size:1.15rem;color:var(--cream)}
-.oc-eco p{margin:0;color:var(--color-text-muted);font-size:.95rem}
+.oc-benefit::before{content:'\2713  ';color:var(--color-accent-600);font-weight:500}
 
 /* =========================================================================
    COMPARISON TABLE
    ========================================================================= */
 .oc-tbl-wrap{overflow-x:auto;border:1px solid var(--color-border-soft);border-radius:var(--radius-lg)}
-.oc-tbl{width:100%;min-width:520px;border-collapse:collapse}
+.oc-tbl{width:100%;min-width:560px;border-collapse:collapse}
 .oc-tbl th,.oc-tbl td{padding:var(--space-4);text-align:left;border-bottom:1px solid var(--color-border-soft)}
-.oc-tbl thead th{color:var(--color-lavender);font-size:.85rem}
-.oc-tbl thead th:last-child,.oc-tbl td:last-child{background:rgba(124,58,237,.1)}
-.oc-tbl tbody th{font-weight:500;color:var(--cream)}
+.oc-tbl thead th{position:relative;color:var(--color-lavender);font-size:.85rem;font-weight:500;vertical-align:bottom}
+.oc-tbl tbody th{font-weight:400;color:var(--cream)}
 .oc-tbl tr:last-child>*{border-bottom:0}
-.oc-yes{color:var(--color-lavender);font-weight:600}.oc-yes::before{content:'\2713  '}
-.oc-no{color:var(--color-text-muted)}.oc-no::before{content:'\2013  '}
+
+/* 1% Club column highlight — explicit class instead of :last-child, so
+   markup and styling agree on which column is "the pick". */
+.oc-tbl-top{background:rgba(124,58,237,.1)}
+.oc-tbl thead th.oc-tbl-top{padding-top:var(--space-6)}
+
+.oc-tbl-ribbon{position:absolute;top:var(--space-2);left:50%;transform:translateX(-50%);padding:.2rem .6rem;border-radius:var(--radius-full);background:var(--gold);color:#1a1206;font-size:.65rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+
+.oc-tbl-price{display:block;margin-top:2px;font:800 1.15rem var(--disp);color:var(--cream)}
+
+/* Included / Not included — icon circles instead of text */
+.oc-yes,.oc-no{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%}
+.oc-yes{background:rgba(124,58,237,.2);color:var(--color-lavender)}
+.oc-yes::after{content:'\2713';font-weight:600;font-size:.8rem}
+.oc-no{background:var(--color-surface-alt);color:var(--color-text-muted)}
+.oc-no::after{content:'\2715';font-size:.7rem}
 
 /* =========================================================================
    HOW IT WORKS (STEPS)
@@ -234,7 +315,7 @@ html[data-site-theme="light"] .oc-hero-meta{
 .oc-review-hero{position:relative;isolation:isolate;overflow:hidden;padding:var(--space-16) 0;border-bottom:1px solid var(--color-border-soft)}
 .oc-review-hero .oc-hero-bg{position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 80% at 70% 40%,rgba(124,58,237,.3),transparent 70%);-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
 .oc-review-hero-in{position:relative}
-.oc-review-heading{margin:var(--space-3) 0 var(--space-4);font-size:clamp(1.8rem,4vw,3rem);line-height:1.05;font-weight:800}
+.oc-review-heading{margin:var(--space-3) 0 var(--space-4);font-size:clamp(1.8rem,4vw,3rem);line-height:1.05;font-weight:600}
 
 /* Two-column layout */
 .oc-review-layout{display:grid;grid-template-columns:1fr 360px;gap:var(--space-10);align-items:start;padding-top:var(--space-8)}
@@ -248,16 +329,16 @@ html[data-site-theme="light"] .oc-hero-meta{
 .oc-review-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .oc-review-thumb-fallback{font:700 1.1rem/1 var(--disp);color:var(--color-lavender)}
 .oc-review-course-info{display:flex;align-items:center;gap:var(--space-3);flex:1;min-width:0}
-.oc-review-check{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--color-accent-500);color:#fff;font-size:.8rem;font-weight:700;display:grid;place-items:center}
+.oc-review-check{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--color-accent-500);color:#fff;font-size:.8rem;font-weight:500;display:grid;place-items:center}
 .oc-review-title{font:600 .95rem/1.3 var(--disp);color:var(--cream);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* Right col: summary card */
 .oc-review-summary{position:sticky;top:var(--space-8)}
 .oc-review-summary-inner{padding:var(--space-6);border:1px solid var(--color-border-soft);border-radius:var(--radius-xl);background:var(--color-surface)}
-.oc-review-summary-title{margin:0 0 var(--space-5);font-size:1.2rem;color:var(--cream);font-weight:700}
+.oc-review-summary-title{margin:0 0 var(--space-5);font-size:1.2rem;color:var(--cream);font-weight:500}
 .oc-review-plan{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-5);padding-bottom:var(--space-5);border-bottom:1px solid var(--color-border-soft)}
 .oc-review-plan-label{font:700 1.05rem/1 var(--disp);color:var(--cream)}
-.oc-review-plan-tag{padding:var(--space-1) .6rem;border-radius:var(--radius-full);background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:var(--color-lavender);font-size:.75rem;font-weight:600;letter-spacing:.06em}
+.oc-review-plan-tag{padding:var(--space-1) .6rem;border-radius:var(--radius-full);background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:var(--color-lavender);font-size:.75rem;font-weight:500;letter-spacing:.06em}
 .oc-review-price-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-4)}
 .oc-review-price-label{color:var(--color-text-muted);font-size:.9rem}
 .oc-review-price-val{display:flex;align-items:baseline;gap:var(--space-2);flex-direction:column;text-align:right}
@@ -284,17 +365,17 @@ html[data-site-theme="light"] .oc-hero-meta{
    RESPONSIVE
    ========================================================================= */
 @media (max-width:768px){
-  .oc-split,.oc-split-photo{grid-template-columns:1fr;gap:var(--space-8)}
-  .oc-photo{max-width:340px}
   .oc-steps{grid-template-columns:1fr 1fr}
   .oc-review-layout{grid-template-columns:1fr}
   .oc-review-summary{position:static}
+  .oc-benefit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:480px){
+  h1.oc-h1-centered{white-space:normal;max-width:16ch!important;width:auto}
   .oc-mark{opacity:.5;right:-12vw}
   .oc-steps{grid-template-columns:1fr}
-  .oc-flow{flex-wrap:wrap}
-  .oc-flow i{display:none}
+  .oc-benefit-grid{grid-template-columns:1fr}
+  .oc-founder-strip{flex-direction:column;text-align:center}
   .oc-actions .btn{width:100%}
   .oc-hero{padding-bottom:var(--space-16)}
   .oc-hero-meta{flex-direction:column;align-items:flex-start;gap:var(--space-3)}
@@ -311,25 +392,11 @@ html[data-site-theme="light"] .oc-hero-meta{
 .oc-view-review{display:block}
 /* ==========================================================================
    Phase 39 — Section 2 Intro Video
+   Sizing/aspect-ratio/border-radius for the player now live on
+   .oc-video-container-wrap and .oc-video-box (added in Phase 1, see the
+   "SECTION 2 EYEBROW + VIDEO BOX" block above) — this file only needs to
+   make the injected iframe itself fill that box.
    ========================================================================== */
-
-#oc-intro-video-wrap {
-  margin-top: var(--space-8, 2rem);
-  padding: 0;
-}
-
-.oc-video-container {
-  position: relative;
-  width: 100%;
-  max-width: 56rem;
-  margin: 0 auto;
-  aspect-ratio: 16 / 9;
-  background: #000;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-}
-
 .oc-video-container iframe {
   position: absolute;
   inset: 0;
@@ -339,8 +406,45 @@ html[data-site-theme="light"] .oc-hero-meta{
   display: block;
 }
 
-@media (max-width: 768px) {
-  #oc-intro-video-wrap {
-    margin-top: var(--space-6, 1.5rem);
-  }
+/* =========================================================================
+   PREMIUM HERO (selection view) — the flagship page gets its own, richer
+   treatment: two-tier title (Oswald caps + Cormorant gold italic), gold
+   hairlines, soft gold halo, refined lead, gold-edged price pill.
+   Home page and the other public pages are untouched.
+   ========================================================================= */
+.club-page .oc-hero{padding:calc(var(--space-16) + var(--pub-header-height)) 0 var(--space-16)}
+.club-page .oc-hero::after{content:"";position:absolute;left:50%;top:38%;width:min(760px,90vw);height:420px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(240,198,116,.13),rgba(240,198,116,.04) 55%,transparent 75%);z-index:-1;pointer-events:none}
+
+.club-page .oc-flag-badge{margin-bottom:var(--space-8);padding:.5rem 1.15rem;border-color:rgba(240,198,116,.45);background:linear-gradient(180deg,rgba(240,198,116,.14),rgba(240,198,116,.05));font-size:.7rem;font-weight:500;letter-spacing:.2em;box-shadow:0 0 28px -8px rgba(240,198,116,.45),inset 0 1px 0 rgba(255,255,255,.08)}
+
+.club-page h1.oc-h1-centered{display:block;margin:0 auto var(--space-8)!important;max-width:100%!important;font-family:var(--disp);font-size:clamp(1.7rem,4.6vw,3.8rem);line-height:1.1;letter-spacing:.01em!important;white-space:nowrap;text-align:center;color:var(--cream);font-weight:500!important}
+.club-page h1.oc-h1-centered .oc-h1-top,.club-page h1.oc-h1-centered .oc-h1-gradient{display:inline;font-family:var(--disp);font-size:inherit;line-height:inherit;font-weight:500!important}
+.club-page h1.oc-h1-centered .oc-h1-top{color:var(--cream);text-shadow:0 0 50px rgba(124,58,237,.35)}
+.club-page h1.oc-h1-centered .oc-h1-gradient{font-style:italic;background:linear-gradient(100deg,var(--gold) 0%,var(--color-lavender) 55%,var(--color-accent-600) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.club-page h1.oc-h1-centered::after{content:"";display:block;width:min(220px,50vw);height:1px;margin:var(--space-6) auto 0;background:linear-gradient(90deg,transparent,rgba(240,198,116,.8),transparent)}
+
+.club-page .oc-lead-centered{max-width:50ch;font-size:1.08rem;font-weight:300;line-height:1.8;color:var(--color-text-muted)}
+
+.club-page .oc-price-pill{margin-top:var(--space-10);padding:.7rem 1.4rem;gap:var(--space-4);align-items:center;border:1px solid rgba(240,198,116,.4);background:linear-gradient(180deg,rgba(240,198,116,.08),rgba(14,11,28,.7));box-shadow:0 18px 50px -22px rgba(240,198,116,.4),inset 0 1px 0 rgba(255,255,255,.07)}
+.club-page .oc-price-pill-amount{font:500 2rem/1 var(--disp);letter-spacing:.02em;color:var(--cream)}
+.club-page .oc-price-pill-chip{background:rgba(240,198,116,.16);border:1px solid rgba(240,198,116,.3);font-weight:500;letter-spacing:.06em;text-transform:uppercase;font-size:.68rem}
+
+.club-page .oc-actions-centered{margin-top:var(--space-8);gap:var(--space-4)}
+.club-page .oc-actions-centered .btn-primary{box-shadow:0 14px 40px -12px rgba(124,58,237,.75),0 0 0 1px rgba(196,181,253,.25)}
+.club-page .oc-actions-centered .btn-ghost{border-color:rgba(240,198,116,.4);color:var(--cream)}
+.club-page .oc-actions-centered .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Light theme */
+html[data-site-theme="light"] .club-page h1.oc-h1-centered .oc-h1-top{color:var(--color-text);text-shadow:none}
+html[data-site-theme="light"] .club-page .oc-hero::after{opacity:.6}
+html[data-site-theme="light"] .club-page .oc-price-pill{background:#fff;box-shadow:0 14px 36px -16px rgba(169,120,15,.35)}
+html[data-site-theme="light"] .club-page .oc-price-pill-amount{color:var(--color-text)}
+html[data-site-theme="light"] .club-page .oc-actions-centered .btn-ghost{color:var(--color-text)}
+html[data-site-theme="light"] .club-page h1.oc-h1-centered .oc-h1-gradient{background:linear-gradient(100deg,#a9780f 0%,#c58b12 40%,#6D3DF5 100%);-webkit-background-clip:text;background-clip:text;filter:none}
+
+@media (max-width:640px){
+  .club-page .oc-hero{padding-top:calc(var(--space-12) + var(--pub-header-height))}
+  .club-page h1.oc-h1-centered{white-space:normal;font-size:clamp(1.9rem,9vw,2.6rem)}
+  .club-page .oc-lead-centered{font-size:1rem;line-height:1.7}
+  .club-page .oc-price-pill-amount{font-size:1.7rem}
 }

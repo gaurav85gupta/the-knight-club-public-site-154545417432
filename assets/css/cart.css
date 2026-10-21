@@ -42,7 +42,7 @@
   background: linear-gradient(135deg, var(--color-accent-500), #a855f7);
   color: #fff;
   font-size: 0.625rem;
-  font-weight: 800;
+  font-weight: 600;
   line-height: 18px;
   text-align: center;
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.55);
@@ -95,7 +95,7 @@
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
 }
 .cart-clear-btn {
   font-size: var(--font-size-sm);
@@ -201,7 +201,7 @@
 .cart-item-title {
   margin: 0;
   font-size: var(--font-size-base);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.35;
   letter-spacing: -0.01em;
   overflow: hidden;
@@ -230,7 +230,7 @@
   padding: 3px 10px;
   border-radius: var(--radius-full);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   background: rgba(248, 113, 113, 0.1);
@@ -247,7 +247,7 @@
 }
 .cart-item-price {
   font-size: var(--font-size-lg);
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--color-text);
 }
@@ -258,7 +258,7 @@
 }
 .cart-item-free {
   font-size: var(--font-size-base);
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-success);
 }
 
@@ -290,7 +290,7 @@
 }
 .cart-item-view {
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-accent-700);
   text-decoration: none;
   display: inline-flex;
@@ -352,7 +352,7 @@
 .cart-summary-title {
   margin: 0;
   font-size: var(--font-size-xl);
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
 }
 
@@ -372,11 +372,11 @@
 }
 .cart-summary-row dt {
   color: var(--color-text-muted);
-  font-weight: 500;
+  font-weight: 400;
 }
 .cart-summary-row dd {
   margin: 0;
-  font-weight: 700;
+  font-weight: 500;
   text-align: right;
 }
 .cart-summary-row.is-total {
@@ -385,12 +385,12 @@
 }
 .cart-summary-row.is-total dt {
   font-size: var(--font-size-base);
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-text);
 }
 .cart-summary-row.is-total dd {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.03em;
   background: linear-gradient(135deg, #fff, var(--color-accent-700));
   -webkit-background-clip: text;

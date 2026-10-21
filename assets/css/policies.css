@@ -47,7 +47,7 @@
   color: var(--color-text-muted);
   text-decoration: none;
   font-size: 0.92rem;
-  font-weight: 500;
+  font-weight: 400;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -91,7 +91,7 @@
 .policies-title {
   margin: 0 0 4px;
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .policies-updated {
@@ -102,7 +102,7 @@
 
 .policies-body h2 {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 500;
   margin: var(--space-6) 0 var(--space-3);
 }
 
@@ -144,7 +144,7 @@
 }
 
 .policies-contact-title {
-  font-weight: 700;
+  font-weight: 500;
   margin: 0 0 var(--space-2);
 }
 
@@ -186,7 +186,7 @@
 }
 
 .policies-notice-title {
-  font-weight: 700;
+  font-weight: 500;
   color: #f0b429;
   margin: 0 0 4px;
   font-size: 0.9rem;

@@ -34,7 +34,7 @@
 }
 
 .learn-header-brand {
-  font-weight: 700;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -42,7 +42,7 @@
   margin: 0;
   text-align: center;
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -119,7 +119,7 @@
 .learn-sidebar-eyebrow {
   margin: 0 0 var(--space-2);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-lavender);
@@ -134,7 +134,7 @@
 .learn-sidebar-nav-eyebrow {
   margin: var(--space-2) var(--space-2) var(--space-2);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
@@ -166,7 +166,7 @@
 .course-progress-label {
   margin: 0;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .course-complete-banner {
@@ -177,7 +177,7 @@
   border: 1px solid var(--color-border-strong);
   color: var(--color-accent-300);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   text-align: center;
 }
 
@@ -205,7 +205,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 500;
   font-size: var(--font-size-sm);
   color: var(--color-text);
   text-align: left;
@@ -274,7 +274,7 @@
 .curriculum-lesson-btn[aria-current="true"] {
   background: var(--color-accent-100);
   color: var(--color-text);
-  font-weight: 600;
+  font-weight: 500;
   border-left-color: var(--color-accent-500);
 }
 
@@ -362,7 +362,7 @@
   background: var(--color-accent-50);
   color: var(--color-accent-300);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .lesson-locked {
@@ -486,7 +486,7 @@
 .up-next-eyebrow {
   margin: 0 0 var(--space-1);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-lavender);
@@ -494,7 +494,7 @@
 
 .up-next-title {
   margin: 0;
-  font-weight: 700;
+  font-weight: 500;
   font-size: var(--font-size-base);
 }
 

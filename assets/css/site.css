@@ -721,10 +721,16 @@ html[data-site-theme="light"] .oc-course.is-on {
   box-shadow: 0 0 0 1px rgba(109, 61, 245, 0.45), 0 8px 28px -8px rgba(109, 61, 245, 0.3);
 }
 
-/* 9. Comparison table last-column highlight */
-html[data-site-theme="light"] .oc-tbl thead th:last-child,
-html[data-site-theme="light"] .oc-tbl td:last-child {
+/* 9. Comparison table — 1% Club column highlight + icon-circle cells */
+html[data-site-theme="light"] .oc-tbl-top {
   background: rgba(109, 61, 245, 0.07);
+}
+html[data-site-theme="light"] .oc-yes {
+  background: rgba(109, 61, 245, 0.16);
+  color: #5125C7;
+}
+html[data-site-theme="light"] .oc-no {
+  background: rgba(28, 21, 48, 0.06);
 }
 
 /* 10. Step number bubbles — already use --color-accent-500, fine in light mode.
@@ -758,11 +764,6 @@ html[data-site-theme="light"] .oc-review-error {
   color: #b91c1c;
 }
 
-/* 16. Ecosystem list numbers */
-html[data-site-theme="light"] .oc-n {
-  color: #5125C7;
-}
-
 /* 17. Sticky bar at bottom */
 html[data-site-theme="light"] .oc-sticky {
   background: rgba(255, 255, 255, 0.92);
@@ -782,6 +783,19 @@ html[data-site-theme="light"] .oc-pick:hover:not(:disabled) {
 
 /* 19. Benefits list items */
 html[data-site-theme="light"] .oc-benefit {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+}
+
+/* 19b. "What You Get" benefit grid cards + founder strip */
+html[data-site-theme="light"] .oc-bcard {
+  background: #ffffff;
+  border-color: rgba(109, 61, 245, 0.16);
+}
+html[data-site-theme="light"] .oc-bcard:hover {
+  border-color: rgba(109, 61, 245, 0.4);
+}
+html[data-site-theme="light"] .oc-founder-strip {
   background: #ffffff;
   border-color: rgba(109, 61, 245, 0.16);
 }

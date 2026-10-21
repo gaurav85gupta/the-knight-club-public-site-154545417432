@@ -32,6 +32,7 @@ html {
 body {
   margin: 0;
   font-family: var(--font-family-base);
+  font-weight: 300;
   font-size: var(--font-size-base);
   color: var(--color-text);
   background: var(--color-bg);
@@ -58,7 +59,7 @@ a:hover {
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 var(--space-4);
   line-height: 1.25;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 p {
@@ -83,7 +84,7 @@ p {
   justify-content: center;
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-md);
-  font-weight: 600;
+  font-weight: 500;
   font-size: var(--font-size-base);
   border: 1px solid transparent;
   cursor: pointer;
@@ -143,7 +144,18 @@ p {
   }
 }
 
-/* ---- h1 — Coolvetica Heavy Compressed (self-hosted via assets/fonts/coolvetica.css) ---- */
-h1 {
+/* ---- h1 — Staatliches, loaded via assets/fonts/coolvetica.css (see that
+   file for why it's no longer the self-hosted "Coolvetica" it's named
+   after). Staatliches is already a tightly condensed display face, so the
+   negative letter-spacing values written throughout the CSS for the old
+   font (tuned for a *less* condensed face) over-compress it and make
+   words run together. !important here resets tracking back to normal on
+   every h1 regardless of which page-specific rule (higher specificity,
+   e.g. .hero-v2-title) also sets letter-spacing — those rules still win on
+   font-size/weight/color, just not on spacing. ---- */
+h1, h1 em, h1 strong, h1 span {
   font-family: var(--font-family-h1);
+  font-weight: 400 !important;
+  font-synthesis: none;
+  letter-spacing: normal !important;
 }

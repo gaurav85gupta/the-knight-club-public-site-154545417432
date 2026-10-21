@@ -127,6 +127,16 @@
   }
 
   // -------------------------------------------------------------------------
+  // Shared "Join for ₹X" label — used by the hero CTA, section CTA and
+  // sticky bar once the student has picked all their courses. Falls back
+  // to a plain "Continue to Checkout" if the plan has no price yet.
+  // -------------------------------------------------------------------------
+  function joinForPriceLabel() {
+    var priceLabel = (plan && plan.price != null) ? money(plan.price, plan.currency) : '';
+    return priceLabel ? ('Join for ' + priceLabel) : 'Continue to Checkout';
+  }
+
+  // -------------------------------------------------------------------------
   // Sticky bar
   // -------------------------------------------------------------------------
   var stickyEl = $('oc-sticky');
@@ -150,7 +160,7 @@
       var complete = (selectionLimit > 0 && count === selectionLimit);
       stickyCta.disabled = !complete;
       stickyCta.setAttribute('aria-disabled', String(!complete));
-      stickyCta.textContent = complete ? 'Continue to Checkout' : ('Select ' + (selectionLimit - count) + ' more');
+      stickyCta.textContent = complete ? joinForPriceLabel() : ('Select ' + (selectionLimit - count) + ' more');
     }
   }
 
@@ -212,7 +222,7 @@
     var cta = $('oc-cta');
     if (cta) {
       if (selectionComplete) {
-        cta.textContent = 'Continue to Checkout';
+        cta.textContent = joinForPriceLabel();
         cta.disabled    = false;
         cta.removeAttribute('aria-disabled');
       } else {
@@ -227,7 +237,7 @@
     var sectCta = $('oc-section-cta');
     if (sectCta) {
       if (selectionComplete) {
-        sectCta.textContent = 'Continue to Checkout';
+        sectCta.textContent = joinForPriceLabel();
         sectCta.disabled    = false;
         sectCta.removeAttribute('aria-disabled');
       } else {
@@ -355,6 +365,20 @@
         e.textContent = money(plan.compareAtPrice, plan.currency);
         e.hidden = false;
       });
+      // Plain-text version used inside the hero's "offer ends" sentence
+      // (e.g. "...automatically become ₹10,000."), plus the sentence itself.
+      document.querySelectorAll('[data-oc-compare-price-text]').forEach(function (e) {
+        e.textContent = money(plan.compareAtPrice, plan.currency);
+      });
+      document.querySelectorAll('[data-oc-offer-note]').forEach(function (e) {
+        e.hidden = false;
+      });
+    } else {
+      // No future higher price configured — the sentence has nothing to
+      // say, so hide it rather than show a dangling "...become ." fragment.
+      document.querySelectorAll('[data-oc-offer-note]').forEach(function (e) {
+        e.hidden = true;
+      });
     }
 
     // Plan name
@@ -477,6 +501,8 @@
       // ---- Section 2 intro video ----
       var videoWrap = $('oc-intro-video-wrap');
       var videoContainer = $('oc-intro-video-container');
+      var videoEmpty = $('oc-video-empty');
+      var videoCaptionSub = $('oc-video-caption-sub');
 
       if (videoWrap && videoContainer && media.introVideo && media.introVideo.embedUrl) {
         var embedUrl = media.introVideo.embedUrl;
@@ -499,9 +525,18 @@
           iframe.style.display = 'block';
           videoContainer.appendChild(iframe);
           videoWrap.hidden = false;
+
+          // A real video is live: hide the static placeholder player and
+          // drop its "ask the owner to add one" caption in favour of a
+          // neutral description, since the wrap/placeholder are mutually
+          // exclusive (see the HTML comment above #oc-intro-video-wrap).
+          if (videoEmpty) videoEmpty.hidden = true;
+          if (videoCaptionSub) videoCaptionSub.textContent = 'Watch this short introduction to the 1% Club.';
         }
       }
-      // If no video configured: videoWrap remains hidden — graceful fallback.
+      // If no video configured: videoWrap stays hidden and #oc-video-empty
+      // (visible by default in the HTML) keeps showing the placeholder
+      // player with its default caption — graceful fallback, unchanged.
 
     } catch (e) {
       // Media config is optional. Any error must NEVER break the purchase flow.
@@ -839,6 +874,16 @@
         e.preventDefault();
         var chooseSect = $('choose');
         if (chooseSect) SmoothScroll.scrollTo(chooseSect);
+      });
+    }
+
+    // Hero "Watch intro" link — scrolls to the intro video section
+    var scrollVideoLink = $('oc-scroll-video');
+    if (scrollVideoLink) {
+      scrollVideoLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        var videoSect = $('watch-intro');
+        if (videoSect) SmoothScroll.scrollTo(videoSect);
       });
     }
 

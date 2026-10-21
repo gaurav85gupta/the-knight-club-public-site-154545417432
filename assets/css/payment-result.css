@@ -76,7 +76,7 @@
 /* ---- Titles ---- */
 .payment-result-title {
   font-size: var(--font-size-2xl);
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-text);
   margin: 0 0 var(--space-3);
   line-height: 1.25;
@@ -115,13 +115,13 @@
 .payment-result-label {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .payment-result-value {
   font-size: var(--font-size-sm);
   color: var(--color-text);
-  font-weight: 600;
+  font-weight: 500;
   text-align: right;
 }
 

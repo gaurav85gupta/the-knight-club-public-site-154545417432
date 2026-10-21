@@ -34,7 +34,7 @@
   transition: background-color var(--dur-base) var(--ease-out), padding var(--dur-base) var(--ease-out);
 }
 .ct-help-list a:hover { background: rgba(139, 92, 246, .06); padding-inline: var(--space-4); }
-.ct-help-name { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
+.ct-help-name { font-size: 1.2rem; font-weight: 500; letter-spacing: -0.02em; }
 .ct-help-text { color: var(--color-text-muted); line-height: 1.6; }
 .ct-help-go { color: var(--color-lavender); transition: transform var(--dur-fast) var(--ease-out); }
 .ct-help-list a:hover .ct-help-go { transform: translateX(4px); }
@@ -53,7 +53,7 @@
 .ct-row-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
 .ct-row-2--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .contact-page .field { margin-bottom: var(--space-3); }
-.contact-page .field label { display: block; margin-bottom: var(--space-1); font-size: .83rem; font-weight: 600; color: var(--color-text); }
+.contact-page .field label { display: block; margin-bottom: var(--space-1); font-size: .83rem; font-weight: 500; color: var(--color-text); }
 .contact-page .field label span { color: var(--color-lavender); }
 
 .contact-page .input {
@@ -76,7 +76,7 @@
 /* error state: colour + icon-free text + border weight, never colour alone */
 .contact-page .field.has-error .input { border-color: #f87171; box-shadow: 0 0 0 1px #f87171; }
 .contact-page .field-error { margin: var(--space-2) 0 0; min-height: 0; font-size: .85rem; line-height: 1.4; color: #fca5a5; }
-.contact-page .field-error:not(:empty)::before { content: "Error: "; font-weight: 700; }
+.contact-page .field-error:not(:empty)::before { content: "Error: "; font-weight: 500; }
 .contact-page .field.is-valid .input { border-color: rgba(134, 239, 172, .55); }
 
 .ct-message-meta { display: flex; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-1); }
@@ -168,7 +168,7 @@ html[data-site-theme="light"] .ct-method:hover::before { opacity: .4; }
 }
 .ct-method h3 { position: relative; margin: 0 0 var(--space-2); font-size: 1.2rem; }
 .ct-method p { position: relative; margin: 0; color: var(--color-text-muted); line-height: 1.6; }
-.ct-method .ct-method-detail { position: relative; margin: var(--space-4) 0 var(--space-6); color: var(--color-text); font-weight: 600; font-size: 1.05rem; overflow-wrap: anywhere; }
+.ct-method .ct-method-detail { position: relative; margin: var(--space-4) 0 var(--space-6); color: var(--color-text); font-weight: 500; font-size: 1.05rem; overflow-wrap: anywhere; }
 .ct-method .btn {
   position: relative; margin-top: auto; border-color: color-mix(in srgb, var(--m-accent) 55%, transparent); color: var(--color-text);
   transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);

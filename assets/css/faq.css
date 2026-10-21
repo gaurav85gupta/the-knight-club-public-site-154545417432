@@ -97,7 +97,7 @@ html[data-site-theme="light"] .faq-section {
   gap: var(--space-2);
   margin: 0 0 var(--space-4);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-lavender);
@@ -117,7 +117,7 @@ html[data-site-theme="light"] .faq-section .faq-eyebrow::before { box-shadow: no
   font-size: clamp(1.75rem, 3.4vw, 2.5rem);
   line-height: 1.12;
   letter-spacing: -0.03em;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-text);
 }
 html[data-site-theme="light"] .faq-section .faq-title { color: var(--color-text); }
@@ -191,7 +191,7 @@ html[data-site-theme="light"] .faq-section .faq-title { color: var(--color-text)
 
 .faq-number {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.12em;
   font-variant-numeric: tabular-nums;
   color: var(--faq-number);
@@ -202,7 +202,7 @@ html[data-site-theme="light"] .faq-section .faq-title { color: var(--color-text)
 
 .faq-text {
   font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);   /* ≈ 15 → 17px */
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.4;
   letter-spacing: -0.01em;
   overflow-wrap: break-word;
@@ -298,7 +298,7 @@ html[data-site-theme="light"] .faq-section .faq-title { color: var(--color-text)
   border-bottom: 1px solid var(--color-border-strong);
 }
 .faq-answer-inner a:hover { color: var(--color-accent-600); }
-.faq-answer-inner em { font-style: normal; font-weight: 500; color: var(--color-text); }
+.faq-answer-inner em { font-style: normal; font-weight: 400; color: var(--color-text); }
 
 /* Optional footnote under the list (e.g. testimonials) */
 .faq-note {

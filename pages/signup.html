@@ -83,20 +83,26 @@
 
         <!-- BACK: Create Account -->
         <section class="auth-card auth-face auth-face-back" id="auth-face-signup" aria-labelledby="signup-title">
-          <h1 id="signup-title">Create your account</h1>
-          <p class="lead">Sign up with a User ID and password. No email needed.</p>
+          <h1 id="signup-title">Start your journey</h1>
+          <p class="lead">Create your free account in seconds</p>
+
+          <ul class="auth-benefits">
+            <li><svg class="check-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.3l2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Unlock premium courses anytime</li>
+            <li><svg class="check-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.3l2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Learn from a 6-figure mentor</li>
+            <li><svg class="check-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.3l2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Join 200+ winning students</li>
+          </ul>
 
           <div id="form-alert-signup" class="alert" role="alert" hidden></div>
 
           <form id="signup-form" novalidate autocomplete="on">
             <div class="form-grid">
 
-              <div class="field">
+              <div class="field field-full">
                 <label for="su-userId">User ID</label>
                 <input class="input" id="su-userId" name="userId" type="text" inputmode="text"
                        autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"
                        maxlength="40" placeholder="e.g. student_01" required aria-describedby="su-userId-hint su-userId-error" />
-                <p class="hint" id="su-userId-hint">4-20 characters: letters, numbers, underscore. Not case-sensitive.</p>
+                <p class="hint" id="su-userId-hint">4-20 characters: letters, numbers, underscore.</p>
                 <p class="field-error" id="su-userId-error" aria-live="polite"></p>
               </div>
 
@@ -111,12 +117,11 @@
                 <label for="su-mobile">Mobile number</label>
                 <input class="input" id="su-mobile" name="mobile" type="tel" inputmode="numeric"
                        autocomplete="tel-national" maxlength="20" placeholder="98765 43210" required
-                       aria-describedby="su-mobile-hint su-mobile-error" />
-                <p class="hint" id="su-mobile-hint">10-digit Indian mobile number.</p>
+                       aria-describedby="su-mobile-error" />
                 <p class="field-error" id="su-mobile-error" aria-live="polite"></p>
               </div>
 
-              <div class="field">
+              <div class="field field-full">
                 <label for="su-state">State</label>
                 <input class="input" id="su-state" name="state" type="text" autocomplete="address-level1"
                        maxlength="60" required aria-describedby="su-state-error" />
@@ -128,10 +133,9 @@
                 <div class="password-wrap">
                   <input class="input" id="su-password" name="password" type="password"
                          autocomplete="new-password" maxlength="128" required
-                         aria-describedby="su-password-hint su-password-error" />
+                         aria-describedby="su-password-error" />
                   <button type="button" class="toggle-password" aria-pressed="false" aria-label="Show or hide password">Show</button>
                 </div>
-                <p class="hint" id="su-password-hint">At least 8 characters. Long passphrases are welcome.</p>
                 <p class="field-error" id="su-password-error" aria-live="polite"></p>
               </div>
 
@@ -145,7 +149,9 @@
                 <p class="field-error" id="su-confirmPassword-error" aria-live="polite"></p>
               </div>
 
-              <div class="field">
+              <p class="hint" style="grid-column: 1 / -1; margin-top: -4px;">Password: at least 8 characters.</p>
+
+              <div class="field field-full">
                 <button class="btn btn-primary btn-block" id="signup-submit-btn" type="submit">
                   <span class="spinner" aria-hidden="true"></span>
                   <span class="label">Create account</span>

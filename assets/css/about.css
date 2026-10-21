@@ -60,7 +60,7 @@
 
 .ab-story-heading {
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
   margin: var(--space-4) 0 0;
@@ -95,7 +95,7 @@
   border: 1px solid var(--color-border-soft);
   background: var(--color-scrim-soft);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-muted);
 }
 
@@ -217,7 +217,7 @@
 .ab-diff-num {
   display: block;
   margin-bottom: var(--space-4);
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
   color: var(--color-accent-600);
 }
 
@@ -282,7 +282,7 @@
 .ab-club-title { margin: 0 0 var(--space-3); font-size: 1.6rem; }
 .ab-club p     { margin: 0 0 var(--space-4); color: var(--color-text-muted); line-height: 1.7; }
 .ab-club p:last-child { margin-bottom: 0; }
-.ab-club-eq    { font-size: 0.9rem; font-weight: 600; color: var(--color-text-muted); letter-spacing: 0.02em; }
+.ab-club-eq    { font-size: 0.9rem; font-weight: 500; color: var(--color-text-muted); letter-spacing: 0.02em; }
 .ab-club-eq strong { color: var(--color-lavender); }
 
 /* ==========================================================================

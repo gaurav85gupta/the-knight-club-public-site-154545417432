@@ -109,7 +109,7 @@
   /* TYPOGRAPHY                                                           */
   /* ------------------------------------------------------------------ */
   --font-family-base: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-h1:   'Coolvetica', 'Helvetica Condensed', 'Arial Narrow', sans-serif;
+  --font-family-h1:   'Oswald', 'Helvetica Condensed', 'Arial Narrow', sans-serif;
   --font-size-sm:   0.875rem;
   --font-size-base: 1.000rem;
   --font-size-lg:   1.125rem;
@@ -197,6 +197,3 @@ html[data-site-theme="light"] {
   --lt-periwinkle: #6D3DF5;
   --lt-gold:       #f5be4f;
 }
-
-
-

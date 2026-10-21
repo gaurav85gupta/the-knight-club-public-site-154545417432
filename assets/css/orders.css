@@ -21,7 +21,7 @@
   background: transparent;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: border-color var(--dur-fast) var(--ease-out),
               background var(--dur-fast) var(--ease-out),
@@ -79,7 +79,7 @@
 
 .order-card-number {
   font-size: var(--font-size-base);
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--color-text);
 }
@@ -121,14 +121,14 @@
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-accent-700);
   background: var(--color-accent-50);
 }
 
 .order-card-thumb-more {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-text-muted);
   white-space: nowrap;
 }
@@ -152,7 +152,7 @@
 
 .order-card-amount {
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
   white-space: nowrap;
   color: var(--color-text);
@@ -173,7 +173,7 @@
   padding: var(--space-1) 10px;
   border-radius: var(--radius-full);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
@@ -199,7 +199,7 @@
   align-items: center;
   gap: var(--space-1);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 2px 8px;
   border-radius: var(--radius-full);
 }
@@ -258,7 +258,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-accent-700);
   background: var(--color-accent-50);
 }
@@ -269,7 +269,7 @@
 
 .receipt-item-title {
   font-size: var(--font-size-base);
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 0 var(--space-1);
   letter-spacing: -0.01em;
   word-break: break-word;
@@ -299,7 +299,7 @@
   border-radius: var(--radius-md);
   margin-bottom: var(--space-6);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .order-status-banner.is-warning {

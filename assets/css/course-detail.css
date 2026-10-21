@@ -137,7 +137,7 @@
 .cd-crumb-sep { margin: 0 var(--space-1); color: var(--color-border-strong); }
 .cd-breadcrumbs #crumb-title {
   color: var(--color-text);
-  font-weight: 500;
+  font-weight: 400;
   display: inline-block;
   max-width: 28ch;
   overflow: hidden;
@@ -158,10 +158,10 @@
 .cd-title {
   margin: 0 0 var(--space-4);
   max-width: 22ch;
-  font-size: clamp(2.3rem, 3.8vw, 3.3rem);
-  line-height: 1.06;
-  letter-spacing: -0.03em;
-  font-weight: 800;
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  font-weight: 400;
   color: #f3effa;
   text-shadow: 0 0 60px rgba(139, 69, 255, 0.25);
 }
@@ -190,7 +190,7 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
-.cd-meta-row strong { color: var(--color-text); font-weight: 600; }
+.cd-meta-row strong { color: var(--color-text); font-weight: 500; }
 .cd-meta-row .dot { color: var(--color-border-strong); }
 
 /* Category / level badges rendered into #detail-meta-top */
@@ -201,7 +201,7 @@
   padding: 0.34rem 0.9rem;
   border-radius: var(--radius-full);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--color-lavender);
@@ -303,7 +303,7 @@
   margin: 0 0 var(--space-5);
   font-size: clamp(1.3rem, 2.2vw, 1.6rem);
   letter-spacing: -0.02em;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-text);
 }
 .cd-h2::before {
@@ -332,7 +332,7 @@
 .cd-desc-heading {
   margin: var(--space-6) 0 var(--space-3);
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--color-text);
 }
@@ -436,7 +436,7 @@
   padding: 0.3rem 0.85rem;
   border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-lavender);
   background: rgba(139, 69, 255, 0.1);
   border: 1px solid rgba(139, 69, 255, 0.3);
@@ -476,8 +476,8 @@
   cursor: pointer;
 }
 .curriculum-module-header:focus-visible { outline: 2px solid var(--color-accent-500); outline-offset: -2px; }
-.module-title { font-weight: 700; letter-spacing: -0.01em; }
-.module-sub { font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: 400; }
+.module-title { font-weight: 500; letter-spacing: -0.01em; }
+.module-sub { font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: 300; }
 .curriculum-module-header .chevron {
   flex: none;
   color: var(--color-text-muted);
@@ -530,7 +530,7 @@ a.lesson-left:hover { color: var(--color-lavender); }
   padding: 0.15rem 0.55rem;
   border-radius: var(--radius-full);
   font-size: 0.65rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--color-lavender);
   background: rgba(139, 69, 255, 0.14);
   border: 1px solid rgba(139, 69, 255, 0.35);
@@ -544,7 +544,7 @@ a.lesson-left:hover { color: var(--color-lavender); }
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-full);
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-text-muted);
   background: var(--color-surface-alt);
   border: 1px solid var(--color-border-soft);
@@ -596,7 +596,7 @@ a.lesson-left:hover { color: var(--color-lavender); }
 }
 .cd-price-current {
   font-size: 2.1rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.03em;
   background: linear-gradient(135deg, #ffffff, #d4c0ff);
   -webkit-background-clip: text;
@@ -619,7 +619,7 @@ a.lesson-left:hover { color: var(--color-lavender); }
   padding: 0.22rem 0.6rem;
   border-radius: var(--radius-full);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.01em;
   color: #34d399;
   background: rgba(52, 211, 153, 0.12);
@@ -743,13 +743,13 @@ html body .cd-buy-card .btn.btn-ghost[disabled] {
   border: 1px solid rgba(139, 69, 255, 0.35);
   box-shadow: 0 -16px 40px -16px rgba(0, 0, 0, 0.6), 0 0 40px -18px rgba(139, 69, 255, 0.5);
 }
-.cd-mobile-bar-label { font-size: 0.82rem; font-weight: 600; color: var(--color-text); }
+.cd-mobile-bar-label { font-size: 0.82rem; font-weight: 500; color: var(--color-text); }
 .cd-mobile-bar-btn {
   flex: none;
   padding: 0.6rem 1.1rem;
   border-radius: var(--radius-full);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #fff;
   background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
 }
@@ -786,7 +786,7 @@ html body .cd-buy-card .btn.btn-ghost[disabled] {
 @media (max-width: 480px) {
   .cd-hero { padding-top: calc(var(--pub-header-height) + var(--space-5)); padding-bottom: var(--space-8); }
   .cd-breadcrumbs { margin-bottom: var(--space-4); }
-  .cd-title { font-size: clamp(1.8rem, 9vw, 2.3rem); }
+  .cd-title { font-size: clamp(1.6rem, 7vw, 2rem); }
   .cd-short-desc { font-size: var(--font-size-base); }
   .cd-buy-card { max-width: none; }
   .cd-buy-card-inner { padding: var(--space-5); }
@@ -981,7 +981,7 @@ html[data-site-theme="light"] .cd-mobile-bar-label { color: var(--color-text); }
   align-items: center;
   justify-content: center;
   color: var(--color-lavender);
-  font-weight: 800;
+  font-weight: 600;
   font-size: 2.5rem;
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), var(--color-surface-2));
   transition: transform 520ms var(--ease-out);
@@ -1001,7 +1001,7 @@ html[data-site-theme="light"] .cd-mobile-bar-label { color: var(--color-text); }
   padding: 0.22rem 0.65rem;
   border-radius: var(--radius-full);
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-lavender);
   background: rgba(139, 92, 246, 0.12);
   border: 1px solid rgba(167, 139, 250, 0.3);
@@ -1011,7 +1011,7 @@ html[data-site-theme="light"] .cd-mobile-bar-label { color: var(--color-text); }
   margin: var(--space-1) 0 0;
   font-size: 1.05rem;
   line-height: 1.3;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.01em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1033,7 +1033,7 @@ html[data-site-theme="light"] .cd-mobile-bar-label { color: var(--color-text); }
   align-items: baseline;
   gap: var(--space-2);
 }
-.price-current { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; transition: filter 280ms var(--ease-out); }
+.price-current { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; transition: filter 280ms var(--ease-out); }
 .price-original { font-size: var(--font-size-sm); color: var(--color-text-muted); text-decoration: line-through; }
 
 html[data-site-theme="light"] .course-card {

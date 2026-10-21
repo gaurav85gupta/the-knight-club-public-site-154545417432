@@ -1,24 +1,19 @@
 /* ==========================================================================
-   Coolvetica Heavy Compressed — Self-hosted @font-face
-   Drop your .woff2 / .woff font files into assets/fonts/ and this file
-   will load them correctly. Used only for h1 headings site-wide via
-   var(--font-family-h1).
+   H1 display font — Staatliches (Google Fonts)
+   Used site-wide for all headings via var(--font-family-h1), defined in
+   assets/css/tokens.css.
 
-   Expected files (place in assets/fonts/):
-     coolvetica-heavy-compressed.woff2   ← preferred (smallest, modern browsers)
-     coolvetica-heavy-compressed.woff    ← fallback (older browsers)
+   Originally this file self-hosted a "Coolvetica" @font-face, but the
+   actual .woff2/.woff font files were never added to assets/fonts/, so
+   every h1 on the site was silently falling back to the generic
+   'Helvetica Condensed'/'Arial Narrow' stack. Replaced with Staatliches,
+   a free condensed display font loaded straight from Google Fonts — no
+   font files to host, same bold condensed look as the original design
+   intent.
 
-   HOW TO GET THE FILES:
-     - If you own the font: export from your font manager as woff/woff2
-     - Convert from .otf/.ttf at: https://cloudconvert.com/otf-to-woff2
+   If a licensed copy of Coolvetica is obtained later, this file can be
+   swapped back to a self-hosted @font-face block (see git history) and
+   tokens.css's --font-family-h1 updated to reference 'Coolvetica' again.
    ========================================================================== */
 
-@font-face {
-  font-family: 'Coolvetica';
-  src:
-    url('./coolvetica-heavy-compressed.woff2') format('woff2'),
-    url('./coolvetica-heavy-compressed.woff')  format('woff');
-  font-weight: normal;
-  font-style:  normal;
-  font-display: swap;   /* show fallback instantly, swap when loaded */
-}
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&display=swap');

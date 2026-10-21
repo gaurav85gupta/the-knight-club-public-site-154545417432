@@ -19,7 +19,7 @@
 }
 
 .brand {
-  font-weight: 800;
+  font-weight: 600;
   font-size: var(--font-size-xl);
   color: var(--color-text);
   letter-spacing: -0.02em;
@@ -32,7 +32,7 @@
   align-items: center;
   gap: var(--space-4);
 }
-.site-nav a:not(.btn) { color: var(--color-text-muted); font-weight: 500; }
+.site-nav a:not(.btn) { color: var(--color-text-muted); font-weight: 400; }
 .site-nav a:not(.btn):hover { color: var(--color-accent-600); }
 
 .btn-sm {
@@ -50,24 +50,16 @@
   overflow-x: clip;
 }
 
-/* Supplied workspace artwork, positioned toward the right/outer edge so the
-   card stays the primary focus. One authoritative background treatment —
-   the dark scrim is a single gradient layered with the image, not a stack
-   of competing overlays. Static (no parallax/scroll effects). */
+/* Background artwork removed per request — plain dark surface with a soft
+   accent glow only (previously layered a photo behind this gradient). */
 .auth-page::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
-  background-image:
-    linear-gradient(100deg, var(--color-bg) 0%, rgba(7, 5, 15, 0.86) 34%, rgba(7, 5, 15, 0.40) 62%, rgba(7, 5, 15, 0.18) 100%),
-    url('../images/auth-background-dark.jpg');
-  background-repeat: no-repeat;
-  background-position: center right, right center;
-  background-size: cover;
+  background: var(--color-bg);
   pointer-events: none;
 }
-/* Fallback if the image fails to load: the gradient + solid bg still reads correctly. */
 .auth-page::after {
   content: "";
   position: fixed;
@@ -82,7 +74,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4) var(--space-4) var(--space-8);
+  padding: var(--space-3) var(--space-4) var(--space-4);
   position: relative;
   z-index: 2;
 }
@@ -105,7 +97,7 @@
    form needs. */
 .auth-flip-scene {
   width: 100%;
-  max-width: 460px;
+  max-width: 420px;
   perspective: 1800px;
 }
 
@@ -117,7 +109,7 @@
      zero height, since position:absolute children don't contribute to an
      auto-height relative parent. auth-flip.js overwrites --auth-card-h
      with the real measured height on load. */
-  min-height: 420px;
+  min-height: 360px;
   height: var(--auth-card-h, auto);
   transition: height var(--dur-base) var(--ease-out);
   will-change: height;
@@ -180,14 +172,14 @@
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-4) var(--space-5);
 }
 
 /* ---- Sign In / Create Account switcher ---- */
 .auth-switch {
   display: inline-flex;
   padding: 3px;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
   background: var(--color-surface-alt);
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-full);
@@ -199,7 +191,7 @@
   background: transparent;
   color: var(--color-text-muted);
   font: inherit;
-  font-weight: 600;
+  font-weight: 500;
   font-size: var(--font-size-sm);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
@@ -214,36 +206,74 @@
 
 .auth-card h1 {
   font-size: var(--font-size-xl);
-  margin-bottom: var(--space-1);
+  margin-bottom: 2px;
 }
 .auth-card .lead {
   color: var(--color-text-muted);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-sm);
 }
 
-/* ---- Form primitives ---- */
+/* ---- Signup benefits checklist ---- */
+.auth-benefits {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: 6px;
+}
+.auth-benefits li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+.auth-benefits .check-icon {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  color: var(--color-accent-500);
+}
+
+/* ---- Form primitives ----
+   Two columns on the signup face for fields that pair naturally
+   (name/mobile, password/confirm), so the wide card width is used
+   efficiently instead of stacking everything in one tall column.
+   .field-full always spans both columns (User ID, State, submit). */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-3);
+  gap: var(--space-2) var(--space-3);
 }
-.field { display: flex; flex-direction: column; gap: 2px; }
+#auth-face-signup .form-grid {
+  grid-template-columns: 1fr 1fr;
+}
+#auth-face-signup .field-full {
+  grid-column: 1 / -1;
+}
+.field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 
 .field label {
-  font-weight: 600;
-  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-size: 0.8rem;
   color: var(--color-text);
 }
 .field .hint {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--color-text-muted);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .input {
   width: 100%;
-  padding: 0.55rem 0.75rem;
+  padding: 0.5rem 0.7rem;
   font: inherit;
   color: var(--color-text);
   background: var(--color-surface-2);
@@ -288,7 +318,7 @@ textarea.input { resize: vertical; min-height: 56px; }
   padding: var(--space-1) var(--space-2);
   font: inherit;
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-accent-600);
   cursor: pointer;
   border-radius: var(--radius-sm);
@@ -331,11 +361,11 @@ textarea.input { resize: vertical; min-height: 56px; }
 
 .auth-alt {
   text-align: center;
-  margin: var(--space-4) 0 0;
+  margin: var(--space-3) 0 0;
   color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  font-size: 0.8rem;
 }
-.auth-alt a { font-weight: 600; }
+.auth-alt a { font-weight: 500; }
 
 /* Visually hidden but available to screen readers */
 .sr-only {
@@ -382,8 +412,8 @@ textarea.input { resize: vertical; min-height: 56px; }
   box-shadow: var(--shadow-sm);
   padding: var(--space-6);
 }
-.summary-card-label { color: var(--color-text-muted); font-size: var(--font-size-sm); font-weight: 600; }
-.summary-card-value { font-size: var(--font-size-3xl); font-weight: 800; color: var(--color-accent-600); line-height: 1.2; }
+.summary-card-label { color: var(--color-text-muted); font-size: var(--font-size-sm); font-weight: 500; }
+.summary-card-value { font-size: var(--font-size-3xl); font-weight: 600; color: var(--color-accent-600); line-height: 1.2; }
 .summary-card-note { color: var(--color-text-muted); font-size: var(--font-size-sm); }
 @media (max-width: 768px) {
   .dash-summary { grid-template-columns: 1fr; }
@@ -430,11 +460,11 @@ textarea.input { resize: vertical; min-height: 56px; }
   align-items: center;
   justify-content: center;
   color: var(--color-accent-300);
-  font-weight: 800;
+  font-weight: 600;
   font-size: var(--font-size-2xl);
 }
 .continue-card-body { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: var(--space-2); }
-.continue-card-title { font-size: var(--font-size-lg); font-weight: 700; margin: 0; }
+.continue-card-title { font-size: var(--font-size-lg); font-weight: 500; margin: 0; }
 .continue-card-meta { color: var(--color-text-muted); font-size: var(--font-size-sm); margin: 0; }
 .continue-card-progress-track {
   width: 100%;
@@ -458,7 +488,7 @@ textarea.input { resize: vertical; min-height: 56px; }
 }
 .profile-row:last-child { border-bottom: 0; }
 .profile-row dt { color: var(--color-text-muted); font-size: var(--font-size-sm); }
-.profile-row dd { margin: 0; font-weight: 600; text-align: right; word-break: break-word; }
+.profile-row dd { margin: 0; font-weight: 500; text-align: right; word-break: break-word; }
 .badge {
   display: inline-block;
   padding: 0.15rem 0.6rem;
@@ -466,7 +496,7 @@ textarea.input { resize: vertical; min-height: 56px; }
   background: var(--color-accent-50);
   color: var(--color-accent-700);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.04em;
 }
 
@@ -477,16 +507,17 @@ textarea.input { resize: vertical; min-height: 56px; }
 }
 
 /* ---- Small phones ---- */
+@media (max-width: 420px) {
+  #auth-face-signup .form-grid { grid-template-columns: 1fr; }
+  #auth-face-signup .field-full { grid-column: auto; }
+}
 @media (max-width: 480px) {
   .auth-card { padding: var(--space-3); }
   .site-nav { gap: var(--space-2); }
   /* Matches the public header's established small-screen brand size
      (public.css), so the wordmark stays on one line instead of wrapping. */
   .site-header .brand { font-size: 1.1rem; }
-  .auth-main { padding-top: var(--space-3); padding-bottom: var(--space-4); }
-  /* Prioritize the form over the artwork on small screens; keep the purple
-     brand identity via the fallback radial glow rather than the full crop. */
-  .auth-page::before { background-position: center 15%, center 15%; opacity: 0.55; }
+  .auth-main { padding-top: var(--space-2); padding-bottom: var(--space-3); }
 }
 
 /* Respect users who ask for less motion */
