@@ -91,7 +91,7 @@
 .policies-title {
   margin: 0 0 4px;
   font-size: 1.6rem;
-  font-weight: 500;
+  font-weight: 500 !important;
 }
 
 .policies-updated {

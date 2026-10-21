@@ -98,18 +98,20 @@
   gap: var(--space-6);
 }
 
-/* Brand: "The" quiet, "Knight Club" in the lavender-violet gradient. */
+/* Brand: premium Sora wordmark, kept light-weight. "The" quiet, "Knight
+   Club" in the lavender-violet gradient. */
 .pub-header .brand,
 .pub-footer .brand {
+  font-family: 'Sora', var(--font-family-base);
   font-size: 1.25rem;
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   color: rgba(245, 243, 251, 0.72);
   white-space: nowrap;
 }
 .pub-header .brand span,
 .pub-footer .brand span {
-  font-weight: 600;
+  font-weight: 700;
   background: linear-gradient(120deg, #c4a0ff 0%, #a06aff 40%, #d8b4ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -145,11 +147,47 @@
   font-size: var(--font-size-sm);
   font-weight: 400;
   white-space: nowrap;
-  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+  transition: color var(--dur-fast) var(--ease-out);
 }
-.pub-header .nav-links a:hover {
+
+/* Underline indicator — swish-in from the left on hover/focus via scaleX,
+   not width, so it animates on the GPU with no layout reflow. A soft glow
+   rides along so it reads as "lit up" rather than a flat drawn line. No
+   background pill, no border box: the link itself never looks "boxed in". */
+.pub-header .nav-links a::after {
+  content: "";
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: 2px;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #a06aff, #d8b4ff);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out), opacity 0.2s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+
+.pub-header .nav-links a:hover,
+.pub-header .nav-links a:focus-visible {
   color: var(--color-text);
-  background: rgba(255, 255, 255, 0.05);
+}
+.pub-header .nav-links a:hover::after,
+.pub-header .nav-links a:focus-visible::after {
+  opacity: 1;
+  transform: scaleX(1);
+  box-shadow: 0 0 8px rgba(160, 106, 255, 0.65);
+}
+
+/* Leaving the link: collapse back toward the right, mirroring the swish-in,
+   instead of an identical reverse (keeps the motion feeling directional). */
+.pub-header .nav-links a:not(:hover):not(:focus-visible)::after {
+  transform-origin: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pub-header .nav-links a::after { transition: opacity 0.15s linear; }
 }
 
 /* ---- 1% Club: premium gold badge (slim) --------
@@ -171,11 +209,47 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--gold-1);
-  background: rgba(245, 197, 66, 0.07);
-  border: 1px solid rgba(245, 197, 66, 0.4);
-  border-radius: var(--radius-full);
-  box-shadow: 0 0 10px rgba(201, 136, 28, 0.2);
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  background: transparent;
+  border: none;
+  text-shadow: 0 0 8px rgba(245, 197, 66, 1), 0 0 16px rgba(245, 197, 66, 0.8), 0 0 28px rgba(201, 136, 28, 0.6);
+  animation: nav-club-glow 2.2s ease-in-out infinite;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.pub-header .nav-links a.nav-club::after {
+  content: "";
+  position: absolute;
+  inset: -6px -10px;
+  border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+  background: radial-gradient(ellipse at 40% 35%, rgba(245, 197, 66, 0.4) 0%, rgba(245, 197, 66, 0.18) 40%, transparent 70%);
+  filter: blur(9px);
+  z-index: -1;
+  pointer-events: none;
+  animation: nav-club-bg-glow 3.6s ease-in-out infinite;
+}
+
+@keyframes nav-club-glow {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(245, 197, 66, 1), 0 0 16px rgba(245, 197, 66, 0.8), 0 0 28px rgba(201, 136, 28, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 12px rgba(245, 197, 66, 1), 0 0 22px rgba(245, 197, 66, 0.95), 0 0 38px rgba(201, 136, 28, 0.75);
+  }
+}
+
+@keyframes nav-club-bg-glow {
+  0%, 100% {
+    opacity: 0.7;
+    border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+  }
+  33% {
+    opacity: 0.9;
+    border-radius: 55% 45% 40% 60% / 45% 55% 45% 55%;
+  }
+  66% {
+    opacity: 1;
+    border-radius: 45% 55% 60% 40% / 55% 40% 60% 45%;
+  }
 }
 
 /* Small star glyph marks it as a tier badge, not a page link. */
@@ -192,13 +266,11 @@
 .pub-header .nav-links a.nav-club:focus-visible,
 .pub-header .nav-links a.nav-club[aria-current="page"] {
   color: var(--gold-1);
-  background: rgba(245, 197, 66, 0.14);
-  border-color: rgba(245, 197, 66, 0.65);
-  box-shadow: 0 0 14px rgba(201, 136, 28, 0.35);
+  background: transparent;
+  text-shadow: 0 0 14px rgba(245, 197, 66, 1), 0 0 26px rgba(245, 197, 66, 1), 0 0 44px rgba(201, 136, 28, 0.85);
 }
 .pub-header .nav-links a.nav-club:focus-visible {
-  outline: 2px solid var(--gold-2);
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* Mobile menu: badge stays compact and left-aligned rather than full-width. */
@@ -211,11 +283,29 @@
 
 
 /* Active page — driven purely by the static `aria-current="page"` attribute
-   written into each page's HTML. No JavaScript is involved. */
+   written into each page's HTML. No JavaScript is involved. Same underline
+   language as hover, just permanently on and with a slow breathing glow so
+   it reads as "you are here" rather than a one-off hover state. */
 .pub-header .nav-links a[aria-current="page"] {
   color: var(--color-text);
-  background: rgba(139, 69, 255, 0.22);
-  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+}
+.pub-header .nav-links a[aria-current="page"]::after {
+  opacity: 1;
+  transform: scaleX(1);
+  transform-origin: left;
+  animation: pub-nav-active-glow 2.4s ease-in-out infinite;
+}
+.pub-header .nav-links a[aria-current="page"]:hover::after {
+  animation: none; /* hover takes over the brighter, instant glow */
+}
+
+@keyframes pub-nav-active-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(160, 106, 255, 0.45); }
+  50% { box-shadow: 0 0 12px rgba(160, 106, 255, 0.85); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pub-header .nav-links a[aria-current="page"]::after { animation: none; box-shadow: 0 0 8px rgba(160, 106, 255, 0.65); }
 }
 
 .pub-header .nav-actions { margin-left: 0; }

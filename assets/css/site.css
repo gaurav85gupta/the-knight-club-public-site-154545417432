@@ -186,15 +186,15 @@ html[data-site-theme="light"] .pub-header .brand span {
 }
 
 html[data-site-theme="light"] .pub-header .nav-links a { color: #6F6A78; }
+html[data-site-theme="light"] .pub-header .nav-links a::after {
+  background: linear-gradient(90deg, #6D3DF5, #A23DE0);
+}
 html[data-site-theme="light"] .pub-header .nav-links a:hover {
   color: #1C1530;
-  background: rgba(109, 61, 245, 0.12);
 }
 html[data-site-theme="light"] .pub-header .nav-links a[aria-current="page"],
 html[data-site-theme="light"] .pub-header .nav-links a.is-active {
-  color: #fff;
-  background: linear-gradient(120deg, #6D3DF5 0%, #A23DE0 55%, #E8399B 100%);
-  box-shadow: 0 6px 16px -6px rgba(162, 61, 224, 0.55);
+  color: #1C1530;
 }
 
 /* 1% Club badge on lavender: light gold text is unreadable here, so use a
@@ -204,17 +204,19 @@ html[data-site-theme="light"] .pub-header .nav-links a.nav-club {
   --gold-1: #8a5a00;
   --gold-2: #b8740f;
   --gold-3: #b8740f;
-  background: rgba(184, 116, 15, 0.1);
-  border-color: rgba(184, 116, 15, 0.4);
-  box-shadow: 0 0 8px rgba(184, 116, 15, 0.12);
+  background: transparent;
+  border: none;
+  text-shadow: 0 0 8px rgba(184, 116, 15, 0.75), 0 0 16px rgba(184, 116, 15, 0.55), 0 0 28px rgba(184, 116, 15, 0.35);
+}
+html[data-site-theme="light"] .pub-header .nav-links a.nav-club::after {
+  background: radial-gradient(ellipse at 40% 35%, rgba(184, 116, 15, 0.32) 0%, rgba(184, 116, 15, 0.14) 40%, transparent 70%);
 }
 html[data-site-theme="light"] .pub-header .nav-links a.nav-club:hover,
 html[data-site-theme="light"] .pub-header .nav-links a.nav-club:focus-visible,
 html[data-site-theme="light"] .pub-header .nav-links a.nav-club[aria-current="page"] {
   color: var(--gold-1);
-  background: rgba(184, 116, 15, 0.18);
-  border-color: rgba(184, 116, 15, 0.65);
-  box-shadow: 0 0 12px rgba(184, 116, 15, 0.22);
+  background: transparent;
+  text-shadow: 0 0 14px rgba(184, 116, 15, 0.95), 0 0 26px rgba(184, 116, 15, 0.75), 0 0 42px rgba(184, 116, 15, 0.5);
 }
 
 html[data-site-theme="light"] .pub-header .nav-toggle {
