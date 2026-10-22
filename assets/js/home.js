@@ -310,6 +310,65 @@
       .join('');
   }
 
+  // ---- hero stats count-up ------------------------------------------------
+
+  /**
+   * Animates each [data-count-to] number from 0 up to its target once it
+   * scrolls into view. Runs once per element (IntersectionObserver unobserves
+   * after triggering). Respects prefers-reduced-motion by snapping straight
+   * to the final value with no animation.
+   */
+  function animateHeroStats() {
+    const els = document.querySelectorAll('[data-count-to]');
+    if (!els.length) return;
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const DURATION = 1400; // ms
+
+    function run(el) {
+      const target = parseInt(el.getAttribute('data-count-to'), 10) || 0;
+      const suffix = el.getAttribute('data-count-suffix') || '';
+
+      if (reduceMotion) {
+        el.textContent = target + suffix;
+        return;
+      }
+
+      const start = performance.now();
+      function tick(now) {
+        const progress = Math.min((now - start) / DURATION, 1);
+        // ease-out cubic — fast start, settles gently on the target
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(target * eased);
+        el.textContent = value + suffix;
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          el.textContent = target + suffix; // guarantee exact final value
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(run);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          run(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    els.forEach((el) => observer.observe(el));
+  }
+
+  animateHeroStats();
+
   // ---- loaders ----------------------------------------------------------------
 
   async function loadFeaturedCourses() {

@@ -115,6 +115,43 @@
 .section-head-row .link-arrow { margin-top: 0; }
 .link-arrow:hover { color: var(--color-text); border-color: var(--color-accent-600); gap: var(--space-3); }
 
+/* "Explore All Courses" CTA — moved below the Featured Courses grid.
+   Scoped to .explore-all-cta only; does not touch the shared .btn-primary
+   colour/shadow/transform rules owned by buttons.css. Adds a standing
+   glow + gentle bounce so the button draws the eye without a hover. */
+.explore-all-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-10);
+}
+.explore-all-cta {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-size: 0.88rem;
+  padding: 0 var(--space-6);
+  min-height: 42px;
+}
+
+/* Shared standing glow + gentle bounce — reused on any CTA that should draw
+   the eye without needing hover (hero "Explore Courses", "Explore All
+   Courses" below Featured Courses, etc). Scoped to .glow-bounce-cta only;
+   does not touch the shared .btn-primary colour/shadow/transform rules
+   owned by buttons.css. */
+.glow-bounce-cta {
+  animation: explore-cta-glow 2.2s ease-in-out infinite, explore-cta-bounce 2.2s ease-in-out infinite;
+}
+@keyframes explore-cta-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.55), 0 14px 32px -12px rgba(124, 58, 237, 0.65); }
+  50% { box-shadow: 0 0 28px 8px rgba(168, 85, 247, 0.55), 0 14px 32px -12px rgba(124, 58, 237, 0.65); }
+}
+@keyframes explore-cta-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .explore-all-cta { animation: none; }
+}
+
 /* ---- Buttons (homepage only) ------------------------------------------------
    Colour, background and hover now live in buttons.css (single source of
    truth). Size/shape overrides for the homepage's larger CTA buttons stay
