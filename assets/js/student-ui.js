@@ -177,6 +177,11 @@ const StudentUI = (() => {
    * Premium learning card used by My Learning (grid) and Dashboard (compact).
    * @param {object} item  one record from the dashboard API
    */
+  /** "Via 1% Club" tag — only when the server says the enrollment came from the membership. */
+  function memberTag(label) {
+    return el('span', 'member-tag', label || 'Via 1% Club');
+  }
+
   function learningCard(item) {
     const bucket = bucketOf(item);
     const pct = progressOf(item);
@@ -195,6 +200,7 @@ const StudentUI = (() => {
     const title = el('h3', 'learn-card-title', item.title || 'Untitled course');
     body.appendChild(title);
     if (item.instructor) body.appendChild(el('p', 'learn-card-instructor', `by ${item.instructor}`));
+    if (item.source === 'MEMBERSHIP') body.appendChild(memberTag());
 
     if (pct !== null) {
       const row = el('div', 'learn-card-progress-row');
@@ -263,6 +269,6 @@ const StudentUI = (() => {
   return {
     el, money, formatDate, formatDateShort, formatDateTime, STATUS_LABELS, statusBadge,
     greeting, progressOf, bucketOf, lessonCounts, currentLessonTitle, continueHref,
-    thumb, progressBar, learningCard, showState, skeletonCards, toast,
+    thumb, progressBar, learningCard, memberTag, showState, skeletonCards, toast,
   };
 })();

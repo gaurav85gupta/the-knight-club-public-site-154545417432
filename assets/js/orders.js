@@ -176,7 +176,9 @@
     // Top row: order number + date + status badge
     const top = el('div', 'order-card-top');
     const meta = el('div');
-    meta.appendChild(el('div', 'order-card-number', `Order ${order.orderNumber}`));
+    const numberRow = el('div', 'order-card-number', `Order ${order.orderNumber}`);
+    if (order.kind === 'MEMBERSHIP') numberRow.appendChild(el('span', 'member-badge', '1% Club'));
+    meta.appendChild(numberRow);
     meta.appendChild(el('div', 'order-card-date',
       StudentUI.formatDateShort(order.createdAt)));
     top.appendChild(meta);

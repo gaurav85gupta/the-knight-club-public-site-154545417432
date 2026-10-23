@@ -234,6 +234,12 @@
 
     // ---- Receipt header: order number + date + status badge ----------------
     els.title.textContent = `Order ${order.orderNumber}`;
+    if (order.kind === 'MEMBERSHIP') {
+      const tag = document.createElement('span');
+      tag.className = 'member-badge';
+      tag.textContent = '1% Club';
+      els.title.appendChild(tag);
+    }
     els.date.textContent  = StudentUI.formatDate(order.createdAt);
 
     const statusLabel = ORDER_STATUS_LABELS[order.status] || order.status;

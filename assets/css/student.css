@@ -639,3 +639,14 @@ body.drawer-open { overflow: hidden; }
   .hero-card { padding: var(--space-8) var(--space-6); }
   .page-sub { font-size: var(--font-size-base); }
 }
+
+/* ---- 1% Club (membership) tags ------------------------------------------ */
+.member-badge {
+  display: inline-block; margin-left: 0.5rem; padding: 0.1rem 0.6rem; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; vertical-align: middle;
+  background: #fff4d6; color: #7a5200; border: 1px solid #f0d58a;
+}
+.member-tag {
+  display: inline-block; align-self: flex-start; margin: 0.25rem 0 0; padding: 0.1rem 0.55rem; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 600; background: #fff4d6; color: #7a5200; border: 1px solid #f0d58a;
+}

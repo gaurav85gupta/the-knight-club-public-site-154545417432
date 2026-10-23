@@ -108,6 +108,7 @@
     const body = el('div', 'continue-feature-body');
     body.appendChild(el('h3', 'continue-feature-title', item.title || 'Continue your course'));
     if (item.instructor) body.appendChild(el('p', 'learn-card-instructor', `by ${item.instructor}`));
+    if (item.source === 'MEMBERSHIP') body.appendChild(StudentUI.memberTag());
 
     const pct = StudentUI.progressOf(item);
     if (pct !== null) {
@@ -221,6 +222,11 @@
       const capabilities = dashboard.capabilities || { learningDataAvailable: false, progressDataAvailable: false };
       const myLearnings = dashboard.myLearnings || [];
       const recent = dashboard.recentLearning || [];
+
+      // 1% Club member badge (server-derived from a PAID membership order).
+      if (dashboard.student && dashboard.student.isMember) {
+        $('dash-eyebrow').appendChild(el('span', 'member-badge', '1% Club Member'));
+      }
 
       renderSummary(dashboard.summary || {}, capabilities, myLearnings);
       renderContinueLearning(dashboard.continueLearning || null, capabilities);

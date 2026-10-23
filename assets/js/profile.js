@@ -32,6 +32,15 @@
   document.getElementById('profile-avatar').textContent = StudentShell.initial(user);
   document.getElementById('profile-name').textContent = StudentShell.displayName(user);
   document.getElementById('profile-userid').textContent = `User ID: ${user.userId}`;
+  // 1% Club badge — best-effort; /auth/me does not carry membership, /students/me does.
+  Api.get('/students/me')
+    .then((me) => {
+      if (me && me.isMember) {
+        document.getElementById('profile-userid').parentNode.appendChild(el('span', 'member-badge', '1% Club Member'));
+      }
+    })
+    .catch(() => { /* badge is optional — never break the profile page */ });
+
   const role = document.getElementById('profile-role');
   role.textContent = user.role || '';
   role.hidden = !user.role;
