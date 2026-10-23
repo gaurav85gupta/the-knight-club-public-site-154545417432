@@ -27,7 +27,7 @@
   const FEATURED_LIMIT = 3;
   // Orbit needs more cards than the 3-up Featured grid to read as a ring;
   // same single request still covers both (see loadFeaturedCourses below).
-  const ORBIT_LIMIT = 8;
+  const ORBIT_LIMIT = 10; // ring shows newest 10; spacing auto-adjusts for any count up to this
 
   // ---- tiny helpers -------------------------------------------------------
 
@@ -85,7 +85,7 @@
 
   function thumbHtml(course) {
     if (course.thumbnail) {
-      return `<img src="${esc(course.thumbnail)}" alt="" loading="lazy" decoding="async" />`;
+      return `<img src="${esc(course.thumbnail)}" alt="${esc(course.title)}" loading="lazy" decoding="async" />`;
     }
     return fallbackThumb(course);
   }
@@ -284,6 +284,37 @@
 
     region.hidden = false;
     region.removeAttribute('aria-hidden');
+
+    // Space the cards so they never touch, whatever the course count.
+    // Adjacent cards on a ring of radius R have centres 2R·tan(π/n) apart
+    // (flat-face spacing), so R must grow with n. R is capped so the ring
+    // stays inside the hero column; beyond the cap the cards shrink a bit
+    // instead (--hero-orbit-scale) so the gap is always preserved.
+    function layoutOrbit() {
+      const BASE_SCALE = 0.95; // overall card size (1 = original)
+      track.style.removeProperty('--hero-orbit-radius');
+      track.style.setProperty('--hero-orbit-scale', String(BASE_SCALE));
+      if (n < 3) return;
+      const first = track.querySelector('.hero-orbit-card');
+      const cardW = first.offsetWidth;
+      const baseR = parseFloat(getComputedStyle(track).getPropertyValue('--hero-orbit-radius')) || 170;
+      const shownW = cardW * BASE_SCALE;
+      const GAP = Math.max(24, shownW * 0.12);
+      const t = Math.tan(Math.PI / n);
+      const wantR = (shownW + GAP) / (2 * t);
+      const maxR = baseR * 1.45;
+      const R = Math.max(baseR * 0.85, Math.min(wantR, maxR));
+      const fitW = 2 * R * t - GAP;
+      const scale = Math.min(BASE_SCALE, fitW / cardW);
+      track.style.setProperty('--hero-orbit-radius', R.toFixed(1) + 'px');
+      track.style.setProperty('--hero-orbit-scale', scale.toFixed(3));
+    }
+    layoutOrbit();
+    let orbitResizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(orbitResizeTimer);
+      orbitResizeTimer = setTimeout(layoutOrbit, 150);
+    });
 
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reducedMotion) {

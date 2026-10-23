@@ -1,5 +1,5 @@
 /* ==========================================================================
-   H1 display font — Staatliches (Google Fonts)
+   H1 display font — Oswald (Google Fonts)
    Used site-wide for all headings via var(--font-family-h1), defined in
    assets/css/tokens.css.
 
@@ -16,4 +16,4 @@
    tokens.css's --font-family-h1 updated to reference 'Coolvetica' again.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&display=swap');
+/* Oswald is now loaded via the <link> to Google Fonts in each page head (no @import chain). */300;400;500;600&display=swap');

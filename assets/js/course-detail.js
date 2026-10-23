@@ -56,7 +56,7 @@
     document.getElementById('og-url').setAttribute('content', canonicalUrl);
     const ogImage = document.getElementById('og-image');
     if (course.thumbnail) ogImage.setAttribute('content', course.thumbnail);
-    else ogImage.remove(); // no fake/placeholder image (spec 21)
+    // no thumbnail: keep the static brand image set in course.html
 
     setStructuredData(course, canonicalUrl);
   }

@@ -353,15 +353,17 @@ html[data-site-theme="light"] h2,
 html[data-site-theme="light"] h3,
 html[data-site-theme="light"] h4 { color: var(--color-text); }
 
-html[data-site-theme="light"] .eyebrow,
 html[data-site-theme="light"] .eyebrow-plain {
-  color: #5125C7;
-  background: rgba(109, 61, 245, 0.10);
-  border-color: rgba(109, 61, 245, 0.28);
+  background: linear-gradient(90deg, #5125C7 0%, #6D3DF5 55%, #0891b2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border: 0;
 }
-html[data-site-theme="light"] .eyebrow-plain::before {
-  background: #6D3DF5;
-  box-shadow: 0 0 0 3px rgba(109, 61, 245, 0.18);
+html[data-site-theme="light"] .eyebrow-plain::before,
+html[data-site-theme="light"] .eyebrow-plain::after {
+  background: linear-gradient(90deg, #6D3DF5, #0891b2);
+  box-shadow: none;
 }
 html[data-site-theme="light"] .section-sub,
 html[data-site-theme="light"] .ed-prose p { color: #6F6A78; }
@@ -555,9 +557,18 @@ html[data-site-theme="light"] .feature-panel p { color: #d6d1f5; }
 html[data-site-theme="light"] .club-panel .eyebrow-plain,
 html[data-site-theme="light"] .cta-panel .eyebrow-plain,
 html[data-site-theme="light"] .feature-panel .eyebrow-plain {
-  color: #e2defd;
-  background: rgba(255, 255, 255, 0.10);
-  border-color: rgba(232, 210, 240, 0.32);
+  background: linear-gradient(90deg, #ffffff, #e2defd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+html[data-site-theme="light"] .club-panel .eyebrow-plain::before,
+html[data-site-theme="light"] .cta-panel .eyebrow-plain::before,
+html[data-site-theme="light"] .feature-panel .eyebrow-plain::before,
+html[data-site-theme="light"] .club-panel .eyebrow-plain::after,
+html[data-site-theme="light"] .cta-panel .eyebrow-plain::after,
+html[data-site-theme="light"] .feature-panel .eyebrow-plain::after {
+  background: linear-gradient(90deg, #ffffff, rgba(255,255,255,.3));
 }
 html[data-site-theme="light"] .club-mark {
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(200, 150, 230, 0.55) 60%, rgba(162, 61, 224, 0.25) 100%);

@@ -231,6 +231,18 @@ const PublicShell = (() => {
     const copy = el('p');
     copy.textContent = `\u00A9 ${new Date().getFullYear()} ${SITE_NAME}. All rights reserved.`;
     bottom.appendChild(copy);
+    const legal = el('nav');
+    legal.setAttribute('aria-label', 'Legal');
+    legal.style.cssText = 'display:flex;flex-wrap:wrap;gap:0.4rem 1.25rem;';
+    [['Terms', 'pages/policy-terms.html'], ['Privacy', 'pages/policy-privacy.html'],
+     ['Refunds', 'pages/policy-refund.html'], ['IP Policy', 'pages/policy-intellectual-property.html']]
+      .forEach(([label, href]) => {
+        const a = el('a');
+        a.href = resolveHref(href, fromPages);
+        a.textContent = label;
+        legal.appendChild(a);
+      });
+    bottom.appendChild(legal);
 
     container.append(grid, bottom);
     footer.appendChild(container);

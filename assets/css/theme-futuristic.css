@@ -36,14 +36,18 @@ html:not([data-site-theme="light"]) .section-title {
   filter: drop-shadow(0 0 30px rgba(124, 58, 237, 0.3));
 }
 
+/* Section label ("eyebrow"): no box. Glowing accent line + gradient text. */
 html:not([data-site-theme="light"]) .eyebrow-plain {
-  color: var(--color-accent-600);
-  background: rgba(124, 58, 237, 0.10);
-  border: 1px solid rgba(124, 58, 237, 0.25);
+  background: linear-gradient(90deg, #c4b5fd 0%, #a78bfa 45%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border: 0;
 }
-html:not([data-site-theme="light"]) .eyebrow-plain::before {
-  background: var(--color-accent-500);
-  box-shadow: 0 0 8px var(--color-accent-500);
+html:not([data-site-theme="light"]) .eyebrow-plain::before,
+html:not([data-site-theme="light"]) .eyebrow-plain::after {
+  background: linear-gradient(90deg, #7c3aed, #22d3ee);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.85), 0 0 22px rgba(34, 211, 238, 0.35);
 }
 
 

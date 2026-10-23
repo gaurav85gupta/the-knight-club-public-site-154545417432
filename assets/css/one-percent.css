@@ -448,3 +448,6 @@ html[data-site-theme="light"] .club-page h1.oc-h1-centered .oc-h1-gradient{backg
   .club-page .oc-lead-centered{font-size:1rem;line-height:1.7}
   .club-page .oc-price-pill-amount{font-size:1.7rem}
 }
+/* state headings are h2 (single H1 per page); keep the old h1 look */
+h2.oc-error-title,h2.oc-member-title,h2.oc-review-heading{font-family:var(--font-family-h1);letter-spacing:normal}
+h2.oc-error-title,h2.oc-member-title{font-weight:400}

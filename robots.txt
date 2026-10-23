@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /pages/dashboard.html
 
-Sitemap: /sitemap.xml
+Sitemap: https://theknightclub.in/sitemap.xml

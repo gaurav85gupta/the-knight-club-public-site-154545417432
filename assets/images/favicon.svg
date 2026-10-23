@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="The Knight Club">
+<defs>
+<linearGradient id="kg" x1="30" y1="30" x2="170" y2="175" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ddd6fe"/><stop offset=".45" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+<linearGradient id="mg" x1="120" y1="10" x2="190" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f5f3ff"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1033"/><stop offset="1" stop-color="#07050f"/></linearGradient>
+<linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+<clipPath id="kc"><path d="M58 170 L58 156 C58 132 74 118 88 104 C80 104 70 108 62 114 L44 118 C40 112 42 104 48 98 C58 84 72 62 80 44 L86 34 L96 46 C112 42 134 52 144 72 C154 94 152 130 150 170 Z"/></clipPath>
+</defs>
+<rect x="2" y="2" width="196" height="196" rx="46" fill="url(#bg)"/>
+<rect x="3.5" y="3.5" width="193" height="193" rx="44.5" fill="none" stroke="url(#ring)" stroke-width="3" opacity=".9"/>
+<g transform="translate(100 100) scale(.78) translate(-100 -100) translate(0 8)"><path d="M157.51 18.14 A22 22 0 1 0 181.42 45.03 A18 18 0 0 1 157.51 18.14Z" fill="url(#mg)"/>
+<path d="M180 58 l2 5.5 5.5 2 -5.5 2 -2 5.5 -2 -5.5 -5.5 -2 5.5 -2z" fill="#a5f3fc"/><path d="M58 170 L58 156 C58 132 74 118 88 104 C80 104 70 108 62 114 L44 118 C40 112 42 104 48 98 C58 84 72 62 80 44 L86 34 L96 46 C112 42 134 52 144 72 C154 94 152 130 150 170 Z" fill="url(#kg)"/>
+<path d="M158 70 L139 80 M160 98 L141 105 M160 126 L143 130" stroke="#07050f" stroke-width="4.5" stroke-linecap="round" fill="none" clip-path="url(#kc)"/>
+<circle cx="97" cy="71" r="5.5" fill="#07050f"/>
+<circle cx="53" cy="110" r="2.6" fill="#07050f"/>
+<rect x="48" y="170" width="112" height="9" rx="4.5" fill="url(#kg)"/></g>
+</svg>
