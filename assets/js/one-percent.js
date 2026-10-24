@@ -954,16 +954,28 @@
 
     if (!member.length) { hideSection(); return; }
 
+    // Markup below intentionally mirrors testimonials.js's .tm-card exactly
+    // (same classes: tm-card / tm-video-embed / tm-video-placeholder /
+    // tm-quote / tm-author / tm-avatar / tm-who / tm-name / tm-meta) so this
+    // section looks identical to the testimonials page instead of falling
+    // back to plain, unstyled <figure>/<blockquote> markup. Built with
+    // DOM methods + textContent (not innerHTML) to stay safely escaped,
+    // same as the rest of this file's DOM-building code.
     member.forEach(function (t) {
-      var fig = document.createElement('figure');
+      var card = el('article', 'tm-card');
 
       // VIDEO testimonials: embed the short-lived signed Bunny URL the
       // backend issued (testimonial.service.js#publicVideoPlaybackFor),
       // never a raw video id. Same host safelist as the Section 2 intro
       // video above — defence in depth on top of the server-side signing.
       if (t.type === 'VIDEO' && t.video && typeof t.video.embedUrl === 'string' && BUNNY_EMBED_HOST_RE.test(t.video.embedUrl)) {
-        var videoBox = document.createElement('div');
-        videoBox.className = 'oc-proof-video';
+        var videoBox = el('div', 'tm-video-embed');
+        var placeholder = el('div', 'tm-video-placeholder');
+        placeholder.setAttribute('aria-hidden', 'true');
+        var playIcon = el('span', 'tm-video-play', '\u25B6');
+        placeholder.appendChild(playIcon);
+        videoBox.appendChild(placeholder);
+
         var iframe = document.createElement('iframe');
         iframe.src = t.video.embedUrl;
         // autoplay intentionally left OUT of `allow` — see note above.
@@ -971,14 +983,30 @@
         iframe.setAttribute('allowfullscreen', 'true');
         iframe.setAttribute('loading', 'lazy');
         iframe.setAttribute('title', 'Video testimonial from ' + t.name);
+        iframe.addEventListener('load', function () { iframe.classList.add('is-loaded'); });
         videoBox.appendChild(iframe);
-        fig.appendChild(videoBox);
+        card.appendChild(videoBox);
       }
 
-      var quote = el('blockquote', '', '\u201c' + t.quote + '\u201d');
-      fig.appendChild(quote);
-      fig.appendChild(el('figcaption', '', [t.name, t.role].filter(Boolean).join(', ')));
-      proof.appendChild(fig);
+      var quoteBlock = el('blockquote', 'tm-quote');
+      var quoteP = el('p', '', t.quote);
+      quoteBlock.appendChild(quoteP);
+      card.appendChild(quoteBlock);
+
+      var footer = el('footer', 'tm-author');
+
+      var avatar = el('span', 'tm-avatar tm-avatar-text', t.name.charAt(0).toUpperCase());
+      avatar.setAttribute('aria-hidden', 'true');
+      footer.appendChild(avatar);
+
+      var who = el('span', 'tm-who');
+      who.appendChild(el('strong', 'tm-name', t.name));
+      if (t.role) who.appendChild(el('span', 'tm-meta', t.role));
+      if (t.program) who.appendChild(el('span', 'tm-program', t.program));
+      footer.appendChild(who);
+
+      card.appendChild(footer);
+      proof.appendChild(card);
     });
   }
 
