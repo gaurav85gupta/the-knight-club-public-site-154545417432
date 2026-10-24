@@ -298,25 +298,37 @@ html[data-site-theme="light"] .oc-hero-meta{
    as the testimonials page (.tm-card, .tm-video-embed, .tm-quote,
    .tm-author, etc. — see renderTestimonials() in one-percent.js), styled
    entirely by testimonials.css (loaded on this page). .oc-proof itself is
-   just the responsive grid wrapper, matching .tm-grid's column behaviour.
-   Capped to 3 cards (one-percent.js slices to 3), so a slightly smaller
-   column width than the full testimonials page grid still looks balanced. */
-.oc-proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-4);margin-bottom:var(--space-4)}
+   the grid wrapper. Capped to 3 cards (one-percent.js slices to 3).
+   Fixed 3-column grid (not auto-fit) — auto-fit would stretch each card
+   to fill the row when there are only 1–2 cards, which is what made them
+   look oversized even after the card-level size overrides below. A fixed
+   max-width keeps every card the same compact size regardless of count,
+   and collapses to fewer columns only once the viewport is actually
+   too narrow for 3 across. */
+.oc-proof{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:var(--space-4);
+  max-width: 760px;
+  margin: 0 auto var(--space-4);
+}
+@media (max-width: 760px) { .oc-proof{ grid-template-columns:repeat(2, minmax(0, 1fr)); max-width: 520px; } }
+@media (max-width: 520px) { .oc-proof{ grid-template-columns: 1fr; max-width: 320px; } }
 
 /* Smaller card variant for this section only — same markup/classes as the
    testimonials page, just scaled down (less padding, shorter quote clamp,
-   smaller avatar/text) so these 3 cards read as a compact highlight strip
-   rather than full-size testimonial cards. Testimonials page itself is
-   untouched since all of this is scoped under #oc-proof. */
-#oc-proof .tm-card { gap: var(--space-4); padding: var(--space-5); }
-#oc-proof .tm-video-embed { border-radius: var(--radius-sm); }
-#oc-proof .tm-video-play { width: 36px; height: 36px; font-size: .75rem; }
-#oc-proof .tm-quote { max-height: 6.5rem; }
-#oc-proof .tm-quote p { font-size: .9rem; line-height: 1.5; }
-#oc-proof .tm-avatar { width: 34px; height: 34px; }
-#oc-proof .tm-name { font-size: .85rem; }
-#oc-proof .tm-meta, #oc-proof .tm-course { font-size: .75rem; }
-#oc-proof .tm-program { font-size: .62rem; }
+   smaller avatar/text, shorter video box) so these cards read as a compact
+   highlight strip rather than full-size testimonial cards. Testimonials
+   page itself is untouched since all of this is scoped under #oc-proof. */
+#oc-proof .tm-card { gap: var(--space-3); padding: var(--space-4); }
+#oc-proof .tm-video-embed { border-radius: var(--radius-sm); aspect-ratio: 4 / 3; }
+#oc-proof .tm-video-play { width: 30px; height: 30px; font-size: .65rem; }
+#oc-proof .tm-quote { max-height: 4.5rem; }
+#oc-proof .tm-quote p { font-size: .8rem; line-height: 1.45; }
+#oc-proof .tm-avatar { width: 28px; height: 28px; }
+#oc-proof .tm-name { font-size: .78rem; }
+#oc-proof .tm-meta, #oc-proof .tm-course { font-size: .68rem; }
+#oc-proof .tm-program { font-size: .58rem; padding: .05rem .5rem; }
 
 /* =========================================================================
    FINAL CTA SECTION
