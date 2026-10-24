@@ -106,6 +106,20 @@ const PublicShell = (() => {
     const a = el('a', 'brand');
     a.href = fromPages ? '../index.html' : 'index.html';
     a.setAttribute('aria-label', `${SITE_NAME} — home`);
+
+    const assetPrefix = fromPages ? '../' : '';
+    const logo = document.createElement('img');
+    logo.className = 'brand-mark';
+    logo.src = `${assetPrefix}assets/images/knight-emblem-nav.png`;
+    logo.srcset =
+      `${assetPrefix}assets/images/knight-emblem-nav.png 1x, ` +
+      `${assetPrefix}assets/images/knight-emblem-nav@2x.png 2x`;
+    logo.width = 32;
+    logo.height = 32;
+    logo.alt = '';
+    logo.setAttribute('aria-hidden', 'true');
+    a.appendChild(logo);
+
     a.append('The ');
     const span = document.createElement('span');
     span.textContent = 'Knight Club';

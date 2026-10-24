@@ -102,12 +102,23 @@
    Club" in the lavender-violet gradient. */
 .pub-header .brand,
 .pub-footer .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: 'Sora', var(--font-family-base);
   font-size: 1.25rem;
   font-weight: 500;
   letter-spacing: -0.01em;
   color: rgba(245, 243, 251, 0.72);
   white-space: nowrap;
+}
+.pub-header .brand .brand-mark,
+.pub-footer .brand .brand-mark {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(160, 106, 255, 0.45));
 }
 .pub-header .brand span,
 .pub-footer .brand span {

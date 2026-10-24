@@ -19,6 +19,9 @@
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 600;
   font-size: var(--font-size-xl);
   color: var(--color-text);
@@ -26,6 +29,13 @@
 }
 .brand:hover { color: var(--color-text); }
 .brand span { color: var(--color-accent-500); }
+.brand .brand-mark {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(160, 106, 255, 0.45));
+}
 
 .site-nav {
   display: flex;

@@ -154,6 +154,15 @@ const StudentShell = (() => {
 
     const brand = el('a', 'brand');
     brand.href = '../index.html';
+    const brandLogo = document.createElement('img');
+    brandLogo.className = 'brand-mark';
+    brandLogo.src = '../assets/images/knight-emblem-nav.png';
+    brandLogo.srcset = '../assets/images/knight-emblem-nav.png 1x, ../assets/images/knight-emblem-nav@2x.png 2x';
+    brandLogo.width = 28;
+    brandLogo.height = 28;
+    brandLogo.alt = '';
+    brandLogo.setAttribute('aria-hidden', 'true');
+    brand.appendChild(brandLogo);
     brand.append('The ');
     brand.appendChild(el('span', null, 'Knight Club'));
 

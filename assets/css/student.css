@@ -79,7 +79,14 @@
   padding: 0 var(--space-6);
 }
 
-.student-header .brand { flex-shrink: 0; }
+.student-header .brand { flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.5rem; }
+.student-header .brand .brand-mark {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(160, 106, 255, 0.45));
+}
 
 .student-nav {
   display: flex;
