@@ -121,10 +121,24 @@
       '<footer class="tm-author">' + avatarHtml(t) + metaHtml(t) + '</footer></article>';
   }
 
+  /** Featured card: media (video, or photo if present, or nothing) in a
+      fixed-size left column; quote + author stacked in the right column.
+      Mirrors .tm-card's structure so it never grows past card proportions,
+      no matter how long the quote text is. */
+  function featuredMediaHtml(t) {
+    if (t.video) return videoHtml(t);
+    if (t.photoUrl) return '<div class="tm-featured-photo"><img src="' + esc(t.photoUrl) + '" alt="Photo of ' + esc(t.name) + '" loading="lazy" decoding="async" /></div>';
+    return '';
+  }
+
   function featuredHtml(t) {
-    return '<figure class="tm-featured-fig">' + videoHtml(t) +
+    var media = featuredMediaHtml(t);
+    return '<figure class="tm-featured-fig' + (media ? '' : ' tm-featured-fig--no-media') + '">' +
+      (media ? '<div class="tm-featured-media">' + media + '</div>' : '') +
+      '<div class="tm-featured-content">' +
       '<blockquote class="tm-featured-quote"><p>' + esc(t.quote) + '</p></blockquote>' +
-      '<figcaption class="tm-author">' + avatarHtml(t) + metaHtml(t) + '</figcaption></figure>';
+      '<figcaption class="tm-author">' + avatarHtml(t) + metaHtml(t) + '</figcaption>' +
+      '</div></figure>';
   }
 
   function storyHtml(t) {

@@ -103,6 +103,7 @@
   background: linear-gradient(180deg, rgba(23, 17, 42, 0.75), rgba(15, 10, 28, 0.75));
   transition: border-color var(--dur-base) var(--ease-out);
 }
+
 .tm-card:hover { border-color: var(--color-border-strong); }
 
 /* VIDEO testimonials (Phase 5): embedUrl is a short-lived signed iframe src
@@ -125,7 +126,11 @@
   border: 0;
 }
 
-.tm-quote { margin: 0; }
+/* Quote text is clamped to a fixed max height with its own scroll —
+   a long paragraph-length story (vs a short pull-quote) no longer
+   makes this one card balloon past the height of every other card in
+   the grid. Short quotes are unaffected since they never reach the cap. */
+.tm-quote { margin: 0; max-height: 9.5rem; overflow-y: auto; padding-right: var(--space-2); }
 .tm-quote p {
   margin: 0;
   font-size: 1.1rem;
@@ -133,6 +138,8 @@
   letter-spacing: -0.01em;
   color: var(--color-text);
 }
+.tm-quote::-webkit-scrollbar { width: 6px; }
+.tm-quote::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: var(--radius-full); }
 .tm-author { display: flex; align-items: center; gap: var(--space-4); margin-top: auto; }
 .tm-avatar {
   flex: none;
@@ -171,14 +178,66 @@
 .tm-intro-copy p { margin: 0 0 var(--space-5); color: var(--color-text-muted); font-size: 1.0625rem; line-height: 1.8; max-width: 62ch; }
 .tm-intro-copy a, .tm-course a { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
 
-/* featured: large editorial quote, deliberately unlike the grid */
-.tm-featured-fig { margin: 0; max-width: 680px; padding: var(--space-10) 0 var(--space-10) var(--space-8); border-left: 2px solid var(--color-accent-600); }
-.tm-featured-quote { margin: 0 0 var(--space-8); }
-.tm-featured-quote p { margin: 0; font-family: var(--font-family-base); font-style: normal; font-weight: 500; font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.35; color: var(--color-text); max-width: 32ch; }
-/* Video inside the featured block is capped so one item never balloons
-   to the full container width — same intent as .tm-card's video, just
-   scoped to the editorial figure. */
-.tm-featured-fig .tm-video-embed { max-width: 420px; margin-bottom: var(--space-6); }
+/* Featured: a single highlighted story, shown as a self-contained card —
+   bounded width, bounded height, same visual weight as a grid card just
+   with a subtle accent border. Built to hold either a short pull-quote
+   OR a full paragraph-length story without the block growing to fill
+   the page: long quotes get a smaller, clamped font and the figure
+   itself never exceeds card-like proportions. */
+.tm-featured-fig {
+  display: grid;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: start;
+  max-width: 920px;
+  margin: 0;
+  padding: var(--space-8);
+  border: 1px solid var(--color-border-soft);
+  border-left: 3px solid var(--color-accent-600);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(23, 17, 42, 0.75), rgba(15, 10, 28, 0.75));
+}
+/* No media (written testimonial): quote takes the full card, no empty
+   280px gutter on the left. */
+.tm-featured-fig--no-media { grid-template-columns: 1fr; }
+
+.tm-featured-media { width: 100%; }
+/* Video or photo column: fixed, card-sized — never stretches to the
+   quote's width or to the page's width. object-fit: cover crops the
+   iframe/video to the 16:9 box instead of letterboxing it, which is
+   what was causing the black-bars-on-white panel look. */
+.tm-featured-media .tm-video-embed { max-width: 100%; margin: 0; }
+.tm-featured-media .tm-video-embed iframe { object-fit: cover; }
+.tm-featured-photo { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface-2); }
+.tm-featured-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.tm-featured-quote { margin: 0 0 var(--space-6); max-height: 11.5rem; overflow-y: auto; padding-right: var(--space-2); }
+.tm-featured-quote p {
+  margin: 0;
+  /* Same weight/spacing as the regular grid card quote (.tm-quote p) —
+     the earlier 500-weight here read as noticeably bolder/denser than
+     the rest of the page at this size. Normal weight + slight negative
+     tracking matches the site's body-text rhythm instead of looking
+     like heavy display type. */
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  /* Matches the regular grid card's quote size (.tm-quote p is 1.1rem) —
+     capped well below the old 2.75rem "display type" size, so a
+     paragraph-length story reads like normal body text instead of an
+     oversized pull-quote stretching the whole block. */
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--color-text);
+  max-width: 56ch;
+}
+/* Scrollbar kept slim and on-theme instead of the browser default. */
+.tm-featured-quote::-webkit-scrollbar { width: 6px; }
+.tm-featured-quote::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: var(--radius-full); }
+
+@media (max-width: 760px) {
+  .tm-featured-fig { grid-template-columns: 1fr; padding: var(--space-6); }
+  .tm-featured-quote { max-height: 14rem; }
+}
 
 /* card extras (avatar fallback is text, never a generated photo) */
 .tm-avatar-text { display: inline-flex; align-items: center; justify-content: center; font-weight: 500; color: var(--color-lavender); background: var(--color-accent-50); }
@@ -210,7 +269,7 @@
 
 .tm-stories[hidden], .tm-featured[hidden], .tm-longform[hidden] { display: none; }
 @media (max-width: 768px) { .tm-intro-grid, .tm-story { grid-template-columns: 1fr; gap: var(--space-6); } .tm-course-list { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .tm-course-list { grid-template-columns: 1fr; } .tm-featured-fig { padding-left: var(--space-5); max-width: 100%; } .tm-featured-fig .tm-video-embed { max-width: 100%; } }
+@media (max-width: 480px) { .tm-course-list { grid-template-columns: 1fr; } .tm-featured-fig { padding: var(--space-5); max-width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .tm-chip, .tm-course-link { transition: none; } .tm-course-link:hover { transform: none; } }
 
 /* Phase 4b — themes, share prompt, program tag */
