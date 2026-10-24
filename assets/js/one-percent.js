@@ -950,7 +950,7 @@
     var member = items.filter(function (t) {
       return t && t.program === '1% Club member' && typeof t.quote === 'string' && t.quote.trim() &&
         typeof t.name === 'string' && t.name.trim();
-    });
+    }).slice(0, 3); // cap: show at most 3 cards in this section
 
     if (!member.length) { hideSection(); return; }
 
