@@ -3,10 +3,11 @@
 
    Loaded ONLY by pages/testimonials.html, after tokens/theme/base/site/public.
 
-   The page currently shows an honest empty state (no testimonial data source
-   exists in the project). The `.tm-card` / `.tm-grid` rules below are the
-   editorial card component that real stories will use; they are dormant until
-   a future phase emits that markup (see the contract comment in the HTML).
+   Phase 5: the page is live-wired to GET /testimonials (the shared public
+   Testimonials API — see assets/js/testimonials.js). The `.tm-card` /
+   `.tm-grid` rules below render real API data; the empty state further down
+   is still shown honestly whenever the API returns zero published
+   testimonials.
    ========================================================================== */
 
 /* ---- Empty state: an editorial panel, not an error box --------------------- */
@@ -103,6 +104,27 @@
   transition: border-color var(--dur-base) var(--ease-out);
 }
 .tm-card:hover { border-color: var(--color-border-strong); }
+
+/* VIDEO testimonials (Phase 5): embedUrl is a short-lived signed iframe src
+   issued by the backend (testimonial.service.js#publicVideoPlaybackFor) —
+   never a raw Bunny video id. Same 16:9 pattern as the existing lesson
+   player; no new design language introduced. */
+.tm-video-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-2);
+}
+.tm-video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .tm-quote { margin: 0; }
 .tm-quote p {
   margin: 0;

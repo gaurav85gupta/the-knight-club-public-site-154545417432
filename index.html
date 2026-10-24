@@ -270,8 +270,11 @@
       </div>
     </section>
 
-    <!-- 11. TESTIMONIALS -->
-    <section class="section-block section-tight" id="testimonials" aria-labelledby="testimonials-title">
+    <!-- 11. TESTIMONIALS (Phase 6.1: shared public Testimonials API — see
+         assets/js/home-testimonials.js. No hardcoded records live here any
+         more; the section hides itself gracefully if the API has no
+         published testimonials, exactly as pages/testimonials.html does.) -->
+    <section class="section-block section-tight" id="testimonials" aria-labelledby="testimonials-title" hidden>
       <div class="container">
         <div class="tm-teaser">
           <span class="tm-teaser-mark" aria-hidden="true">&ldquo;</span>
@@ -279,30 +282,9 @@
           <h2 id="testimonials-title" class="section-title section-title-sm">What Students Are Saying</h2>
           <p>Real feedback from real students &mdash; nothing here is invented.</p>
         </div>
-        <div class="tm-grid" style="margin-top: var(--space-10);">
-          <article class="tm-card">
-            <blockquote class="tm-quote"><p>I&rsquo;m a 12th-pass student with zero background &mdash; and I still understood everything.</p></blockquote>
-            <footer class="tm-author">
-              <span class="tm-avatar tm-avatar-text" aria-hidden="true">T</span>
-              <span class="tm-who"><strong class="tm-name">Tanya Sharma</strong><span class="tm-meta">Beginner friendly</span></span>
-            </footer>
-          </article>
-          <article class="tm-card">
-            <blockquote class="tm-quote"><p>I went from &#8377;0 to my first &#8377;1.2 lakh month in 9 weeks. Aditya&rsquo;s system is plug-and-play &mdash; I just followed the steps and the sales came.</p></blockquote>
-            <footer class="tm-author">
-              <span class="tm-avatar tm-avatar-text" aria-hidden="true">R</span>
-              <span class="tm-who"><strong class="tm-name">Rohan Mehta</strong><span class="tm-meta">Results</span></span>
-            </footer>
-          </article>
-          <article class="tm-card">
-            <blockquote class="tm-quote"><p>Aditya actually replies. The 1:1 guidance changed everything for me.</p></blockquote>
-            <footer class="tm-author">
-              <span class="tm-avatar tm-avatar-text" aria-hidden="true">S</span>
-              <span class="tm-who"><strong class="tm-name">Sneha Kapoor</strong><span class="tm-meta">Mentorship</span></span>
-            </footer>
-          </article>
-        </div>
-        <div class="tm-more">
+        <div id="home-tm-state" class="tm-state" style="margin-top: var(--space-10);" hidden></div>
+        <div id="home-tm-grid" class="tm-grid" style="margin-top: var(--space-10);" hidden></div>
+        <div id="home-tm-more" class="tm-more" hidden>
           <a href="pages/testimonials.html" class="link-arrow">Read More Stories
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
@@ -456,6 +438,10 @@
   <script src="assets/js/faq.js" defer></script>
   <script src="assets/js/hero-scroll-fx.js" defer></script>
   <script src="assets/js/home.js" defer></script>
+  <!-- Shared public Testimonials API (Phase 6.1) — see assets/js/home-testimonials.js.
+       Reads the SAME GET /testimonials endpoint as pages/testimonials.html and
+       the 1% Club page; no hardcoded testimonial content ships with this page. -->
+  <script src="assets/js/home-testimonials.js" defer></script>
   <!-- Central Placeholders System: loads home.skills.video from the public API.
        No Bunny credential, no video ID is hardcoded here or in home-placeholder.js.
        Falls back gracefully when the video is not configured or unavailable. -->

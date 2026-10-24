@@ -1,47 +1,93 @@
 /**
  * Testimonials page controller.
  *
- * DATA SOURCE: there is currently NO testimonials endpoint in the backend
- * contract, so TESTIMONIALS_ENDPOINT is null and this page makes NO network
- * call. Until a backend exists it reads the owner-supplied feedback in
- * assets/js/testimonials-data.js (window.TESTIMONIALS_SEED); if that is absent
- * or empty it shows an honest empty state. Nothing is invented.
+ * DATA SOURCE (Phase 5): GET /testimonials (relative to CONFIG.API_BASE_URL),
+ * the shared public Testimonials API — see
+ * backend/src/controllers/publicTestimonial.controller.js for the DTO this
+ * reads. The server response is unwrapped by Api.get() to its `data` field,
+ * i.e. { items, pagination } (see assets/js/api.js). The server already
+ * guarantees every item is PUBLISHED; this file does no status filtering.
  *
- * When the backend ships a public route, set TESTIMONIALS_ENDPOINT to its path
- * (relative to CONFIG.API_BASE_URL, e.g. '/testimonials'). Expected response:
- *   { items: [{ id, quote, name, role?, course?: {slug,title}, photoUrl?,
- *               rating? (1-5), story?, featured?, createdAt? }],
- *     pagination: { page, totalPages, total } }
+ * DTO fields actually sent by the backend (toPublicTestimonialDto):
+ *   id, name, role, quote, story, topic, program, photoUrl, featured,
+ *   createdAt, type ('PHOTO'|'VIDEO'|'WRITTEN').
+ *   course?  a course id string, not {slug,title} — there is no
+ *            course-title lookup here, so a course reference is tracked but
+ *            not rendered as a link; nothing is invented to fill in a title.
+ *   video?   { embedUrl, expiresAt } — present only for type === 'VIDEO'.
+ * There is no `rating` field at all — the backend model does not have one,
+ * so it is never read or shown.
+ *
  * Only `quote` and `name` are required; every other field is shown ONLY when
  * present and valid. Ratings/courses/photos are never inferred.
  *
  * Optional sections appear only when the data supports them:
  *   featured   -> an item flagged `featured: true` (never auto-picked)
  *   long-form  -> items that carry a `story`
- *   courses    -> distinct real course links from items
+ *   courses    -> distinct real course links from items (only when a title
+ *                 is actually known, which the current DTO never supplies)
  *   themes/filter -> >= 2 distinct `topic` values, >= 6 items, all items loaded
  */
 (function () {
-  var TESTIMONIALS_ENDPOINT = null;
+  var TESTIMONIALS_ENDPOINT = '/testimonials';
   var PAGE_LIMIT = 9;
 
   var esc = function (v) { return Format.escapeHtml(v); };
 
-  function str(v) { return typeof v === 'string' && v.trim() ? v.trim() : ''; }
-  function safeUrl(u) { u = str(u); return /^https:\/\//i.test(u) || /^\//.test(u) ? u : ''; }
+  // Same host safelist used for the 1% Club intro video (one-percent.js) —
+  // the real security is the server-side signature, this is defence in depth
+  // before an embedUrl is ever used as an iframe src.
+  var BUNNY_EMBED_HOST_RE = /^https:\/\/(iframe\.mediadelivery\.net|bunnycdn\.com)\//;
 
-  /** Keeps only valid, known fields. Returns null if quote or name is missing. */
+  function str(v) { return typeof v === 'string' && v.trim() ? v.trim() : ''; }
+  // Accepts only: (a) a well-formed https URL, or (b) a genuine site-relative
+  // path starting with exactly ONE slash followed by a non-slash character.
+  // "//evil.example/x.png" is a PROTOCOL-RELATIVE URL — the browser resolves
+  // it against the current scheme (https:), so it is a full cross-origin URL
+  // to attacker infrastructure, not a relative path on this site. The old
+  // /^\//.test(u) check matched it (it does start with "/"), which is the
+  // bug this fixes: a second leading slash (or a backslash, which some
+  // browsers also treat as a path separator) is rejected outright, and
+  // anything else is checked with the real URL parser rather than a
+  // same-origin-implying regex, so a malformed string can never slip through
+  // as if it were a safe absolute URL.
+  function safeUrl(u) {
+    u = str(u);
+    if (!u) return '';
+    if (/^\/[^/\\]/.test(u)) return u; // single-slash relative path only
+    if (!/^https:\/\//i.test(u)) return '';
+    try {
+      var parsed = new URL(u);
+      return parsed.protocol === 'https:' ? u : '';
+    } catch (e) {
+      return '';
+    }
+  }
+  function safeEmbedUrl(u) { u = str(u); return BUNNY_EMBED_HOST_RE.test(u) ? u : ''; }
+
+  /**
+   * Keeps only valid, known fields. Returns null if quote or name is missing.
+   *
+   * `course` on the live API is a bare id string (see file header) — not the
+   * {slug,title} shape this page can link to — so it is intentionally NOT
+   * mapped into `course` here; course links are only built from testimonials
+   * that genuinely carry both a slug and a title.
+   */
   function normalize(raw) {
     if (!raw || typeof raw !== 'object') return null;
     var quote = str(raw.quote), name = str(raw.name);
     if (!quote || !name) return null;
     var r = Number(raw.rating);
-    var course = raw.course && str(raw.course.slug) && str(raw.course.title)
+    var course = raw.course && typeof raw.course === 'object' && str(raw.course.slug) && str(raw.course.title)
       ? { slug: str(raw.course.slug), title: str(raw.course.title) } : null;
     var d = raw.createdAt ? new Date(raw.createdAt) : null;
+    var type = str(raw.type).toUpperCase();
+    var video = (type === 'VIDEO' && raw.video && typeof raw.video === 'object' && safeEmbedUrl(raw.video.embedUrl))
+      ? { embedUrl: safeEmbedUrl(raw.video.embedUrl) } : null;
     return {
       id: raw.id, quote: quote, name: name, role: str(raw.role), topic: str(raw.topic), program: str(raw.program), course: course,
-      photoUrl: safeUrl(raw.photoUrl), story: str(raw.story), featured: raw.featured === true,
+      type: type, photoUrl: type === 'PHOTO' ? safeUrl(raw.photoUrl) : '', video: video,
+      story: str(raw.story), featured: raw.featured === true,
       rating: Number.isInteger(r) && r >= 1 && r <= 5 ? r : 0,
       date: d && !isNaN(d) ? d.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) : ''
     };
@@ -50,6 +96,12 @@
   function avatarHtml(t) {
     if (t.photoUrl) return '<span class="tm-avatar"><img src="' + esc(t.photoUrl) + '" alt="Photo of ' + esc(t.name) + '" width="44" height="44" loading="lazy" decoding="async" /></span>';
     return '<span class="tm-avatar tm-avatar-text" aria-hidden="true">' + esc(t.name.charAt(0).toUpperCase()) + '</span>';
+  }
+
+  /** VIDEO testimonials get an embedded iframe above the quote; everything else is unchanged. */
+  function videoHtml(t) {
+    if (!t.video) return '';
+    return '<div class="tm-video-embed"><iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '"></iframe></div>';
   }
 
   function metaHtml(t) {
@@ -64,18 +116,20 @@
 
   function cardHtml(t) {
     return '<article class="tm-card" data-topic="' + esc(t.topic) + '">' +
+      videoHtml(t) +
       '<blockquote class="tm-quote"><p>' + esc(t.quote) + '</p></blockquote>' +
       '<footer class="tm-author">' + avatarHtml(t) + metaHtml(t) + '</footer></article>';
   }
 
   function featuredHtml(t) {
-    return '<figure class="tm-featured-fig"><blockquote class="tm-featured-quote"><p>' + esc(t.quote) + '</p></blockquote>' +
+    return '<figure class="tm-featured-fig">' + videoHtml(t) +
+      '<blockquote class="tm-featured-quote"><p>' + esc(t.quote) + '</p></blockquote>' +
       '<figcaption class="tm-author">' + avatarHtml(t) + metaHtml(t) + '</figcaption></figure>';
   }
 
   function storyHtml(t) {
     var paras = t.story.split(/\n{2,}/).map(function (p) { return '<p>' + esc(p.trim()) + '</p>'; }).join('');
-    return '<article class="tm-story"><header class="tm-story-head">' + avatarHtml(t) + metaHtml(t) + '</header><div class="tm-story-body">' + paras + '</div></article>';
+    return '<article class="tm-story"><header class="tm-story-head">' + avatarHtml(t) + metaHtml(t) + '</header>' + videoHtml(t) + '<div class="tm-story-body">' + paras + '</div></article>';
   }
 
   function coursesHtml(items) {
@@ -150,12 +204,6 @@
     }
 
     async function load() {
-      if (!TESTIMONIALS_ENDPOINT) {
-        var seed = (typeof window !== 'undefined' && Array.isArray(window.TESTIMONIALS_SEED)) ? window.TESTIMONIALS_SEED : [];
-        all = seed.map(normalize).filter(Boolean); totalPages = 1;
-        if (!all.length) { setState('empty'); return; }
-        stateEl.hidden = true; empty.hidden = true; wrap.hidden = false; renderAll(); return;
-      }
       if (!all.length) setState('loading');
       try {
         var data = await Api.get(TESTIMONIALS_ENDPOINT + '?page=' + page + '&limit=' + PAGE_LIMIT);

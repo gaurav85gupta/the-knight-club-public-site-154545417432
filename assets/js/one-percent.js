@@ -906,25 +906,76 @@
   }
 
   // -------------------------------------------------------------------------
-  // Testimonials (unchanged from Phase 34)
+  // Testimonials (Phase 5: shared public Testimonials API)
+  //
+  // Reads the SAME GET /testimonials endpoint as the Main Testimonials page
+  // (assets/js/testimonials.js) — one shared testimonial database, one
+  // public API source (see backend/src/services/testimonial.service.js).
+  // There is no `section` field on the backend: this page selects its own
+  // subset the same way it always did, by filtering the shared list on the
+  // existing `program` content field ('1% Club member'), not by querying a
+  // separate collection or a hidden section flag.
+  //
+  // Only quote + name are required to show a testimonial; everything else
+  // (role, video) is shown only when present and valid. Nothing is invented
+  // and no old hardcoded testimonial is shown while this loads or if it
+  // fails — the section hides instead, exactly as it did for an empty seed.
   // -------------------------------------------------------------------------
-  function renderTestimonials() {
+  var BUNNY_EMBED_HOST_RE = /^https:\/\/(iframe\.mediadelivery\.net|bunnycdn\.com)\//;
+
+  async function renderTestimonials() {
     var proof = $('oc-proof');
-    var seed = (window.TESTIMONIALS_SEED || []).filter(function (t) {
-      return t.program === '1% Club member' && t.quote && t.name;
-    });
-    if (proof && seed.length) {
-      seed.forEach(function (t) {
-        var fig     = document.createElement('figure');
-        var quote   = el('blockquote', '', '\u201c' + t.quote + '\u201d');
-        fig.appendChild(quote);
-        fig.appendChild(el('figcaption', '', [t.name, t.role].filter(Boolean).join(', ')));
-        proof.appendChild(fig);
-      });
-    } else if (proof) {
+    if (!proof) return;
+
+    function hideSection() {
       var section = proof.closest('section');
       if (section) section.hidden = true;
     }
+
+    var items;
+    try {
+      var data = await Api.get('/testimonials?limit=100');
+      if (!data || !Array.isArray(data.items)) throw new Error('malformed');
+      items = data.items;
+    } catch (e) {
+      // Network/API failure: hide the section rather than show nothing
+      // useful or fall back to stale hardcoded content.
+      hideSection();
+      return;
+    }
+
+    var member = items.filter(function (t) {
+      return t && t.program === '1% Club member' && typeof t.quote === 'string' && t.quote.trim() &&
+        typeof t.name === 'string' && t.name.trim();
+    });
+
+    if (!member.length) { hideSection(); return; }
+
+    member.forEach(function (t) {
+      var fig = document.createElement('figure');
+
+      // VIDEO testimonials: embed the short-lived signed Bunny URL the
+      // backend issued (testimonial.service.js#publicVideoPlaybackFor),
+      // never a raw video id. Same host safelist as the Section 2 intro
+      // video above — defence in depth on top of the server-side signing.
+      if (t.type === 'VIDEO' && t.video && typeof t.video.embedUrl === 'string' && BUNNY_EMBED_HOST_RE.test(t.video.embedUrl)) {
+        var videoBox = document.createElement('div');
+        videoBox.className = 'oc-proof-video';
+        var iframe = document.createElement('iframe');
+        iframe.src = t.video.embedUrl;
+        iframe.setAttribute('allow', 'accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;');
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('loading', 'lazy');
+        iframe.setAttribute('title', 'Video testimonial from ' + t.name);
+        videoBox.appendChild(iframe);
+        fig.appendChild(videoBox);
+      }
+
+      var quote = el('blockquote', '', '\u201c' + t.quote + '\u201d');
+      fig.appendChild(quote);
+      fig.appendChild(el('figcaption', '', [t.name, t.role].filter(Boolean).join(', ')));
+      proof.appendChild(fig);
+    });
   }
 
   // -------------------------------------------------------------------------
