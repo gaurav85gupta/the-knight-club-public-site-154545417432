@@ -318,7 +318,14 @@ html[data-site-theme="light"] .oc-hero-meta{
   margin: 0 auto var(--space-4);
 }
 @media (max-width: 760px) { .oc-proof{ grid-template-columns:repeat(2, minmax(0, 1fr)); max-width: 520px; } }
-@media (max-width: 520px) { .oc-proof{ grid-template-columns: 1fr; max-width: 320px; } }
+/* Below 520px, a single ~320px-wide card left the embedded video only
+   ~288px wide after its own padding — too narrow for the Bunny player's
+   full control bar (play, time, volume slider, settings, open,
+   fullscreen all in one row), so the controls overlapped/got clipped
+   right at the card edge. The card now uses the full available mobile
+   width (same pattern as the main testimonials page's .tm-grid at this
+   size) so the video embed — and its control bar — has real room. */
+@media (max-width: 520px) { .oc-proof{ grid-template-columns: 1fr; max-width: 100%; } }
 
 /* Smaller card variant for this section only — same markup/classes as the
    testimonials page, just scaled down (less padding, shorter quote clamp,

@@ -522,23 +522,27 @@
   .pub-footer .footer-contact { grid-column: 1 / -1; }
 }
 @media (max-width: 480px) {
-  /* Single-column stack (brand → Explore → Account). Previously used the
-     same var(--space-8) row gap as the 768px 2-column layout, which read
-     as cramped once everything is vertical — brand copy, the "Explore"
-     heading, and its links all sat the same distance apart as individual
-     links within a column, with nothing marking where one section ends
-     and the next begins. */
-  .pub-footer .footer-grid { grid-template-columns: 1fr; row-gap: var(--space-10); }
-  /* Section headings ("Explore", "Account") get a bit more breathing
-     room above their own links, and a visible rule above the Explore
-     block separates it from the brand/tagline block before it — the
-     Account block already gets equivalent separation from row-gap. */
+  /* Compact single-column stack (brand → Explore → Account → Contact).
+     The previous version used the same generous row-gap/heading-margin/
+     link-margin values as desktop at every level (section gap, heading-
+     to-links gap, link-to-link gap), which compound across four stacked
+     sections into a footer far taller than a mobile footer needs to be.
+     Tightened throughout; still clearly grouped via the divider rules,
+     just without the extra air at each level. */
+  .pub-footer { padding: var(--space-8) 0 var(--space-6); }
+  .pub-footer .footer-grid { grid-template-columns: 1fr; row-gap: var(--space-6); margin-bottom: var(--space-6); }
+  .pub-footer .footer-brand p { margin-top: var(--space-2); font-size: 0.85rem; }
+  /* Section headings ("Explore", "Account", "Contact") get a visible
+     rule above each block to mark where one section ends and the next
+     begins, with tighter spacing than the desktop/tablet version since
+     everything here is already visually separated by being full-width. */
   .pub-footer .footer-col:not(.footer-brand) {
-    padding-top: var(--space-6);
+    padding-top: var(--space-4);
     border-top: 1px solid var(--color-border-soft);
   }
-  .pub-footer .footer-col h4 { margin-bottom: var(--space-4); }
-  .pub-footer .footer-col a:not(.brand) { margin-bottom: var(--space-4); }
+  .pub-footer .footer-col h4 { margin-bottom: var(--space-2); font-size: 0.68rem; }
+  .pub-footer .footer-col a:not(.brand) { margin-bottom: var(--space-2); font-size: 0.9rem; }
+  .pub-footer .footer-bottom { padding-top: var(--space-4); }
 }
 
 /* ==========================================================================

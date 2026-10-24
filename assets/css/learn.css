@@ -531,26 +531,25 @@
     display: none;
   }
 
-  /* Nav stays on one row: "My Learning" / "Dashboard" shrink to fit next
-     to the content toggle, theme switch and sign-out instead of wrapping
-     to a second header row like before. */
+  /* Five controls (Course content, My Learning, Dashboard, theme toggle,
+     Sign out) never fit one row on a phone without clipping or
+     overlapping — that's the bug: "My Learning" was getting squeezed
+     out under "Dashboard". Instead the row wraps to two clean rows: the
+     primary action (Course content) plus theme/sign-out stay on row one,
+     flush right; My Learning / Dashboard drop to their own row directly
+     underneath, still fully readable and still one tap away. Nothing
+     overlaps, nothing is clipped, nothing scrolls out of reach. */
   .learn-header-nav {
     grid-column: unset;
     justify-content: flex-end;
-    flex-wrap: nowrap;
-    gap: var(--space-2);
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
     padding-top: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .learn-header-nav::-webkit-scrollbar {
-    display: none;
   }
 
   .learn-header-nav a:not(.btn) {
-    font-size: 0.72rem;
-    flex-shrink: 0;
+    font-size: 0.78rem;
+    order: 3;
   }
 
   .learn-sidebar-toggle {
@@ -559,13 +558,17 @@
     gap: var(--space-1);
     padding: var(--space-2) var(--space-3);
     font-size: 0.78rem;
-    flex-shrink: 0;
+    order: 1;
+  }
+
+  #theme-toggle-slot {
+    order: 2;
   }
 
   #logout-btn {
     padding: var(--space-2) var(--space-3);
     font-size: 0.78rem;
-    flex-shrink: 0;
+    order: 2;
   }
 
   /* ---- Shell: single column, no side gutter waste ---- */
@@ -601,6 +604,14 @@
     padding: var(--space-3) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
     transform: translateY(100%);
     transition: transform var(--dur-base) var(--ease-out);
+    /* Explicit scroll container (not just inherited from the desktop
+     * rule): on some mobile browsers a flex child's `flex:1` can fight
+     * with a `max-height` ancestor and stop collapsing/scrolling
+     * correctly. Spelling it out here guarantees every module and lesson
+     * in the curriculum is reachable by scrolling the sheet, however
+     * long the course list is, instead of being clipped at 78vh. */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .learn-sidebar.is-open {
@@ -667,16 +678,15 @@
     font-size: 0.8rem;
   }
 
-  /* Video: pulled out to the full viewport width, square corners, so it
-     reads as a proper mobile video player rather than a shrunk desktop
-     card. */
+  /* Video stays inset within the page's own side padding (NOT pulled
+     edge-to-edge). Bunny's own player draws its control bar (play,
+     volume, scrubber, settings, open, fullscreen) with icons anchored
+     right at the iframe's left/right edge — stretching the video flush
+     against the screen edge left those icons with no breathing room and
+     made them read as clipped/cut off right where the bezel/edge-gesture
+     area starts. Keeping the existing card margin here is what keeps
+     every control fully visible and tappable. */
   .lesson-video-wrap {
-    margin-left: calc(-1 * var(--space-4));
-    margin-right: calc(-1 * var(--space-4));
-    width: calc(100% + var(--space-4) * 2);
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
     margin-bottom: var(--space-5);
   }
 
@@ -806,12 +816,6 @@
 @media (max-width: 480px) {
   .learn-content {
     padding: var(--space-4) var(--space-3) var(--space-5);
-  }
-
-  .lesson-video-wrap {
-    margin-left: calc(-1 * var(--space-3));
-    margin-right: calc(-1 * var(--space-3));
-    width: calc(100% + var(--space-3) * 2);
   }
 
   .lesson-action-bar {
