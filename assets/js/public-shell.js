@@ -46,6 +46,14 @@ const PublicShell = (() => {
   const SITE_TAGLINE =
     'A premium platform for learning new skills through expert-led courses.';
 
+  // Verified contact details — same values already shown on
+  // pages/contact.html (both in its "Direct contact" section and its
+  // Organization/ContactPoint JSON-LD), reused here rather than
+  // re-typed so the two never drift apart.
+  const SITE_EMAIL = 'theknightclub2007@gmail.com';
+  const SITE_PHONE_DISPLAY = '+91 89535 47403';
+  const SITE_PHONE_TEL = '+918953547403';
+
   // `course.html` is a page under /pages/ but isn't one of the six primary
   // nav items; it should still highlight "Courses" as its parent.
   const PARENT = { course: 'courses' };
@@ -239,7 +247,25 @@ const PublicShell = (() => {
 
     accountNav.append(guest, user);
 
-    grid.append(brandCol, exploreNav, accountNav);
+    // Contact column: verified email + phone (see SITE_EMAIL/SITE_PHONE_*
+    // above), reachable as real tel:/mailto: links from every page's
+    // footer instead of only being findable via the Contact page.
+    const contactCol = el('div', 'footer-col footer-contact');
+    const contactHeading = el('h4');
+    contactHeading.textContent = 'Contact';
+    contactCol.appendChild(contactHeading);
+
+    const emailLink = el('a');
+    emailLink.href = `mailto:${SITE_EMAIL}`;
+    emailLink.textContent = SITE_EMAIL;
+    contactCol.appendChild(emailLink);
+
+    const phoneLink = el('a');
+    phoneLink.href = `tel:${SITE_PHONE_TEL}`;
+    phoneLink.textContent = SITE_PHONE_DISPLAY;
+    contactCol.appendChild(phoneLink);
+
+    grid.append(brandCol, exploreNav, accountNav, contactCol);
 
     const bottom = el('div', 'footer-bottom');
     const copy = el('p');

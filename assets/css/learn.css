@@ -499,53 +499,130 @@
 }
 
 /* ==========================================================================
-   Responsive — mobile reflows top-to-bottom; sidebar becomes a full-width
-   drawer opened via "Course content".
+   MOBILE (≤1024px) — purpose-built layout, not a squeezed desktop view.
+   Everything in this block is scoped to the media query only; nothing here
+   touches desktop rules above. Design goals:
+     - compact sticky header, course-content opens as a bottom sheet
+     - edge-to-edge video, no wasted side gutters
+     - "Up Next" is the single clear next action right under the video
+     - Mark-complete / Prev / Next collapse into one thumb-reachable,
+       sticky bottom bar instead of three stacked full-width buttons
    ========================================================================== */
 
 @media (max-width: 1024px) {
+
+  /* ---- Header: compact single row, icon-first ---- */
+
   .learn-header-inner {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto auto;
     padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+    min-height: 56px;
   }
 
+  .learn-header-brand {
+    font-size: var(--font-size-sm);
+  }
+
+  /* The course title doesn't fit a two-column compact header without
+     crowding the nav controls — it's already shown as the lesson's own
+     breadcrumb just below, so it stays hidden here as before. */
   .learn-header-course-title {
     display: none;
   }
 
+  /* Nav stays on one row: "My Learning" / "Dashboard" shrink to fit next
+     to the content toggle, theme switch and sign-out instead of wrapping
+     to a second header row like before. */
   .learn-header-nav {
-    grid-column: 1 / -1;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    padding-top: var(--space-2);
+    grid-column: unset;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+    padding-top: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .learn-header-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .learn-header-nav a:not(.btn) {
+    font-size: 0.72rem;
+    flex-shrink: 0;
   }
 
   .learn-sidebar-toggle {
     display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.78rem;
+    flex-shrink: 0;
   }
+
+  #logout-btn {
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+
+  /* ---- Shell: single column, no side gutter waste ---- */
 
   .learn-shell {
     display: block;
-    padding: var(--space-4) var(--space-4) var(--space-12);
+    padding: 0 0 var(--space-10);
   }
+
+  .learn-state {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  /* ---- Course content: bottom sheet instead of a left drawer ----
+     Slides up from the bottom edge (thumb-natural on a phone) and is
+     capped below full height so the backdrop above it stays tappable
+     to dismiss. */
 
   .learn-sidebar {
     position: fixed;
-    top: 0;
+    top: auto;
+    bottom: 0;
     left: 0;
-    height: 100vh;
-    width: min(340px, 88vw);
+    right: 0;
+    width: auto;
+    height: auto;
+    max-height: 78vh;
     z-index: 60;
-    transform: translateX(-100%);
-    transition: transform var(--dur-base) var(--ease-out);
-    box-shadow: var(--shadow-lg);
     border: none;
-    border-radius: 0;
+    border-top: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    box-shadow: var(--shadow-float);
+    padding: var(--space-3) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+    transition: transform var(--dur-base) var(--ease-out);
   }
 
   .learn-sidebar.is-open {
-    transform: translateX(0);
+    transform: translateY(0);
+  }
+
+  /* Drag-handle affordance at the top of the sheet. */
+  .learn-sidebar-head {
+    position: relative;
+    padding-top: var(--space-4);
+  }
+
+  .learn-sidebar-head::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--color-border-strong);
   }
 
   .learn-sidebar-backdrop {
@@ -560,52 +637,199 @@
     display: none;
   }
 
+  /* ---- Lesson content: edge-to-edge, card chrome dropped on mobile ---- */
+
   .learn-content {
-    padding: var(--space-6) var(--space-4);
-    margin-top: var(--space-4);
+    padding: var(--space-5) var(--space-4) var(--space-6);
+    margin-top: 0;
     max-width: 100%;
-    border-radius: var(--radius-md);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .lesson-breadcrumb {
+    font-size: 0.72rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .lesson-header {
+    margin-bottom: var(--space-4);
   }
 
   .lesson-title {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
+    line-height: 1.3;
   }
 
-  .lesson-action-bar {
+  .lesson-meta {
+    font-size: 0.8rem;
+  }
+
+  /* Video: pulled out to the full viewport width, square corners, so it
+     reads as a proper mobile video player rather than a shrunk desktop
+     card. */
+  .lesson-video-wrap {
+    margin-left: calc(-1 * var(--space-4));
+    margin-right: calc(-1 * var(--space-4));
+    width: calc(100% + var(--space-4) * 2);
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin-bottom: var(--space-5);
+  }
+
+  .lesson-locked {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  /* ---- Up Next: the one clear next action, right under the video ----
+     #lesson-panel becomes a flex column ONLY on mobile so `order` can
+     promote this card above the progress note / action bar without any
+     HTML or JS change. Desktop keeps its normal block flow (order has no
+     effect outside this media query). */
+  #lesson-panel {
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
   }
 
-  .lesson-nav-row {
-    margin-left: 0;
-    flex-direction: column;
+  /* Row layout: eyebrow + title form a shrinkable text column on the
+     left, the Continue button sits fixed-width on the right — like a
+     native "now playing next" strip. */
+  .up-next-card {
+    order: -1;
+    margin: 0 0 var(--space-5);
+    padding: var(--space-4);
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    border-radius: var(--radius-md);
   }
 
-  .lesson-nav-row .btn {
+  .up-next-eyebrow {
     width: 100%;
+    flex: 0 0 100%;
+    order: 1;
+    font-size: 0.65rem;
+  }
+
+  .up-next-title {
+    flex: 1 1 auto;
+    order: 2;
+    min-width: 0;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #up-next-continue {
+    order: 3;
+    flex-shrink: 0;
+    padding: var(--space-2) var(--space-4);
+    font-size: 0.8rem;
+  }
+
+  .lesson-progress-note {
+    order: 0;
+    font-size: 0.8rem;
+  }
+
+  #lesson-description-wrap {
+    order: 0;
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-5);
+  }
+
+  /* ---- Bottom action bar: sticky, thumb-reachable, one row ----
+     Mark-complete / Previous / Next no longer stack as three full-width
+     buttons in the page flow — they dock to the bottom of the screen like
+     a native player's control bar, always one tap away without scrolling. */
+  .lesson-action-bar {
+    order: 1;
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    margin: var(--space-2) calc(-1 * var(--space-4)) 0;
+    padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    background: var(--color-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--color-border-soft);
+    border-bottom: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--space-2);
   }
 
   #mark-complete-btn {
-    width: 100%;
+    flex: 0 0 auto;
+    width: auto;
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.78rem;
+    white-space: nowrap;
   }
 
-  .up-next-card {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
+  .lesson-nav-row {
+    flex: 1;
+    flex-direction: row;
+    margin-left: auto;
+    gap: var(--space-2);
+  }
+
+  .lesson-nav-row .btn {
+    width: auto;
+    flex: 1;
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.85rem;
+  }
+
+  /* Previous stays compact (its label can shrink/wrap less) so Next —
+     the primary forward action — gets the lion's share of the row. */
+  #nav-prev {
+    flex: 0 0 auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  #nav-next {
+    flex: 1 1 auto;
   }
 }
 
 @media (max-width: 480px) {
-  .learn-shell {
-    padding: var(--space-3) var(--space-3) var(--space-10);
+  .learn-content {
+    padding: var(--space-4) var(--space-3) var(--space-5);
   }
 
-  .learn-content {
-    padding: var(--space-4) var(--space-3);
+  .lesson-video-wrap {
+    margin-left: calc(-1 * var(--space-3));
+    margin-right: calc(-1 * var(--space-3));
+    width: calc(100% + var(--space-3) * 2);
+  }
+
+  .lesson-action-bar {
+    margin-left: calc(-1 * var(--space-3));
+    margin-right: calc(-1 * var(--space-3));
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
   }
 
   .lesson-locked {
-    padding: var(--space-10) var(--space-4);
+    padding: var(--space-8) var(--space-3);
+  }
+
+  .up-next-card {
+    padding: var(--space-3);
+  }
+
+  .up-next-title {
+    font-size: 0.85rem;
   }
 }

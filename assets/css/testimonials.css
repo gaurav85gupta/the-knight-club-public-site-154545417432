@@ -132,17 +132,21 @@
    black bars inside this 16:9 box — that fill color is the player's
    own background, not ours, so it can never be recolored with CSS
    (the player is a cross-origin iframe; we can't reach its internals).
-   Scaling the iframe up and cropping it (the standard "zoom to fill"
-   trick) removes the bars entirely instead of trying to theme them.
-   This crops the top/bottom off portrait footage, which is the
-   accepted trade-off for a consistent, bar-free card across every
-   testimonial regardless of the source video's orientation. */
+   The iframe used to be scaled up 178% and shifted -39% to zoom-crop
+   those bars away, but the Bunny player's own control bar (play/pause,
+   scrubber, fullscreen) scales up right along with the video — so the
+   controls got pushed outside this box's visible edge and spilled onto
+   the card below/beside it (both here and on the One Percent Club page,
+   which reuses this same class; same bug on mobile too, since nothing
+   below overrides this rule). The iframe now simply fills the box
+   exactly: the player's own letterbox bars may show on portrait source
+   footage, but every control stays inside the card where a student can
+   actually reach it. */
 .tm-video-embed iframe {
   position: absolute;
-  width: 178%;
-  height: 178%;
-  left: -39%;
-  top: -39%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 0;
   /* Hidden until onload fires (see testimonials.js) — the placeholder
      underneath is what's visible until then, so the box never shows

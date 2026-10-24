@@ -467,9 +467,15 @@
 }
 .pub-footer .footer-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: var(--space-12);
   margin-bottom: var(--space-12);
+}
+/* Contact column (email + phone) reuses every .footer-col/h4/a rule above —
+   it's just a fourth column, not a new component. Links wrap instead of
+   overflowing since an email address can run long in a narrow column. */
+.pub-footer .footer-contact a {
+  overflow-wrap: anywhere;
 }
 .pub-footer .footer-brand p {
   margin: var(--space-4) 0 0;
@@ -511,9 +517,28 @@
   .pub-footer { padding-top: var(--space-12); }
   .pub-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
   .pub-footer .footer-brand { grid-column: 1 / -1; }
+  /* Contact now sits alongside Explore/Account as the third 2-column
+     tile instead of being forced into the same row as either of them. */
+  .pub-footer .footer-contact { grid-column: 1 / -1; }
 }
 @media (max-width: 480px) {
-  .pub-footer .footer-grid { grid-template-columns: 1fr; }
+  /* Single-column stack (brand → Explore → Account). Previously used the
+     same var(--space-8) row gap as the 768px 2-column layout, which read
+     as cramped once everything is vertical — brand copy, the "Explore"
+     heading, and its links all sat the same distance apart as individual
+     links within a column, with nothing marking where one section ends
+     and the next begins. */
+  .pub-footer .footer-grid { grid-template-columns: 1fr; row-gap: var(--space-10); }
+  /* Section headings ("Explore", "Account") get a bit more breathing
+     room above their own links, and a visible rule above the Explore
+     block separates it from the brand/tagline block before it — the
+     Account block already gets equivalent separation from row-gap. */
+  .pub-footer .footer-col:not(.footer-brand) {
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border-soft);
+  }
+  .pub-footer .footer-col h4 { margin-bottom: var(--space-4); }
+  .pub-footer .footer-col a:not(.brand) { margin-bottom: var(--space-4); }
 }
 
 /* ==========================================================================
