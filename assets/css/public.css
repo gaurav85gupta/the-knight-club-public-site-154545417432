@@ -114,8 +114,11 @@
 }
 .pub-header .brand .brand-mark,
 .pub-footer .brand .brand-mark {
-  width: 32px;
-  height: 32px;
+  /* Logo emblem, enlarged from the original 32px (was set via both the
+     img width/height attributes in public-shell.js and this CSS — CSS
+     wins, so bumping it here is enough without touching the JS). */
+  width: 42px;
+  height: 42px;
   flex-shrink: 0;
   object-fit: contain;
   filter: drop-shadow(0 0 10px rgba(160, 106, 255, 0.45));
