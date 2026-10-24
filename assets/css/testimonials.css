@@ -118,11 +118,22 @@
   overflow: hidden;
   background: var(--color-surface-2);
 }
+/* Portrait/vertical source footage (common for phone-recorded video
+   testimonials) makes the Bunny player letterbox itself with its own
+   black bars inside this 16:9 box — that fill color is the player's
+   own background, not ours, so it can never be recolored with CSS
+   (the player is a cross-origin iframe; we can't reach its internals).
+   Scaling the iframe up and cropping it (the standard "zoom to fill"
+   trick) removes the bars entirely instead of trying to theme them.
+   This crops the top/bottom off portrait footage, which is the
+   accepted trade-off for a consistent, bar-free card across every
+   testimonial regardless of the source video's orientation. */
 .tm-video-embed iframe {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 178%;
+  height: 178%;
+  left: -39%;
+  top: -39%;
   border: 0;
 }
 
@@ -203,11 +214,10 @@
 
 .tm-featured-media { width: 100%; }
 /* Video or photo column: fixed, card-sized — never stretches to the
-   quote's width or to the page's width. object-fit: cover crops the
-   iframe/video to the 16:9 box instead of letterboxing it, which is
-   what was causing the black-bars-on-white panel look. */
+   quote's width or to the page's width. The zoom-and-crop fix for the
+   player's own black bars lives on .tm-video-embed iframe above and
+   applies here too since this is just that same element. */
 .tm-featured-media .tm-video-embed { max-width: 100%; margin: 0; }
-.tm-featured-media .tm-video-embed iframe { object-fit: cover; }
 .tm-featured-photo { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface-2); }
 .tm-featured-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
@@ -273,7 +283,11 @@
 @media (prefers-reduced-motion: reduce) { .tm-chip, .tm-course-link { transition: none; } .tm-course-link:hover { transform: none; } }
 
 /* Phase 4b — themes, share prompt, program tag */
-.tm-program { display: inline-block; width: fit-content; margin-top: var(--space-1); padding: .1rem .6rem; border: 1px solid rgba(217,185,106,.4); border-radius: var(--radius-full); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #d9b96a; }
+.tm-program { display: inline-block; width: fit-content; margin-top: var(--space-1); padding: .1rem .6rem; border: 1px solid rgba(217,185,106,.4); border-radius: var(--radius-full); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #d9b96a; background: rgba(217,185,106,.12); }
+/* The gold-on-dark combination above has almost no contrast on the
+   light theme's pale card background — this darkens both the text and
+   the border so the badge stays legible when data-theme="light". */
+html[data-theme="light"] .tm-program { color: #8a6d1f; border-color: rgba(138,109,31,.45); background: rgba(217,185,106,.18); }
 .tm-themes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 var(--space-12); }
 .tm-themes li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); padding: var(--space-5) 0; border-bottom: 1px solid var(--color-border-soft); }
 .tm-themes span { font-size: clamp(1.2rem, 2.4vw, 1.75rem); letter-spacing: -0.01em; }
