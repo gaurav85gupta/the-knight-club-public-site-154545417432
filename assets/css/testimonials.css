@@ -172,9 +172,13 @@
 .tm-intro-copy a, .tm-course a { color: var(--color-lavender); border-bottom: 1px solid var(--color-border-strong); }
 
 /* featured: large editorial quote, deliberately unlike the grid */
-.tm-featured-fig { margin: 0; padding: var(--space-10) 0 var(--space-10) var(--space-8); border-left: 2px solid var(--color-accent-600); }
+.tm-featured-fig { margin: 0; max-width: 680px; padding: var(--space-10) 0 var(--space-10) var(--space-8); border-left: 2px solid var(--color-accent-600); }
 .tm-featured-quote { margin: 0 0 var(--space-8); }
-.tm-featured-quote p { margin: 0; font-family: var(--font-family-base); font-style: normal; font-weight: 500; font-size: clamp(1.6rem, 3.6vw, 2.75rem); line-height: 1.3; color: var(--color-text); max-width: 32ch; }
+.tm-featured-quote p { margin: 0; font-family: var(--font-family-base); font-style: normal; font-weight: 500; font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.35; color: var(--color-text); max-width: 32ch; }
+/* Video inside the featured block is capped so one item never balloons
+   to the full container width — same intent as .tm-card's video, just
+   scoped to the editorial figure. */
+.tm-featured-fig .tm-video-embed { max-width: 420px; margin-bottom: var(--space-6); }
 
 /* card extras (avatar fallback is text, never a generated photo) */
 .tm-avatar-text { display: inline-flex; align-items: center; justify-content: center; font-weight: 500; color: var(--color-lavender); background: var(--color-accent-50); }
@@ -206,7 +210,7 @@
 
 .tm-stories[hidden], .tm-featured[hidden], .tm-longform[hidden] { display: none; }
 @media (max-width: 768px) { .tm-intro-grid, .tm-story { grid-template-columns: 1fr; gap: var(--space-6); } .tm-course-list { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .tm-course-list { grid-template-columns: 1fr; } .tm-featured-fig { padding-left: var(--space-5); } }
+@media (max-width: 480px) { .tm-course-list { grid-template-columns: 1fr; } .tm-featured-fig { padding-left: var(--space-5); max-width: 100%; } .tm-featured-fig .tm-video-embed { max-width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .tm-chip, .tm-course-link { transition: none; } .tm-course-link:hover { transform: none; } }
 
 /* Phase 4b — themes, share prompt, program tag */
