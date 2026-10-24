@@ -127,9 +127,14 @@
       background before something has rendered into it. */
   function videoHtml(t) {
     if (!t.video) return '';
+    // autoplay intentionally left OUT of `allow` — without this permission
+    // grant the browser blocks the iframe from autoplaying, so the video
+    // just sits on the placeholder/first frame until the visitor taps play.
+    // (Bunny's own embed may still *request* autoplay; omitting the
+    // permission is what actually stops it, not a query param on the URL.)
     return '<div class="tm-video-embed">' +
       '<div class="tm-video-placeholder" aria-hidden="true"><span class="tm-video-play">&#9658;</span></div>' +
-      '<iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '" onload="this.classList.add(\'is-loaded\')"></iframe>' +
+      '<iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '" onload="this.classList.add(\'is-loaded\')"></iframe>' +
       '</div>';
   }
 

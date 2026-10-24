@@ -82,7 +82,11 @@
     // embedUrl is a Bunny player URL; set it via attribute, never via
     // innerHTML, to keep it inert until the browser parses it as a URL.
     iframe.setAttribute('src', embedUrl);
-    iframe.setAttribute('allow', 'accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen');
+    // autoplay intentionally left OUT of `allow` (see "No muted autoplay"
+    // note above) — without this permission grant the browser blocks the
+    // iframe from autoplaying, so it sits on its first frame until the
+    // visitor taps play.
+    iframe.setAttribute('allow', 'accelerometer; gyroscope; encrypted-media; picture-in-picture; fullscreen');
     iframe.setAttribute('allowfullscreen', '');
     iframe.setAttribute('loading', 'lazy');
     iframe.setAttribute('title', PLACEHOLDER_TITLE);

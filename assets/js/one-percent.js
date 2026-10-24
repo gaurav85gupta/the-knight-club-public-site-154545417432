@@ -514,7 +514,10 @@
           videoContainer.innerHTML = ''; // clear any previous
           var iframe = document.createElement('iframe');
           iframe.src = embedUrl;
-          iframe.setAttribute('allow', 'accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;');
+          // autoplay intentionally left OUT of `allow` — without this
+          // permission grant the browser blocks the iframe from
+          // autoplaying on page load.
+          iframe.setAttribute('allow', 'accelerometer; gyroscope; encrypted-media; picture-in-picture;');
           iframe.setAttribute('allowfullscreen', 'true');
           iframe.setAttribute('loading', 'lazy');
           iframe.setAttribute('title', '1% Club intro video');
@@ -963,7 +966,8 @@
         videoBox.className = 'oc-proof-video';
         var iframe = document.createElement('iframe');
         iframe.src = t.video.embedUrl;
-        iframe.setAttribute('allow', 'accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;');
+        // autoplay intentionally left OUT of `allow` — see note above.
+        iframe.setAttribute('allow', 'accelerometer; gyroscope; encrypted-media; picture-in-picture;');
         iframe.setAttribute('allowfullscreen', 'true');
         iframe.setAttribute('loading', 'lazy');
         iframe.setAttribute('title', 'Video testimonial from ' + t.name);
