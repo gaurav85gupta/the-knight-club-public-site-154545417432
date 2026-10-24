@@ -245,6 +245,28 @@ html[data-site-theme="light"] .pub-cta-panel .btn.btn-outline:hover {
   color: #fff;
   border-color: #fff;
 }
+/* .btn-ghost was missing from this panel-override block — on light theme
+   it kept the page's normal ghost colours (--bx-g-fg: #3B2265, a dark
+   purple, with --bx-g-bd: transparent), which is dark text with no border
+   sitting on this same dark purple panel: effectively invisible. Same
+   bright/readable treatment as .btn-outline above, so it's visible here
+   too. */
+html[data-site-theme="light"] .club-panel .btn.btn-ghost,
+html[data-site-theme="light"] .cta-panel .btn.btn-ghost,
+html[data-site-theme="light"] .pub-cta-panel .btn.btn-ghost,
+html[data-site-theme="light"] .feature-panel .btn.btn-ghost {
+  background: transparent;
+  border-color: rgba(232, 210, 240, 0.45);
+  color: #fff;
+}
+html[data-site-theme="light"] .club-panel .btn.btn-ghost:hover,
+html[data-site-theme="light"] .cta-panel .btn.btn-ghost:hover,
+html[data-site-theme="light"] .pub-cta-panel .btn.btn-ghost:hover,
+html[data-site-theme="light"] .feature-panel .btn.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: #fff;
+  border-color: #fff;
+}
 
 /* ==========================================================================
    DO NOT ADD BUTTON COLOUR RULES ELSEWHERE
