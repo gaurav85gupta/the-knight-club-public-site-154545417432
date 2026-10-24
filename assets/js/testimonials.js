@@ -82,7 +82,23 @@
       ? { slug: str(raw.course.slug), title: str(raw.course.title) } : null;
     var d = raw.createdAt ? new Date(raw.createdAt) : null;
     var type = str(raw.type).toUpperCase();
-    var video = (type === 'VIDEO' && raw.video && typeof raw.video === 'object' && safeEmbedUrl(raw.video.embedUrl))
+    // A signed embedUrl is only valid until expiresAt. If it's already
+    // past that — or expiresAt is missing/unparseable, which we can't
+    // tell apart from "already expired" — the Bunny player renders its
+    // own "403 Forbidden" page inside the iframe instead of video: a
+    // dead, broken-looking dark box rather than no video at all. An
+    // iframe's onload fires for that 403 response too (it's still a
+    // successfully-delivered page as far as the browser is concerned),
+    // so onload can't be used to catch this after the fact — the only
+    // reliable guard is to never point the iframe at a URL we aren't
+    // confident is still live. Treating "no expiresAt" as "expired"
+    // (fail closed) rather than "assume it's fine" (fail open) is the
+    // deliberate choice here: a missing video is just a missing video
+    // (clean fallback below), where a guessed-wrong "still valid" is
+    // the exact dark 403 box this exists to prevent.
+    var exp = raw.video && typeof raw.video === 'object' ? Date.parse(raw.video.expiresAt) : NaN;
+    var notExpired = !isNaN(exp) && exp > Date.now();
+    var video = (type === 'VIDEO' && raw.video && typeof raw.video === 'object' && notExpired && safeEmbedUrl(raw.video.embedUrl))
       ? { embedUrl: safeEmbedUrl(raw.video.embedUrl) } : null;
     return {
       id: raw.id, quote: quote, name: name, role: str(raw.role), topic: str(raw.topic), program: str(raw.program), course: course,
@@ -98,10 +114,23 @@
     return '<span class="tm-avatar tm-avatar-text" aria-hidden="true">' + esc(t.name.charAt(0).toUpperCase()) + '</span>';
   }
 
-  /** VIDEO testimonials get an embedded iframe above the quote; everything else is unchanged. */
+  /** VIDEO testimonials get an embedded iframe above the quote; everything else is unchanged.
+      The iframe starts hidden behind a themed placeholder (a play icon on
+      the card's own surface color) and only becomes visible once it has
+      actually loaded — this keeps the slot looking like part of the card
+      in both themes instead of a bare dark rectangle while the player
+      (or an error inside it) is still rendering. A cross-origin iframe's
+      onload fires for a 403 response too, since that's still a
+      successfully-delivered page as far as the browser is concerned, so
+      this intentionally doesn't try to detect that case — it only
+      guards against the box ever showing its raw, un-skinned dark
+      background before something has rendered into it. */
   function videoHtml(t) {
     if (!t.video) return '';
-    return '<div class="tm-video-embed"><iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '"></iframe></div>';
+    return '<div class="tm-video-embed">' +
+      '<div class="tm-video-placeholder" aria-hidden="true"><span class="tm-video-play">&#9658;</span></div>' +
+      '<iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '" onload="this.classList.add(\'is-loaded\')"></iframe>' +
+      '</div>';
   }
 
   function metaHtml(t) {

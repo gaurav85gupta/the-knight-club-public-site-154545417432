@@ -100,8 +100,11 @@
   padding: var(--space-8);
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(23, 17, 42, 0.75), rgba(15, 10, 28, 0.75));
-  transition: border-color var(--dur-base) var(--ease-out);
+  /* Token-driven card surface — flips with the theme instead of the old
+     hardcoded dark-purple rgba() gradient, which stayed black-ish even
+     under html[data-site-theme="light"]. */
+  background: linear-gradient(180deg, var(--color-scrim-card), var(--color-surface));
+  transition: border-color var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out);
 }
 
 .tm-card:hover { border-color: var(--color-border-strong); }
@@ -117,6 +120,12 @@
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--color-surface-2);
+  /* A visible frame around the box so it always reads as "a themed
+     media slot" rather than a bare dark rectangle sitting on top of
+     the card — the video player's own background can't be recolored
+     (see below), so this border is what keeps the box feeling like
+     part of the card instead of a foreign dark patch, in both themes. */
+  border: 1px solid var(--color-border-soft);
 }
 /* Portrait/vertical source footage (common for phone-recorded video
    testimonials) makes the Bunny player letterbox itself with its own
@@ -135,6 +144,36 @@
   left: -39%;
   top: -39%;
   border: 0;
+  /* Hidden until onload fires (see testimonials.js) — the placeholder
+     underneath is what's visible until then, so the box never shows
+     a bare, un-themed dark rectangle while the player is rendering. */
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.tm-video-embed iframe.is-loaded { opacity: 1; }
+
+/* Themed placeholder: same surface color as the card, visible until
+   the iframe reports loaded. Light and dark both use the card's own
+   --color-surface-2, so this never reads as a foreign dark patch. */
+.tm-video-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-2);
+}
+.tm-video-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-accent-600);
+  color: #fff;
+  font-size: 0.9rem;
+  padding-left: 3px;
 }
 
 /* Quote text is clamped to a fixed max height with its own scroll —
@@ -206,7 +245,9 @@
   border: 1px solid var(--color-border-soft);
   border-left: 3px solid var(--color-accent-600);
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(23, 17, 42, 0.75), rgba(15, 10, 28, 0.75));
+  /* Same fix as .tm-card above: token-driven, theme-aware surface instead
+     of a hardcoded dark rgba() gradient that ignored light mode. */
+  background: linear-gradient(180deg, var(--color-scrim-card), var(--color-surface));
 }
 /* No media (written testimonial): quote takes the full card, no empty
    280px gutter on the left. */
