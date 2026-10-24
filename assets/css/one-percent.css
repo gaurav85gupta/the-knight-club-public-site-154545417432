@@ -296,7 +296,7 @@ html[data-site-theme="light"] .oc-hero-meta{
    ========================================================================= */
 .oc-proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-4);margin-bottom:var(--space-4)}
 .oc-proof figure{margin:0;padding:var(--space-6);border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);background:var(--color-surface)}
-.oc-proof blockquote{margin:0 0 var(--space-4);font:italic 500 1.35rem/1.4 var(--serif);color:var(--cream)}
+.oc-proof blockquote{margin:0 0 var(--space-4);font:italic 500 1.35rem/1.4 var(--font-family-base);color:var(--cream)}
 .oc-proof figcaption{color:var(--color-text-muted);font-size:.85rem}
 /* Phase 5: VIDEO testimonials in the 1% Club proof section */
 .oc-proof-video{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-md);overflow:hidden;background:var(--color-surface-2);margin-bottom:var(--space-4)}
