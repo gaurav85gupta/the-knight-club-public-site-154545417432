@@ -132,9 +132,17 @@
     // just sits on the placeholder/first frame until the visitor taps play.
     // (Bunny's own embed may still *request* autoplay; omitting the
     // permission is what actually stops it, not a query param on the URL.)
+    // onload: mark the iframe loaded AND hide the placeholder sibling
+    // directly via JS (belt-and-suspenders alongside the CSS :has()
+    // rule in testimonials.css) — on any browser without :has() support
+    // the placeholder would otherwise keep sitting on top of the iframe
+    // and silently swallow taps meant for the player's own play/pause/
+    // mute controls, which is worst on mobile where everything is tap-
+    // driven. previousElementSibling is the .tm-video-placeholder div,
+    // always rendered immediately before this iframe.
     return '<div class="tm-video-embed">' +
       '<div class="tm-video-placeholder" aria-hidden="true"><span class="tm-video-play">&#9658;</span></div>' +
-      '<iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '" onload="this.classList.add(\'is-loaded\')"></iframe>' +
+      '<iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '" onload="this.classList.add(\'is-loaded\'); if (this.previousElementSibling) { this.previousElementSibling.style.display = \'none\'; }"></iframe>' +
       '</div>';
   }
 

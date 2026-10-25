@@ -154,11 +154,23 @@
   opacity: 0;
   transition: opacity var(--dur-base) var(--ease-out);
 }
-.tm-video-embed iframe.is-loaded { opacity: 1; }
+.tm-video-embed iframe.is-loaded {
+  opacity: 1;
+  /* Once loaded, this iframe is the thing the visitor interacts with —
+     make sure it's above the placeholder in stacking order too, not
+     just visually opaque, so a tap/click always reaches the Bunny
+     player's own play/pause/mute/fullscreen controls instead of ever
+     landing on the placeholder sitting on top of it. */
+  z-index: 1;
+}
 
 /* Themed placeholder: same surface color as the card, visible until
    the iframe reports loaded. Light and dark both use the card's own
-   --color-surface-2, so this never reads as a foreign dark patch. */
+   --color-surface-2, so this never reads as a foreign dark patch.
+   Once the iframe loads, this is hidden outright (not just covered) so
+   it can never intercept taps/clicks meant for the player's controls —
+   on mobile especially, a dead layer sitting over the iframe is exactly
+   what breaks tapping play/pause or unmute. */
 .tm-video-placeholder {
   position: absolute;
   inset: 0;
@@ -166,6 +178,10 @@
   align-items: center;
   justify-content: center;
   background: var(--color-surface-2);
+  pointer-events: none;
+}
+.tm-video-embed:has(iframe.is-loaded) .tm-video-placeholder {
+  display: none;
 }
 .tm-video-play {
   display: flex;
@@ -195,8 +211,14 @@
    (#oc-proof) and the long-form stories keep their own sizing. */
 .tm-grid .tm-card > .tm-video-embed {
   --tm-bleed: var(--space-8); /* must match .tm-card padding */
-  aspect-ratio: 1 / 1;
-  max-height: 26rem;
+  /* Fixed, compact box — same size for every card regardless of the
+     source video's own orientation (16:9 landscape or 9:16 portrait).
+     A portrait video simply letterboxes (empty space at the sides)
+     inside this box rather than stretching the box taller/wider; that
+     empty space is expected and fine. Reduced from the old 1:1 /
+     26rem box, which made every card unnecessarily tall and bulky. */
+  aspect-ratio: 4 / 5;
+  max-height: 18rem;
   width: calc(100% + 2 * var(--tm-bleed));
   margin: calc(-1 * var(--tm-bleed)) calc(-1 * var(--tm-bleed)) 0;
   /* card has a 1px border and rounded corners but no overflow:hidden, so
