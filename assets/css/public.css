@@ -547,36 +547,55 @@
     font-size: 0.88rem;
   }
 
-  /* Explore + Account go from one link per row to a compact two-column
-     grid, since the old layout (one <a> per full-width row) spent a
-     whole row's height on each of the six Explore links. grid-auto-flow:
-     column fills column 1 top-to-bottom then column 2, so with 6 links
-     and 3 rows this reproduces the Home/Courses/1%-Club | About/
-     Testimonials/Contact pairing without reordering NAV_LINKS. Row/column
-     gap stay equal and small since both axes now carry real content. */
-  .pub-footer .footer-col:not(.footer-brand):not(.footer-contact) {
+  /* Explore: 6 links as a clean 2-column grid instead of 6 full-width
+     rows. The heading gets its OWN explicit row (grid-template-rows'
+     first track) so auto-placed links can never land underneath it —
+     that collision (heading overlapping "Home") was the previous bug.
+     grid-auto-flow: column then fills column 1 top-to-bottom, then
+     column 2, reproducing Home/Courses/1%-Club | About/Testimonials/
+     Contact without reordering NAV_LINKS. minmax(0, 1fr) columns stop
+     a long label (e.g. "Testimonials") from forcing horizontal overflow
+     — grid tracks never exceed the available width even if content
+     wants more, so it wraps onto a second line instead of spilling
+     past the viewport edge. */
+  .pub-footer nav.footer-col {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto repeat(3, auto);
     grid-auto-flow: column;
-    column-gap: var(--space-4);
-    row-gap: var(--space-2);
+    column-gap: var(--space-5);
+    row-gap: var(--space-1);
   }
-  .pub-footer .footer-col:not(.footer-brand):not(.footer-contact) h4 {
+  .pub-footer nav.footer-col h4 {
+    grid-row: 1;
     grid-column: 1 / -1;
   }
-  /* Account normally has only 1–2 links (guest: Login + Get Started, or
-     signed-in: Dashboard alone) — grid-auto-flow: column with a single
-     row of content still lays them out side by side rather than wasting
-     a second row, so this section never gets taller than it needs. */
-  .pub-footer .footer-col:not(.footer-brand):not(.footer-contact) a:not(.brand) {
-    margin-bottom: 0;
+  .pub-footer nav.footer-col a:not(.brand) {
+    min-width: 0;
+    overflow-wrap: break-word;
   }
-  /* Contact (email + phone) stays single-column: a long email address
-     needs its own row width rather than fighting a second column. */
+  /* Account normally holds only 1–2 links (guest: Login + Get Started;
+     signed-in: Dashboard alone) — the 3-row allowance above is simply
+     unused rather than forcing extra height, so this section still
+     never grows taller than its real content. */
+
+  /* Contact (email + phone) stays single-column and gets the same
+     breathing room as the two-column sections, just stacked instead
+     of paired — a long email address needs its own row width rather
+     than fighting a second column. */
   .pub-footer .footer-contact a { margin-bottom: 0; }
   .pub-footer .footer-contact a + a { margin-top: var(--space-2); }
 
   .pub-footer .footer-bottom { padding-top: var(--space-3); }
+
+  /* Premium polish: slightly bolder section labels so "Explore" /
+     "Account" / "Contact" read as deliberate section markers rather
+     than faint afterthoughts, without changing their size, color, or
+     letter-spacing from the desktop/tablet version. */
+  .pub-footer .footer-col h4 {
+    font-weight: 600;
+    opacity: 0.85;
+  }
 }
 
 /* ==========================================================================
