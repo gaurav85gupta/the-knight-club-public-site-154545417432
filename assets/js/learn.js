@@ -279,7 +279,13 @@
         btn.appendChild(durationEl);
 
         btn.addEventListener('click', () => {
-          closeSidebar();
+          // Redesign note: this used to also call closeSidebar() to dismiss
+          // the old mobile drawer after picking a lesson. Course Content is
+          // now inline on the page (never a drawer), so collapsing the
+          // whole section on every lesson click would fight the student
+          // mid-click instead of helping — the curriculum stays exactly as
+          // expanded/collapsed as they left it (spec Phase 7.5: "Maintain
+          // the appropriate expanded module state").
           loadLesson(courseId, lesson.id);
         });
 

@@ -80,10 +80,6 @@
    own grid (not .container), so it needs the same gutter applied here. */
 
 .learn-shell {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  align-items: start;
-  gap: var(--space-8);
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--space-6) var(--space-6) var(--space-16);
@@ -94,7 +90,69 @@
   display: none;
 }
 
-/* ---- Sidebar: course navigator --------------------------------------------- */
+/* #lesson-panel holds the lesson header/video/progress AND (since it is
+   the one place the mobile reading order — Navbar > Lesson info > Video >
+   Watch progress > Course Content > Bottom nav — needs Course Content to
+   live) the curriculum panel itself. On desktop/tablet it becomes the
+   two-column workspace (lesson content + curriculum side panel); on mobile
+   it is a simple single column (see the mobile block below), and
+   #learn-sidebar just takes its natural place in that column, directly
+   after the watch-progress note. */
+@media (min-width: 1025px) {
+  /* #lesson-panel has exactly 4 direct children in this order: .lesson-main
+     (everything that used to be here directly — breadcrumb, lesson header,
+     video, description, watch-progress note — now one wrapper so it flows
+     as a single block instead of CSS Grid/Flex splitting each of ITS
+     children into their own row/column), .learn-sidebar, .lesson-action-bar,
+     #up-next-card. Grid with two explicit template areas gives: a top row
+     that is lesson-content-beside-curriculum, and full-width rows below it
+     for the action bar and Up Next — without forcing #lesson-panel's own
+     flex/grid context onto grandchildren. */
+  #lesson-panel {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    grid-template-areas:
+      "main   sidebar"
+      "action sidebar"
+      "upnext sidebar";
+    align-items: start;
+    gap: var(--space-8);
+  }
+
+  /* Action bar and Up Next stay directly under the video/description, the
+     same width as the lesson column — not stretched across the sidebar's
+     column, which left them looking like two disconnected floating groups
+     with a dead gap between "Mark as complete" and "Previous/Next". */
+  .lesson-main {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  .learn-sidebar {
+    grid-area: sidebar;
+  }
+
+  .lesson-action-bar {
+    grid-area: action;
+    margin-top: var(--space-2);
+  }
+
+  #up-next-card {
+    grid-area: upnext;
+  }
+}
+
+/* ---- Course Content: curriculum navigator -----------------------------------
+   One markup block (#learn-sidebar), reused at every breakpoint:
+     - Desktop/tablet (>1024px): sticky panel beside the lesson content,
+       matching the previous two-pane layout.
+     - Mobile (<=1024px): in-flow section directly below the video and
+       watch-progress note (see the mobile block further down) — never a
+       drawer the student has to open separately.
+   The on-page screen-reader-only <h2 id="sidebar-course-title"> above still
+   receives the real course title from learn.js; it isn't re-shown visually
+   since the course title is already in the header/breadcrumb (Phase 4: no
+   duplicate headings). */
 
 .learn-sidebar {
   border: 1px solid var(--color-border-soft);
@@ -103,48 +161,78 @@
   position: sticky;
   top: calc(64px + var(--space-6));
   overflow-y: auto;
-  padding: var(--space-6) var(--space-4) var(--space-8);
+  padding: var(--space-4);
   background: var(--color-surface-alt);
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  /* Desktop placement comes from the #lesson-panel grid rule (>1024px,
+     above .learn-content); mobile placement comes from the #lesson-panel
+     flex `order` rule (<=1024px, below) — this base rule sets no order of
+     its own so neither breakpoint has to fight a stale default. */
 }
 
 .learn-sidebar-head {
-  padding: 0 var(--space-2) var(--space-5);
+  padding: 0 0 var(--space-3);
   border-bottom: 1px solid var(--color-border-soft);
   margin-bottom: var(--space-2);
 }
 
-.learn-sidebar-eyebrow {
-  margin: 0 0 var(--space-2);
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+/* The whole head row is a real <button>, toggling the curriculum list via
+   the same #sidebar-toggle id/handler learn.js already wires up — on mobile
+   this collapses/expands the inline section; on desktop the panel is
+   always expanded (see below), so this still works as a tidy affordance. */
+.learn-sidebar-head-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-text);
+}
+
+.learn-sidebar-head-toggle:hover {
+  background: var(--color-accent-50);
+}
+
+.learn-sidebar-head-toggle:focus-visible {
+  outline: 2px solid var(--color-accent-600);
+  outline-offset: -2px;
+}
+
+.learn-sidebar-head-icon {
+  flex-shrink: 0;
+  display: inline-flex;
   color: var(--color-lavender);
 }
 
-.learn-sidebar-title {
-  margin: 0 0 var(--space-4);
-  font-size: var(--font-size-lg);
-  line-height: 1.3;
+.learn-sidebar-head-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.learn-sidebar-nav-eyebrow {
-  margin: var(--space-2) var(--space-2) var(--space-2);
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.learn-sidebar-head-meta {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.learn-sidebar-head-chevron {
+  flex-shrink: 0;
+  display: inline-flex;
   color: var(--color-text-muted);
+  transition: transform var(--dur-fast) ease;
 }
 
 /* Real, server-authoritative course progress bar. */
 .course-progress-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: 0 var(--space-2);
 }
 
 .course-progress-bar {
@@ -167,6 +255,8 @@
   margin: 0;
   font-size: 0.75rem;
   font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
 }
 
 .course-complete-banner {
@@ -309,7 +399,11 @@
 
 .learn-content {
   padding: var(--space-8);
-  max-width: 920px;
+  /* Room for the 920px lesson column plus the 300px curriculum panel and
+     the gap between them (see the #lesson-panel grid above); on mobile,
+     where that grid doesn't apply, .learn-content stretches to the full
+     single-column width as before. */
+  max-width: calc(920px + var(--space-8) + 300px);
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
@@ -531,44 +625,34 @@
     display: none;
   }
 
-  /* Five controls (Course content, My Learning, Dashboard, theme toggle,
-     Sign out) never fit one row on a phone without clipping or
-     overlapping — that's the bug: "My Learning" was getting squeezed
-     out under "Dashboard". Instead the row wraps to two clean rows: the
-     primary action (Course content) plus theme/sign-out stay on row one,
-     flush right; My Learning / Dashboard drop to their own row directly
-     underneath, still fully readable and still one tap away. Nothing
-     overlaps, nothing is clipped, nothing scrolls out of reach. */
+  /* Compact header: every destination (My Learning, Dashboard, theme
+     toggle, Sign out) stays visible and reachable — none removed — but
+     wraps onto a clean, right-aligned second row instead of overflowing.
+     The old "Course content" control is gone here, not hidden: on mobile
+     Course Content is inline a short scroll down this same page, so a
+     separate jump button would just be a second, confusing way to reach
+     the same content already on screen. */
   .learn-header-nav {
     grid-column: unset;
     justify-content: flex-end;
     flex-wrap: wrap;
-    gap: var(--space-2) var(--space-3);
+    row-gap: var(--space-1);
+    column-gap: var(--space-3);
     padding-top: 0;
+  }
+
+  .learn-sidebar-toggle {
+    display: none;
   }
 
   .learn-header-nav a:not(.btn) {
     font-size: 0.78rem;
-    order: 3;
   }
 
-  .learn-sidebar-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-2) var(--space-3);
-    font-size: 0.78rem;
-    order: 1;
-  }
-
-  #theme-toggle-slot {
-    order: 2;
-  }
-
+  #theme-toggle-slot,
   #logout-btn {
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-1) var(--space-2);
     font-size: 0.78rem;
-    order: 2;
   }
 
   /* ---- Shell: single column, no side gutter waste ---- */
@@ -582,70 +666,50 @@
     padding: var(--space-6) var(--space-4);
   }
 
-  /* ---- Course content: bottom sheet instead of a left drawer ----
-     Slides up from the bottom edge (thumb-natural on a phone) and is
-     capped below full height so the backdrop above it stays tappable
-     to dismiss. */
+  /* ---- Course Content: inline section below the video/watch-progress ----
+     No drawer, no bottom sheet, no backdrop: #learn-sidebar sits in normal
+     page flow (it's already positioned right after #lesson-progress-note
+     in the markup — see learn.html), so the student reaches the whole
+     curriculum by scrolling the same page, per the approved order
+     Navbar > Lesson info > Video > Watch progress > Course Content >
+     Bottom nav. #sidebar-toggle still works exactly as before (same id,
+     same click handler in learn.js) — on mobile it collapses/expands this
+     section instead of opening/closing a drawer. */
 
   .learn-sidebar {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: auto;
+    position: static;
     height: auto;
-    max-height: 78vh;
-    z-index: 60;
-    border: none;
-    border-top: 1px solid var(--color-border-soft);
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    box-shadow: var(--shadow-float);
-    padding: var(--space-3) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
-    transform: translateY(100%);
-    transition: transform var(--dur-base) var(--ease-out);
-    /* Explicit scroll container (not just inherited from the desktop
-     * rule): on some mobile browsers a flex child's `flex:1` can fight
-     * with a `max-height` ancestor and stop collapsing/scrolling
-     * correctly. Spelling it out here guarantees every module and lesson
-     * in the curriculum is reachable by scrolling the sheet, however
-     * long the course list is, instead of being clipped at 78vh. */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    max-height: none;
+    width: auto;
+    overflow: visible;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-lg);
+    box-shadow: none;
+    padding: var(--space-3);
+    margin: 0 0 var(--space-5);
   }
 
-  .learn-sidebar.is-open {
-    transform: translateY(0);
+  /* Collapsed state (closed by default is NOT the default — see learn.js:
+     the current lesson's module starts open, and #sidebar-toggle's initial
+     aria-expanded="true" in the markup matches that; this rule only
+     applies once the student explicitly collapses the panel). */
+  .learn-sidebar:not(.is-open) .curriculum-nav,
+  .learn-sidebar:not(.is-open) #course-complete-banner {
+    display: none;
   }
 
-  /* Drag-handle affordance at the top of the sheet. */
-  .learn-sidebar-head {
-    position: relative;
-    padding-top: var(--space-4);
-  }
-
-  .learn-sidebar-head::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 36px;
-    height: 4px;
-    border-radius: var(--radius-full);
-    background: var(--color-border-strong);
+  .learn-sidebar:not(.is-open) .learn-sidebar-head-chevron {
+    transform: rotate(-90deg);
   }
 
   .learn-sidebar-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: var(--color-scrim);
-    z-index: 50;
+    display: none;
   }
 
-  .learn-sidebar-backdrop[hidden] {
-    display: none;
+  /* Comfortable touch targets for module/lesson rows at phone widths. */
+  .curriculum-module-header,
+  .curriculum-lesson-btn {
+    min-height: 44px;
   }
 
   /* ---- Lesson content: edge-to-edge, card chrome dropped on mobile ---- */
@@ -694,22 +758,42 @@
     padding: var(--space-8) var(--space-4);
   }
 
-  /* ---- Up Next: the one clear next action, right under the video ----
-     #lesson-panel becomes a flex column ONLY on mobile so `order` can
-     promote this card above the progress note / action bar without any
-     HTML or JS change. Desktop keeps its normal block flow (order has no
-     effect outside this media query). */
+  /* ---- Explicit reading order on mobile ----
+     #lesson-panel becomes a flex column ONLY on mobile so this order can
+     be set without any HTML or JS change (desktop keeps normal block flow;
+     `order` has no effect outside this media query). This list is the
+     approved hierarchy in full:
+       1 breadcrumb (kept, off-screen-safe, harmless above the header)
+       2 lesson header (title / meta / completed badge)   — Lesson info
+       3 locked state (if applicable)
+       4 video wrap / no-video state                       — Video
+       5 lesson description
+       6 watch-progress note                                — Watch progress
+       7 Course Content panel (#learn-sidebar)               — Course Content
+       8 bottom action bar (sticky)                          — Bottom nav
+       9 Up Next — supplementary, placed after the required hierarchy so
+         it never displaces Course Content or the bottom bar. */
   #lesson-panel {
     display: flex;
     flex-direction: column;
   }
 
+  .lesson-breadcrumb { order: 1; }
+  .lesson-header { order: 2; }
+  .lesson-locked { order: 3; }
+  .lesson-video-wrap,
+  #lesson-no-video { order: 4; }
+  #lesson-description-wrap { order: 5; }
+  .lesson-progress-note { order: 6; }
+  .learn-sidebar { order: 7; }
+  .lesson-action-bar { order: 8; }
+  .up-next-card { order: 9; }
+
   /* Row layout: eyebrow + title form a shrinkable text column on the
      left, the Continue button sits fixed-width on the right — like a
      native "now playing next" strip. */
   .up-next-card {
-    order: -1;
-    margin: 0 0 var(--space-5);
+    margin: var(--space-5) 0 0;
     padding: var(--space-4);
     flex-direction: row;
     flex-wrap: wrap;
@@ -744,38 +828,44 @@
   }
 
   .lesson-progress-note {
-    order: 0;
     font-size: 0.8rem;
   }
 
   #lesson-description-wrap {
-    order: 0;
     margin-bottom: var(--space-5);
     padding-bottom: var(--space-5);
   }
 
-  /* ---- Bottom action bar: sticky, thumb-reachable, one row ----
-     Mark-complete / Previous / Next no longer stack as three full-width
-     buttons in the page flow — they dock to the bottom of the screen like
-     a native player's control bar, always one tap away without scrolling. */
+  /* ---- Bottom action bar: truly fixed to the viewport, one row ----
+     Mark-complete / Previous / Next dock to the bottom of the SCREEN (not
+     just the end of the scroll container) like a native player's control
+     bar, always one tap away. Because this takes the bar out of normal
+     flow, #lesson-panel gets matching bottom padding (below) so nothing —
+     including the end of the Course Content list — is ever hidden behind
+     it (spec Phase 8 "Content clearance"). */
   .lesson-action-bar {
-    order: 1;
-    position: sticky;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 30;
-    margin: var(--space-2) calc(-1 * var(--space-4)) 0;
     padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
     background: var(--color-glass);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid var(--color-border-soft);
-    border-bottom: none;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
     gap: var(--space-2);
+  }
+
+  /* Reserve room at the end of the scrollable column so the fixed bar
+     never overlaps the last Course Content row or the Up Next card.
+     68px is the bar's own approximate height (padding + ~40px buttons);
+     safe-area is added on top of that, not instead of it. */
+  #lesson-panel {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px) + var(--space-4));
   }
 
   #mark-complete-btn {

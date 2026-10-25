@@ -36,9 +36,9 @@
       <a class="brand learn-header-brand" href="../index.html">The <span>Knight Club</span></a>
       <p id="learn-header-course-title" class="learn-header-course-title"></p>
       <nav class="site-nav learn-header-nav" aria-label="Learning">
-        <button type="button" id="sidebar-toggle" class="btn btn-outline btn-sm learn-sidebar-toggle" aria-expanded="false" aria-controls="learn-sidebar">
+        <a href="#learn-sidebar" id="sidebar-jump-link" class="btn btn-outline btn-sm learn-sidebar-toggle">
           Course content
-        </button>
+        </a>
         <a href="learning.html" class="text-muted">My Learning</a>
         <a href="dashboard.html" class="text-muted">Dashboard</a>
         <!-- Day/Night toggle: populated by ThemeToggle.create() (theme-toggle.js). -->
@@ -86,30 +86,11 @@
     <!-- ==================== LEARNING SHELL ==================== -->
     <div id="learn-shell" class="learn-shell" hidden>
 
-      <!-- Mobile backdrop for the sidebar drawer -->
+      <!-- Mobile backdrop: only used if the sidebar is opened as a drawer
+           (desktop/tablet fallback below --mobile-inline-content; see
+           learn.css). On phones the curriculum is inline in the page, so
+           this backdrop is simply never shown there. -->
       <div id="sidebar-backdrop" class="learn-sidebar-backdrop" hidden></div>
-
-      <!-- ---- SIDEBAR: course curriculum ---- -->
-      <aside id="learn-sidebar" class="learn-sidebar" aria-label="Course curriculum">
-        <div class="learn-sidebar-head">
-          <p class="text-muted learn-sidebar-eyebrow">Course</p>
-          <h1 id="sidebar-course-title" class="learn-sidebar-title"></h1>
-          <!-- Phase 14: real, server-authoritative course progress. Hidden
-               until data arrives; never shows a fabricated percentage. -->
-          <div id="course-progress-wrap" class="course-progress-wrap" hidden>
-            <div class="course-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-labelledby="course-progress-label">
-              <div id="course-progress-fill" class="course-progress-fill" style="width: 0%"></div>
-            </div>
-            <p id="course-progress-label" class="text-muted course-progress-label"></p>
-          </div>
-        </div>
-        <p class="learn-sidebar-nav-eyebrow">Course content</p>
-        <nav id="curriculum-nav" class="curriculum-nav" aria-label="Modules and lessons"></nav>
-        <!-- Phase 14: shown once the whole course is complete. -->
-        <div id="course-complete-banner" class="course-complete-banner" hidden>
-          <span aria-hidden="true">&#10003;</span> Course complete!
-        </div>
-      </aside>
 
       <!-- ---- CURRENT LESSON AREA ---- -->
       <section class="learn-content" aria-label="Current lesson">
@@ -121,6 +102,12 @@
         </div>
 
         <div id="lesson-panel" hidden>
+          <!-- Layout-only wrapper (no IDs inside it change — every element
+               learn.js looks up by id is unaffected): groups the lesson
+               content into one flowing column so it can sit beside
+               #learn-sidebar as a single flex item on desktop/tablet,
+               without each child becoming its own side-by-side column. -->
+          <div class="lesson-main">
           <nav class="lesson-breadcrumb" aria-label="Breadcrumb">
             <a href="learning.html">My Learning</a>
             <span aria-hidden="true">/</span>
@@ -175,6 +162,48 @@
 
           <!-- Progress display (Phase 14: real, server-authoritative) -->
           <div id="lesson-progress-note" class="lesson-progress-note text-muted"></div>
+          </div><!-- /.lesson-main -->
+
+          <!-- ---- COURSE CONTENT: inline on mobile, sidebar on desktop ----
+               Single source of curriculum markup — learn.js renders the
+               real modules/lessons into #curriculum-nav exactly as before;
+               only its position in the layout changes per breakpoint
+               (see learn.css). No duplicate render path, no duplicate
+               lesson-navigation handlers. -->
+          <aside id="learn-sidebar" class="learn-sidebar is-open" aria-label="Course curriculum">
+            <div class="learn-sidebar-head">
+              <!-- Course title is already shown above (header course title /
+                   lesson breadcrumb); learn.js still writes it here for the
+                   section's accessible name, kept visually hidden to avoid
+                   a duplicate heading on screen (spec Phase 4: "Do not
+                   display duplicate lesson headings"). -->
+              <h2 id="sidebar-course-title" class="sr-only"></h2>
+              <button type="button" id="sidebar-toggle" class="learn-sidebar-head-toggle" aria-expanded="true" aria-controls="curriculum-nav">
+                <span class="learn-sidebar-head-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </span>
+                <span class="learn-sidebar-head-title">Course Content</span>
+                <span class="learn-sidebar-head-meta">
+                  <span id="course-progress-label" class="course-progress-label"></span>
+                </span>
+                <span class="chevron learn-sidebar-head-chevron" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </button>
+              <!-- Phase 14: real, server-authoritative course progress. Hidden
+                   until data arrives; never shows a fabricated percentage. -->
+              <div id="course-progress-wrap" class="course-progress-wrap" hidden>
+                <div class="course-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-labelledby="course-progress-label">
+                  <div id="course-progress-fill" class="course-progress-fill" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+            <nav id="curriculum-nav" class="curriculum-nav" aria-label="Modules and lessons"></nav>
+            <!-- Phase 14: shown once the whole course is complete. -->
+            <div id="course-complete-banner" class="course-complete-banner" hidden>
+              <span aria-hidden="true">&#10003;</span> Course complete!
+            </div>
+          </aside>
 
           <div class="lesson-action-bar">
             <button type="button" id="mark-complete-btn" class="btn btn-outline btn-sm" hidden>Mark as complete</button>
