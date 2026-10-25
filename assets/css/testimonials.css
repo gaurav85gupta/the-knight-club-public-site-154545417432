@@ -217,8 +217,12 @@
      inside this box rather than stretching the box taller/wider; that
      empty space is expected and fine. Reduced from the old 1:1 /
      26rem box, which made every card unnecessarily tall and bulky. */
-  aspect-ratio: 4 / 5;
-  max-height: 18rem;
+  /* Flatter than before (was 4:5) to shave more height off the card —
+     kept well short of the old square/1:1 box so the Bunny player's
+     own control bar (play, timer, volume, settings, fullscreen) still
+     has full card-width to lay out in and never gets squeezed. */
+  aspect-ratio: 16 / 11;
+  max-height: 15rem;
   width: calc(100% + 2 * var(--tm-bleed));
   margin: calc(-1 * var(--tm-bleed)) calc(-1 * var(--tm-bleed)) 0;
   /* card has a 1px border and rounded corners but no overflow:hidden, so
