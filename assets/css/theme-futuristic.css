@@ -106,6 +106,14 @@ html:not([data-site-theme="light"]) .home-page .hero.hero-v2::after {
   background-color: var(--color-bg);
 }
 
+/* Scanline texture (home.css .hero.hero-v2::before) reads as visible
+   horizontal lines across the plain dark background — switch it off
+   for dark mode so the hero is a clean dark backdrop with just the
+   purple glow above. */
+html:not([data-site-theme="light"]) .home-page .hero.hero-v2::before {
+  display: none;
+}
+
 /* Headline — solid off-white with a soft purple glow consistent with the
    brand's existing dark typographic treatment. */
 html:not([data-site-theme="light"]) .home-page .hero h1.hero-v2-title {
