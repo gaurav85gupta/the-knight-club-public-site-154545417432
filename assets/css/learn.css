@@ -498,10 +498,12 @@
   box-shadow: var(--shadow-lg);
 }
 
-/* Controlled ambient purple glow behind the frame — decorative only. */
+/* Controlled ambient purple glow behind the frame — decorative only.
+   Kept tight to the frame (not -20%) so it reads as a glow around the
+   video, not a haze that bleeds up into the sticky header above it. */
 .lesson-video-glow {
   position: absolute;
-  inset: -20%;
+  inset: -6%;
   z-index: 0;
   background: radial-gradient(closest-side, rgba(124, 58, 237, 0.35), transparent 70%);
   filter: blur(40px);
@@ -605,17 +607,22 @@
 
 @media (max-width: 1024px) {
 
-  /* ---- Header: compact single row, icon-first ---- */
+  /* ---- Header: two deliberate rows, not a mid-sentence wrap ----
+     Row 1: brand (left) + account actions — theme toggle, Sign out
+     (right). Row 2: My Learning / Dashboard, as a clearly separated
+     secondary nav strip with its own divider, rather than letting the
+     flex row wrap unpredictably between the two groups. */
 
   .learn-header-inner {
-    grid-template-columns: auto auto;
-    padding: var(--space-3) var(--space-4);
-    gap: var(--space-2);
-    min-height: 56px;
+    grid-template-columns: 1fr auto;
+    padding: var(--space-3) var(--space-4) 0;
+    gap: var(--space-2) var(--space-3);
+    min-height: 0;
   }
 
   .learn-header-brand {
     font-size: var(--font-size-sm);
+    align-self: center;
   }
 
   /* The course title doesn't fit a two-column compact header without
@@ -625,20 +632,27 @@
     display: none;
   }
 
-  /* Compact header: every destination (My Learning, Dashboard, theme
-     toggle, Sign out) stays visible and reachable — none removed — but
-     wraps onto a clean, right-aligned second row instead of overflowing.
-     The old "Course content" control is gone here, not hidden: on mobile
-     Course Content is inline a short scroll down this same page, so a
-     separate jump button would just be a second, confusing way to reach
-     the same content already on screen. */
+  /* Row 1: theme toggle + Sign out, right-aligned next to the brand.
+     Row 2: My Learning / Dashboard pulled onto their own full-width
+     strip (order + flex-basis: 100%, same <nav>, no duplicate markup)
+     with a divider above, so the header reads as two intentional rows
+     rather than a mid-sentence wrap. */
   .learn-header-nav {
-    grid-column: unset;
     justify-content: flex-end;
     flex-wrap: wrap;
-    row-gap: var(--space-1);
-    column-gap: var(--space-3);
+    gap: var(--space-2);
     padding-top: 0;
+  }
+
+  .learn-header-nav a.learn-header-links-item {
+    order: 3;
+  }
+
+  .learn-header-nav a.learn-header-links-item:first-of-type {
+    flex-basis: 100%;
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border-soft);
   }
 
   .learn-sidebar-toggle {
