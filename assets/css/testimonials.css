@@ -180,6 +180,31 @@
   padding-left: 3px;
 }
 
+/* Video card sizing (testimonials page grid + featured card).
+   The player lives in a cross-origin iframe, so its control bar (play,
+   scrubber, volume, fullscreen) is drawn INSIDE the iframe's own box and
+   can only ever be as roomy as that box. The old 16:9 slot inset by the
+   card's 32px padding was only ~300x168px: portrait phone footage got
+   huge black side bars and the control bar was squeezed into the bottom
+   edge. The box is now edge-to-edge across the top of the card (the
+   card's padding is cancelled with negative margins) and square, so
+   portrait footage gets real height and the control bar spans the full
+   card width. The iframe still fills the box exactly (no scale/crop), so
+   every control stays visible inside the card.
+   Scoped to .tm-grid / .tm-featured-media: the compact 1% Club cards
+   (#oc-proof) and the long-form stories keep their own sizing. */
+.tm-grid .tm-card > .tm-video-embed {
+  --tm-bleed: var(--space-8); /* must match .tm-card padding */
+  aspect-ratio: 1 / 1;
+  max-height: 26rem;
+  width: calc(100% + 2 * var(--tm-bleed));
+  margin: calc(-1 * var(--tm-bleed)) calc(-1 * var(--tm-bleed)) 0;
+  /* card has a 1px border and rounded corners but no overflow:hidden, so
+     round the media's top corners to match (radius minus the border). */
+  border-width: 0 0 1px;
+  border-radius: calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px) 0 0;
+}
+
 /* Quote text is clamped to a fixed max height with its own scroll —
    a long paragraph-length story (vs a short pull-quote) no longer
    makes this one card balloon past the height of every other card in
@@ -240,10 +265,10 @@
    itself never exceeds card-like proportions. */
 .tm-featured-fig {
   display: grid;
-  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
   gap: var(--space-8);
   align-items: start;
-  max-width: 920px;
+  max-width: 980px;
   margin: 0;
   padding: var(--space-8);
   border: 1px solid var(--color-border-soft);
@@ -262,7 +287,7 @@
    quote's width or to the page's width. The zoom-and-crop fix for the
    player's own black bars lives on .tm-video-embed iframe above and
    applies here too since this is just that same element. */
-.tm-featured-media .tm-video-embed { max-width: 100%; margin: 0; }
+.tm-featured-media .tm-video-embed { max-width: 100%; margin: 0; aspect-ratio: 1 / 1; max-height: 26rem; }
 .tm-featured-photo { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface-2); }
 .tm-featured-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
@@ -291,6 +316,7 @@
 
 @media (max-width: 760px) {
   .tm-featured-fig { grid-template-columns: 1fr; padding: var(--space-6); }
+  .tm-featured-media { max-width: 420px; }
   .tm-featured-quote { max-height: 14rem; }
 }
 
