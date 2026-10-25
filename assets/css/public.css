@@ -529,20 +529,54 @@
      sections into a footer far taller than a mobile footer needs to be.
      Tightened throughout; still clearly grouped via the divider rules,
      just without the extra air at each level. */
-  .pub-footer { padding: var(--space-8) 0 var(--space-6); }
-  .pub-footer .footer-grid { grid-template-columns: 1fr; row-gap: var(--space-6); margin-bottom: var(--space-6); }
-  .pub-footer .footer-brand p { margin-top: var(--space-2); font-size: 0.85rem; }
+  .pub-footer { padding: var(--space-6) 0 var(--space-5); }
+  .pub-footer .footer-grid { grid-template-columns: 1fr; row-gap: var(--space-5); margin-bottom: var(--space-5); }
+  .pub-footer .footer-brand p { margin-top: var(--space-2); font-size: 0.85rem; line-height: 1.5; }
   /* Section headings ("Explore", "Account", "Contact") get a visible
      rule above each block to mark where one section ends and the next
      begins, with tighter spacing than the desktop/tablet version since
      everything here is already visually separated by being full-width. */
   .pub-footer .footer-col:not(.footer-brand) {
-    padding-top: var(--space-4);
+    padding-top: var(--space-3);
     border-top: 1px solid var(--color-border-soft);
   }
   .pub-footer .footer-col h4 { margin-bottom: var(--space-2); font-size: 0.68rem; }
-  .pub-footer .footer-col a:not(.brand) { margin-bottom: var(--space-2); font-size: 0.9rem; }
-  .pub-footer .footer-bottom { padding-top: var(--space-4); }
+  .pub-footer .footer-col a:not(.brand) {
+    margin-bottom: 0;
+    padding: var(--space-1) 0;
+    font-size: 0.88rem;
+  }
+
+  /* Explore + Account go from one link per row to a compact two-column
+     grid, since the old layout (one <a> per full-width row) spent a
+     whole row's height on each of the six Explore links. grid-auto-flow:
+     column fills column 1 top-to-bottom then column 2, so with 6 links
+     and 3 rows this reproduces the Home/Courses/1%-Club | About/
+     Testimonials/Contact pairing without reordering NAV_LINKS. Row/column
+     gap stay equal and small since both axes now carry real content. */
+  .pub-footer .footer-col:not(.footer-brand):not(.footer-contact) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-auto-flow: column;
+    column-gap: var(--space-4);
+    row-gap: var(--space-2);
+  }
+  .pub-footer .footer-col:not(.footer-brand):not(.footer-contact) h4 {
+    grid-column: 1 / -1;
+  }
+  /* Account normally has only 1–2 links (guest: Login + Get Started, or
+     signed-in: Dashboard alone) — grid-auto-flow: column with a single
+     row of content still lays them out side by side rather than wasting
+     a second row, so this section never gets taller than it needs. */
+  .pub-footer .footer-col:not(.footer-brand):not(.footer-contact) a:not(.brand) {
+    margin-bottom: 0;
+  }
+  /* Contact (email + phone) stays single-column: a long email address
+     needs its own row width rather than fighting a second column. */
+  .pub-footer .footer-contact a { margin-bottom: 0; }
+  .pub-footer .footer-contact a + a { margin-top: var(--space-2); }
+
+  .pub-footer .footer-bottom { padding-top: var(--space-3); }
 }
 
 /* ==========================================================================
