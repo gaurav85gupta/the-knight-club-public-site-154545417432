@@ -63,7 +63,23 @@
       return '';
     }
   }
-  function safeEmbedUrl(u) { u = str(u); return BUNNY_EMBED_HOST_RE.test(u) ? u : ''; }
+  // Strips/forces off any autoplay the backend's embedUrl may carry in its
+  // own query string (e.g. "...?autoplay=true"). The `allow` attribute on
+  // the <iframe> only revokes the BROWSER PERMISSION to autoplay — it does
+  // nothing about the player requesting a muted autoplay, which some
+  // browsers grant anyway. Stripping/forcing the param in the URL itself is
+  // what actually stops a visitor from landing on the page and immediately
+  // hearing/seeing a video start on its own.
+  function withAutoplayOff(u) {
+    try {
+      var parsed = new URL(u);
+      parsed.searchParams.set('autoplay', 'false');
+      return parsed.toString();
+    } catch (e) {
+      return u; // malformed URL: safeEmbedUrl's host check already rejects it upstream
+    }
+  }
+  function safeEmbedUrl(u) { u = str(u); return BUNNY_EMBED_HOST_RE.test(u) ? withAutoplayOff(u) : ''; }
 
   /**
    * Keeps only valid, known fields. Returns null if quote or name is missing.

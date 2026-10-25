@@ -74,6 +74,24 @@
   /** Membership plan slug — stable public identifier. */
   var PLAN_SLUG = '1-percent-club';
 
+  // Strips/forces off any autoplay the backend's embedUrl may carry in its
+  // own query string (e.g. "...?autoplay=true"). The iframe `allow`
+  // attribute only revokes the BROWSER PERMISSION to autoplay — it does
+  // nothing about the player itself requesting a muted autoplay, which some
+  // browsers grant anyway. Forcing the param off in the URL is what actually
+  // stops a visitor landing on the page and a video starting on its own.
+  // Shared by both video embeds on this page (Section 2 intro video and the
+  // video testimonials further down).
+  function withAutoplayOff(u) {
+    try {
+      var parsed = new URL(u);
+      parsed.searchParams.set('autoplay', 'false');
+      return parsed.toString();
+    } catch (e) {
+      return u; // malformed URL: the caller's own host check rejects it before this runs
+    }
+  }
+
   // -------------------------------------------------------------------------
   // Page views: 'selection' | 'review' | 'loading' | 'error' | 'member'
   // -------------------------------------------------------------------------
@@ -513,7 +531,7 @@
         if (typeof embedUrl === 'string' && /^https:\/\/(iframe\.mediadelivery\.net|bunnycdn\.com)\//.test(embedUrl)) {
           videoContainer.innerHTML = ''; // clear any previous
           var iframe = document.createElement('iframe');
-          iframe.src = embedUrl;
+          iframe.src = withAutoplayOff(embedUrl);
           // autoplay intentionally left OUT of `allow` — without this
           // permission grant the browser blocks the iframe from
           // autoplaying on page load.
@@ -977,13 +995,20 @@
         videoBox.appendChild(placeholder);
 
         var iframe = document.createElement('iframe');
-        iframe.src = t.video.embedUrl;
+        iframe.src = withAutoplayOff(t.video.embedUrl);
         // autoplay intentionally left OUT of `allow` — see note above.
         iframe.setAttribute('allow', 'accelerometer; gyroscope; encrypted-media; picture-in-picture;');
         iframe.setAttribute('allowfullscreen', 'true');
         iframe.setAttribute('loading', 'lazy');
         iframe.setAttribute('title', 'Video testimonial from ' + t.name);
-        iframe.addEventListener('load', function () { iframe.classList.add('is-loaded'); });
+        // Same fix as testimonials.js: hide the placeholder outright once
+        // loaded (belt-and-suspenders alongside the CSS :has() rule) so it
+        // can never sit on top of the iframe and swallow taps meant for the
+        // player's own play/pause/mute controls.
+        iframe.addEventListener('load', function () {
+          iframe.classList.add('is-loaded');
+          placeholder.style.display = 'none';
+        });
         videoBox.appendChild(iframe);
         card.appendChild(videoBox);
       }

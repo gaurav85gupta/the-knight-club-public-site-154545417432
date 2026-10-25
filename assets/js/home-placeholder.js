@@ -50,6 +50,23 @@
   const wrap = document.getElementById('skills-video-wrap');
   if (!wrap) return; // section not present on this page — nothing to do
 
+  // Strips/forces off any autoplay the backend's embedUrl may carry in its
+  // own query string (e.g. "...?autoplay=true"). The iframe `allow`
+  // attribute below only revokes the BROWSER PERMISSION to autoplay — it
+  // does nothing about the player itself requesting a muted autoplay, which
+  // some browsers grant anyway. Forcing the param off in the URL is what
+  // actually stops a visitor landing on the page and a video starting on
+  // its own.
+  function withAutoplayOff(u) {
+    try {
+      const parsed = new URL(u);
+      parsed.searchParams.set('autoplay', 'false');
+      return parsed.toString();
+    } catch (e) {
+      return u; // malformed URL: rejected upstream before this ever runs
+    }
+  }
+
   // ── State renderers ──────────────────────────────────────────────────────
 
   /**
@@ -81,7 +98,7 @@
     const iframe = document.createElement('iframe');
     // embedUrl is a Bunny player URL; set it via attribute, never via
     // innerHTML, to keep it inert until the browser parses it as a URL.
-    iframe.setAttribute('src', embedUrl);
+    iframe.setAttribute('src', withAutoplayOff(embedUrl));
     // autoplay intentionally left OUT of `allow` (see "No muted autoplay"
     // note above) — without this permission grant the browser blocks the
     // iframe from autoplaying, so it sits on its first frame until the
