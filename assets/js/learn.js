@@ -642,23 +642,93 @@
     Auth.guardBfcache();
     document.documentElement.classList.remove('auth-pending');
 
-    // Day/Night toggle — same shared control the student shell uses.
-    const themeSlot = document.getElementById('theme-toggle-slot');
-    if (themeSlot && typeof ThemeToggle !== 'undefined') {
-      themeSlot.appendChild(ThemeToggle.create('theme-toggle--learn'));
+    // Day/Night toggle — same shared control the student shell uses. Two
+    // slots exist (desktop row, mobile row); CSS shows only one at a time,
+    // but both get a real control so neither is ever an empty gap.
+    if (typeof ThemeToggle !== 'undefined') {
+      const themeSlot = document.getElementById('theme-toggle-slot');
+      if (themeSlot) themeSlot.appendChild(ThemeToggle.create('theme-toggle--learn'));
+      const themeSlotMobile = document.getElementById('theme-toggle-slot-mobile');
+      if (themeSlotMobile) themeSlotMobile.appendChild(ThemeToggle.create('theme-toggle--learn'));
     }
 
-    const logoutBtn = document.getElementById('logout-btn');
-    logoutBtn.addEventListener('click', async () => {
-      logoutBtn.disabled = true;
+    // Sign out: one real implementation, called from whichever button is
+    // visible (desktop row vs. mobile drawer — CSS shows only one at a time).
+    async function signOut(button) {
+      document.querySelectorAll('#logout-btn, #logout-btn-mobile').forEach((b) => { b.disabled = true; });
+      if (button) button.setAttribute('aria-busy', 'true');
       ProgressTracker.stop(); // flush any accumulated progress before leaving (spec Step 48)
       await Auth.logout();
       Auth.setNotice('You have been signed out.', 'info');
       window.location.replace(Auth.urlFor(Auth.PATHS.login));
-    });
+    }
+    const logoutBtn = document.getElementById('logout-btn');
+    logoutBtn.addEventListener('click', () => signOut(logoutBtn));
+    const logoutBtnMobile = document.getElementById('logout-btn-mobile');
+    if (logoutBtnMobile) logoutBtnMobile.addEventListener('click', () => signOut(logoutBtnMobile));
+
     Auth.onChange((u) => {
       if (!u) window.location.replace(Auth.urlFor(Auth.PATHS.login));
     });
+
+    // ---- Mobile menu (≤1024px): hamburger opens an off-canvas drawer with
+    // My Learning / Dashboard / Sign out. Same interaction contract as the
+    // student-shell drawer used elsewhere (Escape, outside/backdrop click,
+    // focus-restore, scroll-lock, auto-close if the viewport grows past the
+    // breakpoint) — reimplemented here, scoped to learn.html, since this
+    // page intentionally doesn't load student-shell.js. -------------------
+    const menuToggle = document.getElementById('learn-menu-toggle');
+    const drawerWrap = document.getElementById('learn-mobile-drawer-wrap');
+    const drawerEl = document.getElementById('learn-mobile-drawer');
+    if (menuToggle && drawerWrap && drawerEl) {
+      let lastFocus = null;
+
+      function setDrawer(open) {
+        drawerWrap.hidden = !open;
+        menuToggle.setAttribute('aria-expanded', String(open));
+        document.body.classList.toggle('learn-drawer-open', open);
+        if (open) {
+          lastFocus = document.activeElement;
+          requestAnimationFrame(() => {
+            const first = drawerEl.querySelector('a, button');
+            if (first) first.focus();
+          });
+        } else if (lastFocus) {
+          lastFocus.focus();
+          lastFocus = null;
+        }
+      }
+
+      menuToggle.addEventListener('click', () => setDrawer(drawerWrap.hidden));
+
+      drawerWrap.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action="close-learn-drawer"]');
+        if (target) setDrawer(false);
+      });
+
+      // Close automatically when a navigation link inside the drawer is used.
+      drawerEl.querySelectorAll('a.learn-mobile-link').forEach((a) => {
+        a.addEventListener('click', () => setDrawer(false));
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !drawerWrap.hidden) setDrawer(false);
+        if (e.key === 'Tab' && !drawerWrap.hidden) {
+          const f = drawerEl.querySelectorAll('a[href], button:not([disabled])');
+          if (!f.length) return;
+          const first = f[0];
+          const last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      });
+
+      // Leaving the mobile breakpoint while open must not leave body
+      // scroll-locked or an orphaned open drawer on desktop.
+      window.matchMedia('(min-width: 1025px)').addEventListener('change', (m) => {
+        if (m.matches && !drawerWrap.hidden) setDrawer(false);
+      });
+    }
 
     const courseId = getCourseId();
     if (!courseId) {

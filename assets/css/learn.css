@@ -72,6 +72,114 @@
   display: none;
 }
 
+/* Mobile-only header controls (theme toggle + hamburger). Desktop keeps
+   using .learn-header-nav's own theme-toggle slot and links, so this
+   cluster stays out of the way above 1024px. */
+.learn-header-mobile-actions {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.learn-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.learn-menu-toggle:hover { border-color: var(--color-border-strong); }
+.learn-menu-toggle:focus-visible {
+  outline: 2px solid var(--color-accent-600);
+  outline-offset: 2px;
+}
+
+/* ---- Mobile drawer (My Learning / Dashboard / Sign out) ----
+   Shown only ≤1024px, scoped entirely to this page (not student-shell's
+   drawer — learn.html doesn't load that file), but matching its same
+   tokens/behaviour for visual consistency with the rest of the student area. */
+.learn-mobile-drawer-wrap[hidden] { display: none; }
+.learn-mobile-drawer-wrap { position: fixed; inset: 0; z-index: 100; }
+.learn-mobile-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 2, 10, 0.72);
+  backdrop-filter: blur(4px);
+}
+.learn-mobile-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(320px, 86vw);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface-alt, var(--color-surface));
+  border-left: 1px solid var(--color-border);
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.35);
+  overflow-y: auto;
+}
+.learn-mobile-drawer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+.learn-mobile-drawer-title {
+  font-weight: 500;
+  color: var(--color-text);
+}
+.learn-mobile-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.learn-mobile-close:hover { color: var(--color-text); background: rgba(124, 58, 237, 0.1); }
+
+.learn-mobile-links { display: flex; flex-direction: column; gap: 2px; }
+
+.learn-mobile-link {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--font-size-base);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  width: 100%;
+}
+.learn-mobile-link:hover { background: rgba(124, 58, 237, 0.12); color: var(--color-text); }
+
+.learn-mobile-signout {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+}
+.learn-mobile-signout:hover { color: var(--color-danger); background: rgba(248, 113, 113, 0.08); }
+.learn-mobile-signout:disabled { opacity: 0.6; cursor: wait; }
+
+body.learn-drawer-open { overflow: hidden; }
+
 .learn-main {
   min-height: calc(100vh - 64px);
   background: var(--color-bg);
@@ -614,15 +722,14 @@
 
 @media (max-width: 1024px) {
 
-  /* ---- Header: two deliberate rows ----
-     Row 1: brand (left) + account actions — theme toggle, Sign out
-     (right). Row 2: a full-width secondary nav STRIP — My Learning and
-     Dashboard, left-aligned and evenly spaced like tabs — sitting under
-     its own divider, instead of two links floating isolated in the
-     top-right corner. */
+  /* ---- Header: single compact row ----
+     Brand on the left; theme toggle + hamburger on the right. My Learning,
+     Dashboard and Sign out move into the off-canvas menu below instead of
+     competing for space in the header row (previously these wrapped onto
+     an awkward, unevenly-aligned second row). */
 
   .learn-header-inner {
-    padding: var(--space-3) var(--space-4) 0;
+    padding: var(--space-3) var(--space-4);
     min-height: 0;
   }
 
@@ -637,52 +744,25 @@
     font-size: var(--font-size-sm);
   }
 
-  /* The course title doesn't fit a two-column compact header without
-     crowding the nav controls — it's already shown as the lesson's own
-     breadcrumb just below, so it stays hidden here as before. */
+  /* The course title doesn't fit a compact header without crowding the
+     controls — it's already shown as the lesson's own breadcrumb just
+     below, so it stays hidden here as before. */
   .learn-header-course-title {
     display: none;
   }
 
-  /* Row 1 content: theme toggle + Sign out, right-aligned. My Learning /
-     Dashboard (order: 3, flex-basis: 100%) drop to their own full-width
-     row — left-aligned and evenly spaced like tabs, with a divider above,
-     instead of floating isolated in the top-right corner. */
+  /* Desktop nav (links, its own theme-toggle slot, Sign out) is replaced
+     by the mobile actions cluster below this breakpoint. */
   .learn-header-nav {
+    display: none;
+  }
+
+  .learn-header-mobile-actions {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--space-2);
-  }
-
-  .learn-header-nav a.learn-header-links-item {
-    order: 3;
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  .learn-header-nav a.learn-header-links-item:first-of-type {
-    flex-basis: 100%;
-    margin-top: var(--space-2);
-    padding-top: var(--space-3);
-    margin-right: var(--space-5);
-    border-top: 1px solid var(--color-border-soft);
-  }
-
-  .learn-header-nav a.learn-header-links-item:last-of-type {
-    border-top: 1px solid transparent;
-    padding-top: var(--space-3);
   }
 
   .learn-sidebar-toggle {
     display: none;
-  }
-
-  #theme-toggle-slot,
-  #logout-btn {
-    padding: var(--space-1) var(--space-2);
-    font-size: 0.78rem;
   }
 
   /* ---- Shell: single column, no side gutter waste ---- */

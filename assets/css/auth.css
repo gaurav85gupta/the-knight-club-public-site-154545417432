@@ -93,6 +93,79 @@
   z-index: 2;
 }
 
+/* ---- Desktop/tablet brand panel ----
+   Fills the large empty space beside the card on wide screens with
+   purposeful brand content instead of bare dark background. Hidden by
+   default (mobile-first); shown only at the split-layout breakpoint
+   below. The card's own perspective/flip mechanics are untouched —
+   this is a sibling, not a wrapper. Decorative (aria-hidden) — it
+   restates the homepage hero promise rather than conveying anything
+   the auth form itself depends on. */
+.auth-split {
+  display: none;
+}
+
+.auth-split-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent-700);
+  background: var(--color-accent-50);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-full);
+}
+
+.auth-split-title {
+  margin: 0 0 var(--space-4);
+  font-family: 'Sora', var(--font-family-base);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 2.6vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.auth-split-title span {
+  background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-split-lead {
+  margin: 0 0 var(--space-8);
+  max-width: 420px;
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+.auth-split-stats {
+  display: flex;
+  gap: var(--space-8);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--color-border-soft);
+}
+.auth-split-stats li { display: flex; flex-direction: column; gap: 2px; }
+.auth-split-stats strong {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+.auth-split-stats span {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* ---- Flip scene ----
    Canonical two-layer flip structure: the OUTER card (.auth-flip-card)
    never rotates and owns layout/height/overflow; the INNER rotator
@@ -187,6 +260,10 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
   padding: var(--space-4) var(--space-5);
+}
+
+@media (min-width: 1024px) {
+  .auth-card { box-shadow: var(--glow-soft), var(--shadow-float); }
 }
 
 /* ---- Sign In / Create Account switcher ---- */
@@ -360,18 +437,40 @@ textarea.input { resize: vertical; min-height: 56px; }
 .btn.is-loading .spinner { display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ---- Alerts ---- */
+/* ---- Alerts ----
+   A left accent bar + small icon give each state (error/success/info)
+   real visual presence instead of a flat tinted box — especially
+   alert-info, used for neutral session messages like "You have been
+   signed out", which previously read as inert/washed-out. */
 .alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
   font-size: var(--font-size-sm);
   margin-bottom: var(--space-4);
   border: 1px solid transparent;
+  border-left-width: 3px;
 }
 .alert[hidden] { display: none; }
+.alert::before {
+  flex-shrink: 0;
+  width: 1.1em;
+  height: 1.1em;
+  margin-top: 0.05em;
+  font-size: 0.95em;
+  line-height: 1.1em;
+  text-align: center;
+  border-radius: 50%;
+  font-weight: 700;
+}
 .alert-error   { background: rgba(248, 113, 113, 0.12); border-color: rgba(248, 113, 113, 0.35); color: #fca5a5; }
+.alert-error::before   { content: "!"; background: rgba(248, 113, 113, 0.22); color: #fca5a5; }
 .alert-success { background: var(--color-accent-50); border-color: var(--color-accent-100); color: var(--color-accent-700); }
-.alert-info    { background: var(--color-surface-alt); border-color: var(--color-border); color: var(--color-text); }
+.alert-success::before { content: "\2713"; background: var(--color-accent-100); color: var(--color-accent-700); }
+.alert-info    { background: var(--color-surface-alt); border-left-color: var(--color-accent-500); color: var(--color-text); }
+.alert-info::before    { content: "i"; font-style: italic; background: var(--color-accent-100); color: var(--color-accent-700); }
 
 .auth-alt {
   text-align: center;
@@ -518,6 +617,32 @@ textarea.input { resize: vertical; min-height: 56px; }
 @media (min-width: 768px) {
   .auth-main { padding-top: var(--space-6); }
   .auth-card { padding: var(--space-6) var(--space-8); }
+}
+
+/* ---- Desktop: two-pane split ----
+   Replaces "small centered card on a huge empty background" with a
+   deliberate layout: brand panel fills the left column, the auth card
+   sits in a fixed-width right column. Both are vertically centered as
+   a pair within the viewport, so the whole composition — not just the
+   card — reads as the page's content. */
+@media (min-width: 1024px) {
+  .auth-main {
+    justify-content: center;
+    gap: var(--space-16);
+    padding: var(--space-6) var(--space-10);
+  }
+  .auth-split {
+    display: block;
+    flex: 1 1 480px;
+    max-width: 560px;
+  }
+  .auth-flip-scene {
+    flex: 0 0 420px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .auth-main { gap: var(--space-24); }
 }
 
 /* ---- Small phones ---- */
