@@ -1,8 +1,7 @@
 /* ==========================================================================
    THE NIGHT CLUB — Authentication pages (login, signup, dashboard shell)
-   Uses ONLY tokens from tokens.css. Dark-purple premium surface (the site's
-   default palette — these pages do not load site-theme-init.js and are
-   intentionally dark-only, matching the supplied background artwork).
+   Uses ONLY tokens from tokens.css. The signed-in shell pages use the dark
+   palette; login/signup use a light card scoped by .auth-page--split.
    Mobile-first: the base rules are the phone layout; wider screens add to it.
    ========================================================================== */
 
@@ -64,9 +63,11 @@
   overflow-x: clip;
 }
 
-/* Background artwork removed per request — plain dark surface with a soft
-   accent glow only (previously layered a photo behind this gradient). */
-.auth-page::before {
+/* Flat dark surface + soft accent glow for the signed-in shell pages
+   (dashboard, profile, orders...). Login/signup opt out with
+   .auth-page--split and draw the shared artwork instead (see the
+   "Split-artwork auth pages" section at the end of this file). */
+.auth-page:not(.auth-page--split)::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -74,7 +75,7 @@
   background: var(--color-bg);
   pointer-events: none;
 }
-.auth-page::after {
+.auth-page:not(.auth-page--split)::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -540,4 +541,132 @@ textarea.input { resize: vertical; min-height: 56px; }
 @media (prefers-reduced-motion: reduce) {
   .btn .spinner { animation-duration: 2s; }
   .input, .btn { transition: none; }
+}
+
+
+/* ==========================================================================
+   Split-artwork auth pages (login.html + signup.html)
+   --------------------------------------------------------------------------
+   One shared asset, assets/images/auth-background.jpg, is drawn on a fixed
+   full-viewport layer. The artwork is dark on the left and light lavender on
+   the right with the boundary at ~50% (a white divider at 49.8-50.3%).
+
+   >= 1024px  background-size: cover, centred. Centred cropping is symmetric,
+              so the dark/light boundary stays on the viewport's vertical
+              centre line at every aspect ratio, and the form column occupies
+              the right half (the light side).
+   <  1024px  The half-width light region alone is scaled to cover the
+              viewport (206vw >= viewport width / 0.496; 178vh keeps the
+              height covered, 16:9 art), anchored right. The card then sits on
+              light artwork. The image is only scaled uniformly, never stretched.
+
+   The light palette is applied by redefining tokens on the page element, so
+   every existing .input/.alert/.auth-* rule picks it up with no duplicates.
+   ========================================================================== */
+.auth-page--split {
+  --auth-art: url("../images/auth-background.jpg");
+
+  --color-bg: #ece3fb;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f3edff;
+  --color-surface-2: #ffffff;
+  --color-text: #2a1650;
+  --color-text-muted: #66548c;
+  --color-border: #d4c6f1;
+  --color-border-soft: rgba(124, 58, 237, 0.16);
+  --color-border-strong: rgba(124, 58, 237, 0.38);
+  --color-accent-50: #f3edff;
+  --color-accent-100: #e4d8fb;
+  --color-accent-300: #a98af0;
+  --color-accent-500: #7c3aed;
+  --color-accent-600: #6d3df5;
+  --color-accent-700: #4c1fb3;
+  color-scheme: light;
+
+  background: var(--color-bg);
+}
+
+.auth-page--split::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--color-bg);
+  background-image: var(--auth-art);
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  background-size: max(206vw, 178vh) auto;
+  background-size: max(206vw, 178dvh) auto;
+  pointer-events: none;
+}
+
+.auth-page--split .auth-scene,
+.auth-page--split .auth-scene[data-active="signup"] {
+  max-width: 480px;
+}
+
+.auth-page--split .auth-logo-mark { filter: drop-shadow(0 4px 10px rgba(124, 58, 237, 0.28)); }
+
+.auth-page--split .auth-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(124, 58, 237, 0.16);
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(55, 25, 100, 0.12);
+  padding: clamp(20px, 3vw, 34px);
+}
+
+/* Tabs: active = purple gradient / white text (from .auth-switch rules);
+   inactive = white-lavender with dark-purple text. */
+.auth-page--split .auth-switch {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--color-border-soft);
+}
+.auth-page--split .auth-switch button { color: var(--color-accent-700); }
+.auth-page--split .auth-switch button:hover:not([aria-selected="true"]) { background: var(--color-accent-50); }
+.auth-page--split .auth-switch button[aria-selected="true"] { color: #fff; }
+
+/* The signup password-rule hint sits directly in .form-grid (not in a
+   .field), so the .field .hint rule above never styled it. */
+.auth-page--split .form-grid > .hint {
+  font-size: 0.7rem;
+  line-height: 1.25;
+  color: var(--color-text-muted);
+}
+
+.auth-page--split .input { background: #fff; }
+.auth-page--split .input::placeholder { color: #8f80b3; opacity: 1; }
+
+/* The dark palette's pastel error red is unreadable on white. */
+.auth-page--split .field-error { color: #b42318; }
+.auth-page--split .alert-error { background: #fff1f0; border-color: rgba(180, 35, 24, 0.35); color: #b42318; }
+.auth-page--split .alert-error::before { background: rgba(180, 35, 24, 0.14); color: #b42318; }
+.auth-page--split .field.has-error .input { border-color: #d92d20; box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.14); }
+
+@media (min-width: 1024px) {
+  .auth-page--split::before {
+    background-position: center center;
+    background-size: cover;
+  }
+  /* Two equal columns: the left one is intentionally empty so the dark art
+     shows; the scene is centred inside the right (light) column. Padding is
+     symmetric, so the column split stays on the viewport centre line. */
+  .auth-page--split .auth-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: var(--space-6) var(--space-6);
+  }
+  .auth-page--split .auth-scene {
+    grid-column: 2;
+    justify-self: center;
+  }
+  .auth-page--split .auth-card { box-shadow: 0 24px 70px rgba(55, 25, 100, 0.12); }
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .auth-page--split .auth-card { padding: var(--space-5); }
+}
+
+@media (max-width: 480px) {
+  .auth-page--split .auth-card { padding: var(--space-4); }
 }
