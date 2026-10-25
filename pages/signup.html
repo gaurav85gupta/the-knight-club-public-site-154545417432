@@ -22,38 +22,23 @@
 </head>
 <body class="auth-page">
 
-  <header class="container site-header">
-    <a class="brand" href="../index.html"><img class="brand-mark" src="../assets/images/knight-emblem-nav.png" srcset="../assets/images/knight-emblem-nav.png 1x, ../assets/images/knight-emblem-nav@2x.png 2x" width="28" height="28" alt="" aria-hidden="true" />The <span>Knight Club</span></a>
-    <nav class="site-nav" aria-label="Account">
-      <a href="courses.html" class="text-muted">Courses</a>
-      <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
-    </nav>
-  </header>
-
   <main class="auth-main">
-    <div class="auth-split" aria-hidden="true">
-      <p class="auth-split-eyebrow">Learn &bull; Build &bull; Grow</p>
-      <h2 class="auth-split-title">The school of what<br>school <span>forgot</span></h2>
-      <p class="auth-split-lead">Practical skills, real-world thinking and modern tools for people who want to build something beyond the traditional classroom.</p>
-      <ul class="auth-split-stats">
-        <li><strong>200+</strong><span>Students</span></li>
-        <li><strong>7+</strong><span>Skills</span></li>
-        <li><strong>100%</strong><span>Practical</span></li>
-      </ul>
-    </div>
+    <div class="auth-scene" id="auth-scene" data-active="signup">
 
-    <div class="auth-flip-scene" id="auth-scene" data-active="signup">
+      <a href="../index.html" class="auth-logo" aria-label="The Knight Club — home">
+        <img class="auth-logo-mark" src="../assets/images/knight-emblem-512.png" width="48" height="48" alt="" aria-hidden="true" />
+        <span class="auth-logo-text">The <span>Knight Club</span></span>
+      </a>
 
       <div class="auth-switch" role="tablist" aria-label="Choose Sign in or Create account">
         <button type="button" id="switch-login" role="tab" aria-selected="false" aria-controls="auth-face-login">Sign In</button>
         <button type="button" id="switch-signup" role="tab" aria-selected="true" aria-controls="auth-face-signup">Create Account</button>
       </div>
 
-      <div class="auth-flip-card" id="auth-flip-card">
-       <div class="auth-flip-inner">
+      <div class="auth-card" id="auth-card">
 
-        <!-- FRONT: Sign In -->
-        <section class="auth-card auth-face auth-face-front" id="auth-face-login" aria-labelledby="login-title" aria-hidden="true">
+        <!-- Sign In -->
+        <section class="auth-face" id="auth-face-login" aria-labelledby="login-title" aria-hidden="true" hidden>
           <h1 id="login-title">Welcome back</h1>
           <p class="lead">Sign in with your User ID and password.</p>
 
@@ -93,16 +78,10 @@
           <p class="auth-alt">New here? <a href="signup.html" data-auth-switch="signup">Create an account</a></p>
         </section>
 
-        <!-- BACK: Create Account -->
-        <section class="auth-card auth-face auth-face-back" id="auth-face-signup" aria-labelledby="signup-title">
-          <h1 id="signup-title">Start your journey</h1>
-          <p class="lead">Create your free account in seconds</p>
-
-          <ul class="auth-benefits">
-            <li><svg class="check-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.3l2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Unlock premium courses anytime</li>
-            <li><svg class="check-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.3l2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Learn from a 6-figure mentor</li>
-            <li><svg class="check-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.3l2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Join 200+ winning students</li>
-          </ul>
+        <!-- Create Account -->
+        <section class="auth-face" id="auth-face-signup" aria-labelledby="signup-title">
+          <h1 id="signup-title">Create your account</h1>
+          <p class="lead">Join The Knight Club and start learning today.</p>
 
           <div id="form-alert-signup" class="alert" role="alert" hidden></div>
 
@@ -175,7 +154,6 @@
           <p class="auth-alt">Already have an account? <a href="login.html" data-auth-switch="login">Sign in</a></p>
         </section>
 
-       </div>
       </div>
     </div>
   </main>
@@ -184,7 +162,7 @@
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/forms.js"></script>
-  <script src="../assets/js/auth-flip.js"></script>
+  <script src="../assets/js/auth-tabs.js"></script>
   <script src="../assets/js/login.js"></script>
   <script src="../assets/js/signup.js"></script>
 </body>

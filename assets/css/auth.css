@@ -88,167 +88,58 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-3) var(--space-4) var(--space-4);
+  padding: var(--space-6) var(--space-4);
   position: relative;
   z-index: 2;
 }
 
-/* ---- Desktop/tablet brand panel ----
-   Fills the large empty space beside the card on wide screens with
-   purposeful brand content instead of bare dark background. Hidden by
-   default (mobile-first); shown only at the split-layout breakpoint
-   below. The card's own perspective/flip mechanics are untouched —
-   this is a sibling, not a wrapper. Decorative (aria-hidden) — it
-   restates the homepage hero promise rather than conveying anything
-   the auth form itself depends on. */
-.auth-split {
-  display: none;
+/* ---- Centered auth scene ----
+   A single static column: logo, tab switcher, card. No flip/3D transform
+   and no desktop two-pane split — both faces live in the DOM (so
+   switching never loses in-progress input in the other form) and the
+   inactive one is removed from layout with the `hidden` attribute plus
+   aria-hidden, rather than being rotated off-screen. */
+.auth-scene {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: max-width var(--dur-base) var(--ease-out);
+}
+/* The Sign In form only ever needs two stacked fields, so it stays at the
+   compact base width above even on desktop; only Create Account (which
+   gets a two-column field layout at >=1024px) needs the wider card. */
+.auth-scene[data-active="signup"] {
+  max-width: 440px;
 }
 
-.auth-split-eyebrow {
+.auth-logo {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  margin: 0 0 var(--space-4);
-  padding: 0.4rem 0.9rem;
-  font-size: 0.75rem;
+  gap: 0.55rem;
+  margin-bottom: var(--space-5);
+}
+.auth-logo:hover { color: var(--color-text); }
+.auth-logo-mark {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(160, 106, 255, 0.45));
+}
+.auth-logo-text {
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-accent-700);
-  background: var(--color-accent-50);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-full);
-}
-
-.auth-split-title {
-  margin: 0 0 var(--space-4);
-  font-family: 'Sora', var(--font-family-base);
-  font-weight: 700;
-  font-size: clamp(1.9rem, 2.6vw, 2.6rem);
-  line-height: 1.15;
+  font-size: var(--font-size-xl);
+  color: var(--color-text);
   letter-spacing: -0.02em;
-  color: var(--color-text);
+  white-space: nowrap;
 }
-.auth-split-title span {
-  background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+.auth-logo-text span { color: var(--color-accent-500); }
 
-.auth-split-lead {
-  margin: 0 0 var(--space-8);
-  max-width: 420px;
-  font-size: var(--font-size-base);
-  line-height: 1.7;
-  color: var(--color-text-muted);
-}
-
-.auth-split-stats {
-  display: flex;
-  gap: var(--space-8);
-  list-style: none;
-  margin: 0;
-  padding: var(--space-5) 0 0;
-  border-top: 1px solid var(--color-border-soft);
-}
-.auth-split-stats li { display: flex; flex-direction: column; gap: 2px; }
-.auth-split-stats strong {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-text);
-}
-.auth-split-stats span {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-/* ---- Flip scene ----
-   Canonical two-layer flip structure: the OUTER card (.auth-flip-card)
-   never rotates and owns layout/height/overflow; the INNER rotator
-   (.auth-flip-inner) is the only element whose transform changes
-   (0deg <-> 180deg). Each face carries its own FIXED rotation (front:
-   0deg, back: 180deg) plus backface-visibility: hidden, so exactly one
-   face is ever front-facing — rotating a face that is itself already
-   rotated 180deg (as an earlier version of this file did) composes two
-   3D rotations and makes the browser treat BOTH faces as back-facing,
-   which renders as a blank card. Keeping the rotation on one layer only
-   avoids that.
-   Faces are absolutely positioned so the inactive one never contributes
-   to layout height. The card's own height is synced by auth-flip.js to
-   whichever face is active (measured, then set as --auth-card-h), so
-   Sign In stays compact and Create Account gets the room its longer
-   form needs. */
-.auth-flip-scene {
-  width: 100%;
-  max-width: 420px;
-  perspective: 1800px;
-}
-
-.auth-flip-card {
-  position: relative;
-  /* min-height covers the moment before auth-flip.js's first measurement
-     (and the rare no-JS case, where the flip switcher itself is inert
-     anyway): the Sign In face stays reachable rather than collapsing to
-     zero height, since position:absolute children don't contribute to an
-     auto-height relative parent. auth-flip.js overwrites --auth-card-h
-     with the real measured height on load. */
-  min-height: 360px;
-  height: var(--auth-card-h, auto);
-  transition: height var(--dur-base) var(--ease-out);
-  will-change: height;
-  /* 3D-transformed descendants (the rotated back face) still inflate an
-     ancestor's scrollable overflow even while absolutely positioned and
-     invisible (visibility: hidden only hides paint, not layout/overflow
-     participation). Clipping overflow here stops the inactive, oversized
-     face from pushing the whole page taller. */
-  overflow: hidden;
-}
-
-.auth-flip-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform var(--dur-base) var(--ease-out);
-  will-change: transform;
-}
-.auth-flip-scene[data-active="signup"] .auth-flip-inner { transform: rotateY(180deg); }
-
-.auth-face {
-  position: absolute;
-  /* top/left/right only — deliberately NOT `inset: 0` / bottom: 0, which
-     would stretch the face to the card's (animated) height and create a
-     circular dependency: the card's height is measured FROM each face's
-     natural content height, so the face itself must stay free to size to
-     its own content (height: fit-content) rather than being pinned to
-     whatever height the card currently has. */
-  top: 0;
-  left: 0;
-  right: 0;
-  backface-visibility: hidden;
-  min-width: 0;
-  height: fit-content;
-}
-.auth-face-front { transform: rotateY(0deg); }
-.auth-face-back { transform: rotateY(180deg); }
-
-/* The inactive face must not be reachable by keyboard or AT, and must not
-   paint over the active one even where 3D transforms are unsupported. */
-.auth-face[aria-hidden="true"] {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .auth-flip-card { transition: height var(--dur-fast) linear; }
-  .auth-flip-inner { transition: none; transform: none !important; }
-  .auth-face-back { transform: none; }
-  .auth-flip-scene[data-active="login"] .auth-face-back { opacity: 0; visibility: hidden; }
-  .auth-flip-scene[data-active="signup"] .auth-face-front { opacity: 0; visibility: hidden; }
+.auth-face[hidden] {
+  display: none;
 }
 
 .auth-card {
@@ -305,33 +196,6 @@
   font-size: var(--font-size-sm);
 }
 
-/* ---- Signup benefits checklist ---- */
-.auth-benefits {
-  list-style: none;
-  margin: 0 0 var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-surface-alt);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-md);
-  display: grid;
-  gap: 6px;
-}
-.auth-benefits li {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-text);
-  line-height: 1.2;
-}
-.auth-benefits .check-icon {
-  flex-shrink: 0;
-  width: 1em;
-  height: 1em;
-  color: var(--color-accent-500);
-}
-
 /* ---- Form primitives ----
    Two columns on the signup face for fields that pair naturally
    (name/mobile, password/confirm), so the wide card width is used
@@ -376,6 +240,20 @@
 }
 .input::placeholder { color: var(--color-text-muted); opacity: 0.7; }
 .input:hover { border-color: var(--color-accent-300); }
+/* Chrome/Edge/Safari paint autofilled fields with an opaque light
+   background by default (ignoring `background`), which breaks the dark
+   surface. A huge inset box-shadow in the surface color repaints behind
+   the browser's autofill layer instead, and the text-fill-color keeps the
+   entered text readable against it. */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-2) inset;
+  box-shadow: 0 0 0 1000px var(--color-surface-2) inset;
+  caret-color: var(--color-text);
+  transition: background-color 9999s ease-in-out 0s;
+}
 .input:focus {
   outline: none;
   border-color: var(--color-accent-500);
@@ -619,30 +497,13 @@ textarea.input { resize: vertical; min-height: 56px; }
   .auth-card { padding: var(--space-6) var(--space-8); }
 }
 
-/* ---- Desktop: two-pane split ----
-   Replaces "small centered card on a huge empty background" with a
-   deliberate layout: brand panel fills the left column, the auth card
-   sits in a fixed-width right column. Both are vertically centered as
-   a pair within the viewport, so the whole composition — not just the
-   card — reads as the page's content. */
 @media (min-width: 1024px) {
   .auth-main {
-    justify-content: center;
-    gap: var(--space-16);
     padding: var(--space-6) var(--space-10);
   }
-  .auth-split {
-    display: block;
-    flex: 1 1 480px;
-    max-width: 560px;
+  .auth-scene[data-active="signup"] {
+    max-width: 720px;
   }
-  .auth-flip-scene {
-    flex: 0 0 420px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .auth-main { gap: var(--space-24); }
 }
 
 /* ---- Small phones ---- */
@@ -652,17 +513,15 @@ textarea.input { resize: vertical; min-height: 56px; }
 }
 @media (max-width: 480px) {
   .auth-card { padding: var(--space-3); }
+  .auth-logo-text { font-size: 1.1rem; }
+  /* .site-header/.site-nav/.btn-sm rules below only affect OTHER pages
+     sharing this stylesheet (e.g. profile.html) — login/signup no longer
+     render a .site-header. */
   .site-nav { gap: var(--space-2); }
-  /* Matches the public header's established small-screen brand size
-     (public.css), so the wordmark stays on one line instead of wrapping. */
   .site-header .brand { font-size: 1.1rem; }
-  /* Courses is secondary to the auth flow itself — on a narrow phone it
-     only exists to steal room from the brand and the primary CTA, which
-     is what forced both onto two lines. Drop it here; it stays reachable
-     from the brand link (home) and from the site-wide nav elsewhere. */
   .site-header .site-nav a.text-muted { display: none; }
   .site-header .btn-sm { padding: 0.5rem 0.85rem; font-size: 0.8rem; }
-  .auth-main { padding-top: var(--space-2); padding-bottom: var(--space-3); }
+  .auth-main { padding-top: var(--space-4); padding-bottom: var(--space-3); }
 }
 
 /* Short header + tall phone viewport otherwise centers the card into a

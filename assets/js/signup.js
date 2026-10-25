@@ -5,10 +5,10 @@
  *
  * Registration deliberately does NOT sign the user in (backend design). Both
  * the Sign In and Create Account forms live on the same page (see
- * login.html / signup.html), so on success this flips to the Sign In face
- * in place (via auth-flip.js) and shows an "account created" notice there,
- * rather than navigating. If auth-flip.js is unavailable for any reason,
- * it falls back to the original cross-page notice + navigation to
+ * login.html / signup.html), so on success this switches to the Sign In
+ * tab in place (via auth-tabs.js) and shows an "account created" notice
+ * there, rather than navigating. If auth-tabs.js is unavailable for any
+ * reason, it falls back to the original cross-page notice + navigation to
  * login.html.
  *
  * `confirmPassword` is sent to the server ONLY because the backend validator
