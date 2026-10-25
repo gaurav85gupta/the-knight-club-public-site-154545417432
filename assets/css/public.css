@@ -125,7 +125,7 @@
 }
 .pub-header .brand span,
 .pub-footer .brand span {
-  font-weight: 700;
+  font-weight: 600;
   background: linear-gradient(120deg, #c4a0ff 0%, #a06aff 40%, #d8b4ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
