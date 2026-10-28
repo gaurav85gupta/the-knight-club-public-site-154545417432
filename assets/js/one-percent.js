@@ -968,7 +968,12 @@
     // Phase 3: Pre-Book Now
     var prebookBtn = $('oc-prebook-cta');
     if (prebookBtn) {
-      prebookBtn.addEventListener('click', startPreBooking);
+      // Pre-Book Now first opens the "How pre-booking works" page (terms +
+      // explanation). Its Continue button runs the same create/resume flow
+      // (startPreBooking logic) and then goes to pre-booking.html.
+      prebookBtn.addEventListener('click', function () {
+        window.location.href = 'pre-booking-info.html?slug=' + encodeURIComponent(PLAN_SLUG);
+      });
     }
 
     // Review — Edit Selection button

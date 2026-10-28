@@ -1,0 +1,115 @@
+/* ============================================================
+   Pre-booking info page (terms + how it works)
+   Uses site tokens only, so dark and light themes both work.
+   ============================================================ */
+
+.pbi-page { --pbi-gold: #f0c674; --pbi-gold-ink: #2a1d00; }
+html[data-site-theme="light"] .pbi-page { --pbi-gold: #a9780f; --pbi-gold-ink: #ffffff; }
+
+.pbi-main { padding: var(--space-10) 0 var(--space-16); min-height: 60vh; }
+.pbi-wrap { max-width: 780px; }
+
+.pbi-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.pbi-back {
+  display: inline-flex; align-items: center; gap: .45rem;
+  color: var(--color-text-muted); text-decoration: none; font-size: .9rem;
+  margin-bottom: var(--space-6);
+}
+.pbi-back:hover { color: var(--color-text); }
+
+.pbi-head { margin-bottom: var(--space-6); }
+.pbi-title { margin: 0 0 var(--space-3); font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.1; color: var(--color-text); }
+.pbi-lead { margin: 0; max-width: 62ch; color: var(--color-text-muted); font-size: 1.02rem; line-height: 1.65; }
+
+/* ---- Alert ---- */
+.pbi-alert {
+  margin-bottom: var(--space-5); padding: var(--space-4); border-radius: 12px;
+  border: 1px solid rgba(240,180,41,.35); background: rgba(240,180,41,.08);
+  color: var(--color-text); font-size: .92rem; line-height: 1.55;
+}
+.pbi-alert[hidden] { display: none; }
+.pbi-alert a { color: inherit; text-decoration: underline; }
+
+/* ---- At a glance (the one memorable element) ---- */
+.pbi-facts[hidden] { display: none; }
+.pbi-facts { margin-bottom: var(--space-6); }
+.pbi-facts-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0;
+  border: 1px solid var(--color-border-strong); border-radius: 18px; overflow: hidden;
+  background: var(--color-border-soft);
+}
+.pbi-fact { margin: 0; padding: var(--space-5); background: var(--color-surface); }
+.pbi-fact dt { margin: 0 0 .35rem; color: var(--color-text-muted); font-size: .82rem; line-height: 1.4; }
+.pbi-fact dd { margin: 0; color: var(--color-text); font-size: 1.45rem; font-weight: 600; line-height: 1.2; }
+.pbi-fact-hero {
+  grid-column: 1 / -1; padding: var(--space-6) var(--space-5);
+  background: linear-gradient(135deg, rgba(240,198,116,.14), rgba(124,58,237,.12)), var(--color-surface);
+}
+.pbi-fact-hero dd { font-size: clamp(2.2rem, 7vw, 3.2rem); color: var(--pbi-gold); letter-spacing: -.01em; }
+
+/* ---- Main card ---- */
+.pbi-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 18px; padding: var(--space-8);
+}
+.pbi-sec + .pbi-sec { margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--color-border-soft); }
+.pbi-sec h2 { margin: 0 0 var(--space-3); font-size: 1.3rem; color: var(--color-text); }
+.pbi-sec p { margin: 0 0 var(--space-3); max-width: 66ch; color: var(--color-text-muted); line-height: 1.7; }
+.pbi-sec p:last-child { margin-bottom: 0; }
+
+/* Steps: a real sequence, so numbers are meaningful */
+.pbi-steps { list-style: none; margin: var(--space-4) 0 0; padding: 0; counter-reset: pbi-step; display: grid; gap: var(--space-5); }
+.pbi-steps li { position: relative; padding-left: 3rem; counter-increment: pbi-step; }
+.pbi-steps li::before {
+  content: counter(pbi-step); position: absolute; left: 0; top: 0;
+  width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 600; font-size: .95rem;
+  color: var(--pbi-gold); border: 1px solid var(--pbi-gold);
+}
+.pbi-steps li:not(:last-child)::after {
+  content: ""; position: absolute; left: calc(1.05rem - .5px); top: 2.4rem; bottom: calc(-1 * var(--space-5) + .3rem);
+  width: 1px; background: var(--color-border-soft);
+}
+.pbi-steps h3 { margin: .2rem 0 .3rem; font-size: 1.03rem; color: var(--color-text); }
+.pbi-steps p { margin: 0; }
+
+.pbi-list { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; gap: var(--space-3); }
+.pbi-list li { display: flex; gap: .7rem; align-items: flex-start; color: var(--color-text-muted); line-height: 1.6; }
+.pbi-list svg { flex-shrink: 0; margin-top: .2rem; color: var(--pbi-gold); }
+
+.pbi-terms { margin: var(--space-3) 0 0; padding-left: 1.4rem; display: grid; gap: var(--space-3); color: var(--color-text-muted); line-height: 1.65; }
+.pbi-terms li::marker { color: var(--pbi-gold); font-weight: 600; }
+.pbi-terms a, .pbi-help a { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- Confirm + actions ---- */
+.pbi-check { display: flex; gap: .75rem; align-items: flex-start; cursor: pointer; color: var(--color-text); line-height: 1.5; }
+.pbi-check input { width: 1.2rem; height: 1.2rem; margin-top: .15rem; accent-color: var(--color-accent-500); flex-shrink: 0; }
+.pbi-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+.pbi-continue {
+  background: linear-gradient(135deg, #f6d98a 0%, #f0c674 45%, #c99a2e 100%);
+  color: #2a1d00; border: 1px solid rgba(255,230,160,.6); font-weight: 600;
+  box-shadow: 0 14px 40px -14px rgba(240,198,116,.55);
+}
+html[data-site-theme="light"] .pbi-continue { color: #2a1d00; }
+.pbi-continue:hover:not(:disabled) { filter: brightness(1.06); }
+.pbi-continue:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+.pbi-continue:focus-visible, .pbi-check input:focus-visible, .pbi-back:focus-visible { outline: 2px solid var(--color-accent-300); outline-offset: 3px; }
+.pbi-spinner {
+  display: inline-block; width: 1rem; height: 1rem; margin-right: .5rem; vertical-align: -.15em;
+  border: 2px solid rgba(42,29,0,.3); border-top-color: #2a1d00; border-radius: 50%;
+  animation: pbi-spin .7s linear infinite;
+}
+.pbi-spinner[hidden] { display: none; }
+@keyframes pbi-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pbi-spinner { animation-duration: 2s; } }
+.pbi-hint { margin: var(--space-3) 0 0; font-size: .85rem; color: var(--color-text-muted); }
+.pbi-help { margin: var(--space-6) 0 0; text-align: center; font-size: .9rem; color: var(--color-text-muted); }
+
+@media (max-width: 640px) {
+  .pbi-card { padding: var(--space-5); }
+  .pbi-facts-grid { grid-template-columns: 1fr 1fr; }
+  .pbi-fact-hero { grid-column: 1 / -1; }
+  .pbi-fact:last-child { grid-column: 1 / -1; }
+  .pbi-actions .btn { width: 100%; }
+}
