@@ -113,3 +113,14 @@ html[data-site-theme="light"] .pbi-continue { color: #2a1d00; }
   .pbi-fact:last-child { grid-column: 1 / -1; }
   .pbi-actions .btn { width: 100%; }
 }
+
+/* ---- "How to continue" instruction ---- */
+.pbi-howto {
+  display: flex; gap: .7rem; align-items: flex-start; margin: 0 0 var(--space-5);
+  padding: var(--space-4); border-radius: 12px; line-height: 1.55; font-size: .95rem;
+  color: var(--color-text); background: rgba(240,198,116,.08); border: 1px solid rgba(240,198,116,.3);
+}
+html[data-site-theme="light"] .pbi-howto { background: rgba(169,120,15,.08); border-color: rgba(169,120,15,.35); }
+.pbi-howto svg { flex-shrink: 0; margin-top: .15rem; color: var(--pbi-gold); }
+.pbi-howto a { display: inline-block; margin-left: .35rem; color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
+.pbi-confirm { scroll-margin-top: 96px; }

@@ -48,6 +48,11 @@
         <p class="pbi-lead">Reserve your seat in the 1% Club today and choose your courses later. Please read this page once before you continue. It takes about two minutes.</p>
       </header>
 
+      <p class="pbi-howto">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        <span><strong>How to continue:</strong> scroll to the bottom of this page, tick the agreement box, then press <em>Continue to payment</em>. <a href="#pbi-confirm" id="pbi-jump">Take me to the bottom</a></span>
+      </p>
+
       <div id="pbi-alert" class="pbi-alert" role="alert" hidden></div>
 
       <!-- Amounts come from the live plan (never hardcoded). -->
@@ -127,7 +132,7 @@
           </ol>
         </section>
 
-        <section class="pbi-sec pbi-confirm">
+        <section class="pbi-sec pbi-confirm" id="pbi-confirm">
           <label class="pbi-check" for="pbi-agree">
             <input type="checkbox" id="pbi-agree" />
             <span>I have read and agree to the pre-booking terms above.</span>

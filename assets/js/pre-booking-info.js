@@ -145,5 +145,18 @@
     btn.addEventListener('click', onContinue);
     syncButton();
   }
+  // "Take me to the bottom" — jumps to the agreement box and focuses it.
+  var jump = $('pbi-jump');
+  if (jump) {
+    jump.addEventListener('click', function (e) {
+      e.preventDefault();
+      var target = $('pbi-confirm');
+      if (!target) return;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      if (agree) setTimeout(function () { agree.focus({ preventScroll: true }); }, reduce ? 0 : 450);
+    });
+  }
+
   loadPlan();
 })();
