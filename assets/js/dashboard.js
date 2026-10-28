@@ -207,6 +207,33 @@
     StudentUI.showState(act, 'list');
   }
 
+  // ---- Phase 3: open pre-booking resume banner ------------------------------------
+  // dashboard.membershipBooking is the server's own purchase summary (same
+  // shape pre-booking.js renders), or null when there's no open booking.
+  // This never overlaps with the 1% Club member badge: a booking summary
+  // only exists while the order is still PENDING (see
+  // membershipBooking.service.js#getActiveBookingSummary), and isMember is
+  // only ever true for a PAID order — the two states are mutually exclusive.
+  function renderBookingBanner(booking) {
+    const banner = $('dash-booking-banner');
+    if (!banner) return;
+    if (!booking) {
+      banner.hidden = true;
+      return;
+    }
+
+    const stageMessage = {
+      PRE_BOOKING_PENDING_PAYMENT: 'Complete your pre-booking payment to reserve your seat.',
+      PRE_BOOKED: 'Your seat is reserved — choose your courses to continue.',
+      COURSE_SELECTION_COMPLETE: `Remaining balance: ${StudentUI.money(booking.remainingBalance, booking.currency)}.`,
+      REMAINING_PAYMENT_PENDING: `Remaining balance: ${StudentUI.money(booking.remainingBalance, booking.currency)}.`,
+    };
+
+    $('dash-booking-sub').textContent = stageMessage[booking.purchaseStage] || 'Continue where you left off.';
+    $('dash-booking-resume').href = `pre-booking.html?orderId=${encodeURIComponent(booking.orderId)}`;
+    banner.hidden = false;
+  }
+
   // ---- Load ----------------------------------------------------------------------
   async function loadDashboard() {
     StudentUI.showState(cont, 'loading');
@@ -227,6 +254,10 @@
       if (dashboard.student && dashboard.student.isMember) {
         $('dash-eyebrow').appendChild(el('span', 'member-badge', '1% Club Member'));
       }
+
+      // Phase 3: open pre-booking resume banner — independent of the member
+      // badge above (see renderBookingBanner's doc comment).
+      renderBookingBanner(dashboard.membershipBooking || null);
 
       renderSummary(dashboard.summary || {}, capabilities, myLearnings);
       renderContinueLearning(dashboard.continueLearning || null, capabilities);

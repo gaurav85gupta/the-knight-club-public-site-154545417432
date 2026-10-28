@@ -494,3 +494,26 @@ html[data-site-theme="light"] .club-page h1.oc-h1-centered .oc-h1-gradient{backg
 /* state headings are h2 (single H1 per page); keep the old h1 look */
 h2.oc-error-title,h2.oc-member-title,h2.oc-review-heading{font-family:var(--font-family-h1);letter-spacing:normal}
 h2.oc-error-title,h2.oc-member-title{font-weight:400}
+/* ---- Pre-Booking entry point (Phase 3) ---- */
+.oc-prebook-row{display:flex;flex-direction:column;align-items:center;gap:var(--space-3);max-width:48ch;margin:var(--space-6) auto 0;text-align:center}
+.oc-prebook-row[hidden]{display:none}
+.oc-prebook-note{margin:0;color:var(--color-text-muted);font-size:.85rem;line-height:1.5}
+.oc-prebook-note strong{color:var(--cream, var(--color-text))}
+.club-page .oc-prebook-row .btn-outline{border-color:rgba(240,198,116,.4);color:var(--cream, var(--color-text))}
+.club-page .oc-prebook-row .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+html[data-site-theme="light"] .club-page .oc-prebook-row .btn-outline{color:var(--color-text)}
+
+/* ---- Hero CTAs: Join + gold Pre-Book on row 1, note, then Watch intro ---- */
+.oc-prebook-slot{display:contents}
+.oc-prebook-slot[hidden]{display:none}
+.club-page .btn-gold{background:linear-gradient(135deg,#f6d98a 0%,#f0c674 45%,#c99a2e 100%);color:#2a1d00;border:1px solid rgba(255,230,160,.6);font-weight:600;box-shadow:0 14px 40px -12px rgba(240,198,116,.55)}
+.club-page .btn-gold:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.club-page .btn-gold:disabled{opacity:.7;cursor:not-allowed}
+.oc-prebook-note{max-width:48ch;margin:var(--space-4) auto 0;text-align:center;color:var(--color-text-muted);font-size:.85rem;line-height:1.5}
+.oc-prebook-note strong{color:var(--cream, var(--color-text))}
+/* hide the note whenever the Pre-Book button is hidden (pre-booking disabled) */
+.oc-actions:has(> #oc-prebook-row[hidden]) ~ .oc-prebook-note{display:none}
+.oc-watch-row{display:flex;justify-content:center;margin-top:var(--space-4)}
+.club-page .oc-watch-row .btn-ghost{border-color:rgba(240,198,116,.4);color:var(--cream)}
+.club-page .oc-watch-row .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+html[data-site-theme="light"] .club-page .oc-watch-row .btn-ghost{color:var(--color-text)}

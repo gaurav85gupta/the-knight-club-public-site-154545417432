@@ -50,6 +50,22 @@
         </div>
       </section>
 
+      <!-- ==================== PRE-BOOKING RESUME BANNER (Phase 3) ====================
+           Hidden by default; shown only when dashboard.membershipBooking is
+           non-null (the student has an open 1% Club pre-booking). Never
+           shown for an already-active membership — that state has no open
+           booking to resume and dashboard.student.isMember covers it via the
+           existing member badge above. -->
+      <section class="section-block" id="dash-booking-banner" hidden aria-labelledby="dash-booking-title">
+        <div class="order-status-banner is-warning" role="status" style="display:flex; align-items:center; justify-content:space-between; gap: var(--space-4); flex-wrap: wrap;">
+          <div>
+            <strong id="dash-booking-title">You have an open 1% Club pre-booking</strong>
+            <p id="dash-booking-sub" style="margin: var(--space-1) 0 0; font-weight: 400;"></p>
+          </div>
+          <a id="dash-booking-resume" href="#" class="btn btn-primary btn-sm">Resume booking</a>
+        </div>
+      </section>
+
       <!-- ==================== STATS ==================== -->
       <section class="section-block" aria-label="Learning summary">
         <div class="stat-grid" id="stat-grid">

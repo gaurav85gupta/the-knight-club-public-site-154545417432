@@ -453,6 +453,21 @@
   }
 
   function renderCheckout(order, items, idempotent) {
+    // Defense in depth: this generic checkout page is for direct, single-
+    // payment orders only. A staged (pre-booking) membership order has its
+    // own page (pre-booking.html) that understands partial payments, course
+    // selection and stage-driven balances — rendering it here would show a
+    // misleading full-price total while the actual payment amount (resolved
+    // server-side from the booking stage) could be smaller. The backend
+    // never lets this page charge the wrong amount either way, but a
+    // student should still land on the right UI, not a confusing one.
+    // This can only be reached by hand-editing the URL: every in-app link
+    // to checkout.html always comes from the non-staged order-creation
+    // endpoint (see one-percent.js's proceedToCheckout and payment-result.js).
+    if (order.purchaseStage) {
+      window.location.replace(`pre-booking.html?orderId=${encodeURIComponent(order.id)}`);
+      return;
+    }
     currentOrder = order;
 
     dom.orderNumber.textContent = order.orderNumber;

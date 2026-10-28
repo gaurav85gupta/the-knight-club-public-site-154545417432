@@ -1,0 +1,53 @@
+/**
+ * Pre-Booking page (Phase 3) — styles specific to pages/pre-booking.html.
+ *
+ * Everything else on this page reuses existing design-system classes
+ * (cart.css .cart-layout/.cart-summary, checkout.css .checkout-*, student.css
+ * .s-card/.kv, orders.css .receipt-course-item/.order-status-banner,
+ * one-percent.css .oc-courses/.oc-course). This file only adds what none of
+ * those already cover: the horizontal stage-progress strip.
+ */
+
+/* ---- Stage progress strip ------------------------------------------------ */
+
+.pb-stage-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0 0 var(--space-6);
+  padding: 0;
+}
+
+.pb-stage-strip li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt, rgba(255, 255, 255, 0.02));
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.pb-stage-strip li .pb-stage-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.pb-stage-strip li.is-done {
+  border-color: rgba(52, 211, 153, 0.4);
+  color: var(--color-success, #34d399);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.pb-stage-strip li.is-current {
+  border-color: var(--color-accent-500, #7c3aed);
+  color: var(--color-accent-700, #c4a0ff);
+  background: rgba(124, 58, 237, 0.1);
+  font-weight: 500;
+}

@@ -421,6 +421,30 @@
       counterEl.textContent = '0 of ' + limit + ' selected';
     }
     refreshStickyBar(0);
+
+    // Phase 3: Pre-Book entry point. plan.preBooking is the PUBLIC, safe
+    // shape from toSafeMembershipPlan — it is already {enabled, amount,
+    // remainingAmount} and already reflects "valid" server-side (an
+    // enabled-but-misconfigured plan reports enabled:false here). Nothing
+    // about availability is inferred client-side (spec: "Do not infer
+    // availability only from frontend defaults").
+    updatePreBookRow();
+  }
+
+  // -------------------------------------------------------------------------
+  // Phase 3: Pre-Book row visibility + amount display.
+  // -------------------------------------------------------------------------
+  function updatePreBookRow() {
+    var row = $('oc-prebook-row');
+    if (!row) return;
+    var pb = plan && plan.preBooking;
+    if (pb && pb.enabled === true && typeof pb.amount === 'number') {
+      var amountEl = $('oc-prebook-amount');
+      if (amountEl) amountEl.textContent = money(pb.amount, plan.currency);
+      row.hidden = false;
+    } else {
+      row.hidden = true;
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -832,6 +856,85 @@
   }
 
   // -------------------------------------------------------------------------
+  // Phase 3: Pre-Book Now — creates/resumes the student's pre-booking and
+  // hands off to pre-booking.html, which owns the rest of the journey
+  // (payment, course selection, remaining balance). This function does not
+  // touch `selectedIds`/`selectionComplete` — the direct-purchase flow
+  // above is completely untouched by this path.
+  // -------------------------------------------------------------------------
+  function startPreBooking() {
+    if (!plan) return;
+
+    var btn = $('oc-prebook-cta');
+    var spinner = btn && btn.querySelector('.oc-btn-spinner');
+    var label = btn && btn.querySelector('.oc-btn-label');
+
+    if (typeof Auth === 'undefined' || !Auth.requireAuth) {
+      window.location.href = 'login.html?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+      return;
+    }
+
+    if (btn) { btn.disabled = true; btn.setAttribute('aria-disabled', 'true'); }
+    if (spinner) spinner.hidden = false;
+    if (label) label.textContent = 'Please wait\u2026';
+
+    function resetBtn() {
+      if (btn) { btn.disabled = false; btn.removeAttribute('aria-disabled'); }
+      if (spinner) spinner.hidden = true;
+      if (label) label.textContent = 'Pre-Book Now';
+    }
+
+    Auth.requireAuth().then(function () {
+      // Same existing-member guard as the direct-purchase path: a current
+      // member has nothing to pre-book.
+      return checkExistingMembership();
+    }).then(function (isMember) {
+      if (isMember) {
+        showView('member');
+        SmoothScroll.scrollTo(0);
+        resetBtn();
+        return null;
+      }
+      // Idempotent: creates a new pre-booking, or resumes the student's
+      // existing open one — never a second active booking for repeated
+      // clicks/refreshes (spec: "Do not create multiple active
+      // pre-bookings").
+      return Api.post('/memberships/' + encodeURIComponent(PLAN_SLUG) + '/pre-bookings', {})
+        .then(function (data) {
+          var order = data && data.order;
+          if (!order || !order.id) {
+            resetBtn();
+            return;
+          }
+          window.location.href = 'pre-booking.html?orderId=' + encodeURIComponent(order.id) +
+            '&slug=' + encodeURIComponent(PLAN_SLUG);
+        });
+    }).catch(function (err) {
+      var status = (err && err.status) || 0;
+      if (status === 401 || status === 403) {
+        if (typeof Auth !== 'undefined' && Auth.handleSessionError) Auth.handleSessionError(err);
+        return;
+      }
+      resetBtn();
+      // Pre-booking became unavailable since the page loaded (disabled or
+      // reconfigured mid-visit) — hide the row immediately so the student
+      // isn't left with a dead-end button, then re-fetch the plan so
+      // updatePreBookRow() reflects the server's current, authoritative
+      // state rather than the stale copy already in memory.
+      if (status === 409 || status === 404) {
+        var row = $('oc-prebook-row');
+        if (row) row.hidden = true;
+        Api.get('/memberships/' + encodeURIComponent(PLAN_SLUG))
+          .then(function (freshPlan) {
+            plan = freshPlan;
+            updatePreBookRow();
+          })
+          .catch(function () { /* keep the row hidden; next full load() will reconcile */ });
+      }
+    });
+  }
+
+  // -------------------------------------------------------------------------
   // Event wiring
   // -------------------------------------------------------------------------
   function wireEvents() {
@@ -860,6 +963,12 @@
         if (!selectionComplete) return;
         enterReview();
       });
+    }
+
+    // Phase 3: Pre-Book Now
+    var prebookBtn = $('oc-prebook-cta');
+    if (prebookBtn) {
+      prebookBtn.addEventListener('click', startPreBooking);
     }
 
     // Review — Edit Selection button

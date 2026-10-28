@@ -212,6 +212,29 @@
               Join the 1% Club
               <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
+            <div id="oc-prebook-row" class="oc-prebook-slot" hidden>
+              <button id="oc-prebook-cta" class="btn btn-gold btn-lg oc-btn-with-spinner" type="button">
+                <span class="oc-btn-spinner" hidden aria-hidden="true"></span>
+                <span class="oc-btn-label">Pre-Book Now</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               Pre-Booking entry point (Phase 3).
+               Hidden by default; one-percent.js reveals it only when the
+               backend-confirmed plan.preBooking.enabled is true (never
+               inferred from a frontend default — see spec "CTA rules").
+               A separate, secondary path alongside the direct-purchase CTA
+               above — clicking it never touches the course-selection state
+               that CTA depends on.
+               ================================================================ -->
+          <p class="oc-prebook-note">
+            Not ready to choose your courses yet? Reserve your seat now for
+            <strong id="oc-prebook-amount"></strong> and pick your courses later.
+          </p>
+
+          <div class="oc-watch-row">
             <a id="oc-scroll-video" href="#watch-intro" class="btn btn-ghost btn-lg">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
               Watch intro

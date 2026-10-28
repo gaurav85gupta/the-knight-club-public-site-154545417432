@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-48.png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme applied synchronously before stylesheets — no flash on first paint -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>1% Club Pre-Booking — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/cart.css" />
+  <link rel="stylesheet" href="../assets/css/checkout.css" />
+  <link rel="stylesheet" href="../assets/css/orders.css" />
+  <link rel="stylesheet" href="../assets/css/one-percent.css" />
+  <link rel="stylesheet" href="../assets/css/pre-booking.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <!-- Protected shell: page is invisible until server confirms the session -->
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container is-medium">
+
+      <a href="one-percent-club.html" class="checkout-back-link" aria-label="Back to the 1% Club page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to 1% Club
+      </a>
+
+      <header class="page-head" style="margin-bottom: var(--space-6)">
+        <div style="display:flex; align-items:center; gap: var(--space-4)">
+          <span class="checkout-lock-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <div>
+            <p class="eyebrow">1% Club Pre-Booking</p>
+            <h1 class="page-title" id="pb-page-title">Your booking</h1>
+          </div>
+        </div>
+      </header>
+
+      <div id="pb-alert" class="alert" role="alert" hidden></div>
+
+      <!-- ================================================================
+           STATE: LOADING
+           ================================================================ -->
+      <div id="pb-loading" aria-label="Loading your booking">
+        <div class="checkout-skeleton-item" aria-hidden="true">
+          <div class="checkout-skeleton-thumb"></div>
+          <div class="checkout-skeleton-lines">
+            <div class="checkout-skeleton-line"></div>
+            <div class="checkout-skeleton-line is-short"></div>
+            <div class="checkout-skeleton-line is-price"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================================
+           STATE: ERROR
+           ================================================================ -->
+      <div id="pb-error" class="checkout-error-state" hidden>
+        <div class="checkout-error-icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h2>We couldn&rsquo;t load this booking</h2>
+        <p id="pb-error-message">Please try again in a moment.</p>
+        <button id="pb-error-retry" class="btn btn-outline" type="button">Try again</button>
+      </div>
+
+      <!-- ================================================================
+           STATE: NOT FOUND — no orderId, or the booking doesn't belong
+           to this student.
+           ================================================================ -->
+      <div id="pb-notfound" class="empty-state" hidden>
+        <span class="empty-state-icon" aria-hidden="true">?</span>
+        <h3>We couldn&rsquo;t find that booking.</h3>
+        <p>It may not exist, or it may not belong to your account.</p>
+        <a class="btn btn-primary" href="one-percent-club.html">Back to 1% Club</a>
+      </div>
+
+      <!-- ================================================================
+           STATE: CONTENT — every purchase stage renders inside here.
+           ================================================================ -->
+      <div id="pb-content" hidden>
+
+        <!-- Stage progress strip -->
+        <ol class="pb-stage-strip" id="pb-stage-strip" aria-label="Booking progress"></ol>
+
+        <!-- Support-review banner (payment anomaly) -->
+        <div id="pb-anomaly-banner" class="order-status-banner is-danger" role="status" hidden>
+          Something about this booking&rsquo;s payments needs a closer look. Our team has been notified —
+          please <a href="contact.html">contact support</a> if you have questions.
+        </div>
+
+        <!-- Awaiting-confirmation banner -->
+        <div id="pb-awaiting-banner" class="order-status-banner is-warning" role="status" hidden>
+          We&rsquo;re confirming your last payment. This can take a minute — feel free to refresh.
+        </div>
+
+        <div class="cart-layout">
+
+          <!-- LEFT: stage-specific panel -->
+          <div>
+
+            <!-- PANEL: pay pre-booking -->
+            <section id="pb-panel-pay-prebooking" class="s-card" hidden>
+              <h2 class="s-card-title">Reserve your seat</h2>
+              <p class="s-card-desc">Pay the pre-booking amount now to reserve your seat in the 1% Club. You&rsquo;ll choose your courses after this payment is confirmed.</p>
+              <dl class="kv">
+                <div class="kv-row">
+                  <dt>Membership price</dt>
+                  <dd id="pb-pp-membership-price"></dd>
+                </div>
+                <div class="kv-row is-total">
+                  <dt>Pay now (pre-booking)</dt>
+                  <dd id="pb-pp-amount"></dd>
+                </div>
+              </dl>
+              <p class="text-muted" style="font-size: var(--font-size-sm); margin-top: var(--space-2);">
+                This is an initial payment, not the full membership price. The remaining balance is due after you select your courses.
+              </p>
+            </section>
+
+            <!-- PANEL: select courses -->
+            <section id="pb-panel-select-courses" class="s-card" hidden>
+              <h2 class="s-card-title">Choose your courses</h2>
+              <p class="s-card-desc" id="pb-select-sub">Your pre-booking payment is confirmed. Select your courses to continue.</p>
+              <p id="pb-select-count" class="oc-count" style="margin-bottom: var(--space-4);"></p>
+              <div id="pb-select-grid" class="oc-courses" role="group" aria-label="Available courses"></div>
+              <p id="pb-select-error" class="oc-review-error" hidden role="alert"></p>
+              <div class="oc-review-actions" style="margin-top: var(--space-6);">
+                <button id="pb-select-save" class="btn btn-primary btn-lg oc-btn-with-spinner" type="button" disabled aria-disabled="true">
+                  <span class="oc-btn-spinner" hidden aria-hidden="true"></span>
+                  <span class="oc-btn-label">Save selection</span>
+                </button>
+              </div>
+            </section>
+
+            <!-- PANEL: course selection complete (read-only recap + edit) -->
+            <section id="pb-panel-courses-complete" class="s-card" hidden>
+              <h2 class="s-card-title">Your selected courses</h2>
+              <p id="pb-complete-sub" class="s-card-desc"></p>
+              <div id="pb-complete-list" role="list"></div>
+              <button id="pb-complete-edit" class="btn btn-ghost btn-sm" type="button" style="margin-top: var(--space-4);">Change courses</button>
+            </section>
+
+            <!-- PANEL: pay remaining balance -->
+            <section id="pb-panel-pay-remaining" class="s-card" hidden>
+              <h2 class="s-card-title">Pay the remaining balance</h2>
+              <p class="s-card-desc">Complete your payment to activate your 1% Club membership.</p>
+              <dl class="kv">
+                <div class="kv-row">
+                  <dt>Membership price</dt>
+                  <dd id="pb-pr-membership-price"></dd>
+                </div>
+                <div class="kv-row">
+                  <dt>Paid so far</dt>
+                  <dd id="pb-pr-captured"></dd>
+                </div>
+                <div class="kv-row is-total">
+                  <dt>Remaining balance</dt>
+                  <dd id="pb-pr-remaining"></dd>
+                </div>
+              </dl>
+            </section>
+
+            <!-- PANEL: fully paid -->
+            <section id="pb-panel-fully-paid" class="s-card" hidden>
+              <h2 class="s-card-title">You&rsquo;re a 1% Club member!</h2>
+              <p class="s-card-desc">Your membership is fully paid and active. Your selected courses are available in My Learning.</p>
+              <div class="oc-actions" style="margin-top: var(--space-4);">
+                <a href="dashboard.html" class="btn btn-primary btn-lg">Go to My Learning</a>
+                <a id="pb-fp-order-link" href="#" class="btn btn-ghost btn-lg">View order</a>
+              </div>
+            </section>
+
+          </div>
+
+          <!-- RIGHT: payment / summary sidebar (hidden on the fully-paid panel) -->
+          <aside aria-label="Booking summary" id="pb-sidebar">
+            <div class="cart-summary">
+              <h2 class="cart-summary-title">Booking Summary</h2>
+              <dl class="cart-summary-rows" id="pb-summary-fields"></dl>
+
+              <p id="pb-payment-error" class="checkout-payment-error" hidden role="alert"></p>
+
+              <button id="pb-payment-btn" class="btn btn-primary btn-lg checkout-payment-cta" type="button" hidden>
+                <span id="pb-payment-btn-text">Pay now</span>
+              </button>
+              <p id="pb-payment-notice" class="checkout-payment-notice" hidden>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <span id="pb-payment-notice-text">Processing&hellip;</span>
+              </p>
+
+              <p class="oc-review-security" style="margin-top: var(--space-4);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Secure checkout powered by Razorpay
+              </p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/pre-booking-api.js"></script>
+  <script src="../assets/js/pre-booking.js"></script>
+</body>
+</html>
