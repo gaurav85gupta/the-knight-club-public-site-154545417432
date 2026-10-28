@@ -51,3 +51,34 @@
   background: rgba(124, 58, 237, 0.1);
   font-weight: 500;
 }
+
+/* ---- Layout fix: long course lists ---------------------------------------
+   1. Booking Summary / payment stays in view while the course list scrolls.
+   2. Courses sit two per row, so far fewer screens of scrolling.
+   3. "Save selection" stays reachable at the bottom of the viewport.
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 769px) {
+  #pb-sidebar {
+    position: sticky;
+    top: calc(var(--header-h, 72px) + var(--space-4));
+    align-self: start;
+    max-height: calc(100vh - var(--header-h, 72px) - var(--space-8));
+    overflow-y: auto;
+  }
+}
+
+#pb-select-grid {
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--space-2);
+}
+
+#pb-panel-select-courses .oc-review-actions {
+  position: sticky;
+  bottom: var(--space-3);
+  z-index: 2;
+  margin-top: var(--space-5);
+  padding-top: var(--space-3);
+  background: linear-gradient(to top, var(--color-surface, #0e0b1c) 65%, transparent);
+}
+#pb-panel-select-courses .oc-review-actions .btn { width: 100%; }
