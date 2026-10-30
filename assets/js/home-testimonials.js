@@ -27,6 +27,11 @@
 
   var esc = function (v) { return Format.escapeHtml(v); };
 
+  // Same host safelist used by assets/js/testimonials.js — the real
+  // security is the server-side signature, this is defence in depth
+  // before an embedUrl is ever used as an iframe src.
+  var BUNNY_EMBED_HOST_RE = /^https:\/\/(iframe\.mediadelivery\.net|bunnycdn\.com)\//;
+
   function str(v) { return typeof v === 'string' && v.trim() ? v.trim() : ''; }
 
   // Same safe-URL discipline as assets/js/testimonials.js#safeUrl: only a
@@ -46,17 +51,40 @@
     }
   }
 
+  // Forces autoplay off in the embed URL's own query string — same reason
+  // as testimonials.js#withAutoplayOff: the iframe's `allow` attribute
+  // alone doesn't stop a muted autoplay some browsers grant anyway.
+  function withAutoplayOff(u) {
+    try {
+      var parsed = new URL(u);
+      parsed.searchParams.set('autoplay', 'false');
+      return parsed.toString();
+    } catch (e) {
+      return u;
+    }
+  }
+  function safeEmbedUrl(u) { u = str(u); return BUNNY_EMBED_HOST_RE.test(u) ? withAutoplayOff(u) : ''; }
+
   /** Keeps only valid, known fields. Returns null if quote or name is missing. */
   function normalize(raw) {
     if (!raw || typeof raw !== 'object') return null;
     var quote = str(raw.quote), name = str(raw.name);
     if (!quote || !name) return null;
     var type = str(raw.type).toUpperCase();
+    // Same fail-closed expiry guard as testimonials.js: a signed embedUrl
+    // is only good until expiresAt. Missing/unparseable expiresAt is
+    // treated as already-expired rather than assumed still valid, so the
+    // homepage teaser never points an iframe at a dead signed URL.
+    var exp = raw.video && typeof raw.video === 'object' ? Date.parse(raw.video.expiresAt) : NaN;
+    var notExpired = !isNaN(exp) && exp > Date.now();
+    var video = (type === 'VIDEO' && raw.video && typeof raw.video === 'object' && notExpired && safeEmbedUrl(raw.video.embedUrl))
+      ? { embedUrl: safeEmbedUrl(raw.video.embedUrl) } : null;
     return {
       quote: quote,
       name: name,
       role: str(raw.role),
       photoUrl: type === 'PHOTO' ? safeUrl(raw.photoUrl) : '',
+      video: video,
       featured: raw.featured === true,
     };
   }
@@ -68,8 +96,20 @@
     return '<span class="tm-avatar tm-avatar-text" aria-hidden="true">' + esc(t.name.charAt(0).toUpperCase()) + '</span>';
   }
 
+  /** Same pattern as testimonials.js#videoHtml: iframe hidden behind a
+      themed placeholder until it actually loads, so the slot never shows
+      a bare dark rectangle while the player is still rendering. */
+  function videoHtml(t) {
+    if (!t.video) return '';
+    return '<div class="tm-video-embed">' +
+      '<div class="tm-video-placeholder" aria-hidden="true"><span class="tm-video-play">&#9658;</span></div>' +
+      '<iframe src="' + esc(t.video.embedUrl) + '" loading="lazy" allow="accelerometer; gyroscope; encrypted-media; picture-in-picture;" allowfullscreen title="Video testimonial from ' + esc(t.name) + '" onload="this.classList.add(\'is-loaded\'); if (this.previousElementSibling) { this.previousElementSibling.style.display = \'none\'; }"></iframe>' +
+      '</div>';
+  }
+
   function cardHtml(t) {
     return '<article class="tm-card">' +
+      videoHtml(t) +
       '<blockquote class="tm-quote"><p>' + esc(t.quote) + '</p></blockquote>' +
       '<footer class="tm-author">' + avatarHtml(t) +
       '<span class="tm-who"><strong class="tm-name">' + esc(t.name) + '</strong>' +
