@@ -273,6 +273,113 @@
     }
   }
 
+  // ---- "Add your email" banner (legacy User-ID students only) -----------------
+  // Shown when the signed-in student has no email on file yet (see
+  // Student.toSafeStudent().needsEmail on the backend — true for every
+  // account created before this phase, false for anything email/Google
+  // based). Purely additive UI: nothing above this line changes, and a
+  // student with an email never sees any of this code run.
+  initAddEmailBanner(user);
+
   $('dash-retry').addEventListener('click', loadDashboard);
   loadDashboard();
 })();
+
+/**
+ * Wires the dashboard's "add your email" banner.
+ *
+ * DISMISSAL: a per-browser, session-only dismissal (sessionStorage) so a
+ * student who closes the banner doesn't see it fight them on every page
+ * load within the same visit, but it returns next time they sign in fresh
+ * — this is a convenience, not a decision the student has permanently made
+ * (only adding a verified email removes the banner for good, server-side).
+ *
+ * On submit: calls the existing Auth.addEmail(), which hits
+ * POST /auth/add-email (authenticated) and sends a verification link to
+ * the address entered — identical mechanism to signup's own verification
+ * email (see auth.service.addEmailToLegacyStudent on the backend). This
+ * does NOT change how the student signs in: they keep using their User ID
+ * until/unless a future change adds email-login for legacy accounts too.
+ */
+function initAddEmailBanner(user) {
+  const DISMISS_KEY = 'tkc_dismiss_email_banner';
+  const banner = document.getElementById('dash-email-banner');
+  if (!banner) return;
+
+  if (!user.needsEmail) return; // already has an email — nothing to do, ever
+  let dismissed = false;
+  try {
+    dismissed = sessionStorage.getItem(DISMISS_KEY) === '1';
+  } catch {
+    /* sessionStorage unavailable (private mode, etc.) — just show the banner */
+  }
+  if (dismissed) return;
+
+  banner.hidden = false;
+
+  const form = document.getElementById('dash-email-form');
+  const input = document.getElementById('dash-email-input');
+  const submitBtn = document.getElementById('dash-email-submit');
+  const dismissBtn = document.getElementById('dash-email-dismiss');
+
+  dismissBtn.addEventListener('click', () => {
+    banner.hidden = true;
+    try {
+      sessionStorage.setItem(DISMISS_KEY, '1');
+    } catch {
+      /* sessionStorage unavailable — the banner simply reappears next load, which is fine */
+    }
+  });
+
+  input.addEventListener('input', () => {
+    if (input.closest('.field').classList.contains('has-error')) Forms.clearFieldError(input);
+  });
+
+  /** Replaces the banner's content with a "check your email" confirmation, in place. */
+  function showSent(email) {
+    const wrap = banner.querySelector('.order-status-banner');
+    wrap.textContent = '';
+    const title = document.createElement('strong');
+    title.textContent = 'Verification email sent';
+    const message = document.createElement('p');
+    message.style.margin = 'var(--space-1) 0 0';
+    message.style.fontWeight = '400';
+    message.textContent = `We've sent a verification link to ${email}. Click it to finish adding your email.`;
+    wrap.append(title, message);
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (submitBtn.disabled) return;
+
+    Forms.clearFieldError(input);
+    const emailError = Forms.check.email(input.value);
+    if (emailError) {
+      Forms.setFieldError(input, emailError);
+      input.focus();
+      return;
+    }
+    const email = input.value;
+
+    Forms.setLoading(submitBtn, true, 'Adding…');
+    try {
+      await Auth.addEmail(email);
+      showSent(email);
+    } catch (err) {
+      Forms.setLoading(submitBtn, false);
+      if (err instanceof ApiError && err.status === 409) {
+        Forms.setFieldError(input, err.message);
+        input.focus();
+      } else if (err instanceof ApiError && err.isValidation) {
+        const unmatched = Forms.applyServerErrors(form, err.errors);
+        if (unmatched.length) Forms.setFieldError(input, unmatched.join(' '));
+      } else if (err instanceof ApiError && err.isRateLimited) {
+        Forms.setFieldError(input, 'Too many attempts. Please try again later.');
+      } else if (err instanceof ApiError && !err.isNetworkError) {
+        Forms.setFieldError(input, err.message || 'Could not add this email. Please try again.');
+      } else {
+        Forms.setFieldError(input, 'Could not add this email. Please check your connection and try again.');
+      }
+    }
+  });
+}

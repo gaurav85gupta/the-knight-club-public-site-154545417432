@@ -670,3 +670,82 @@ textarea.input { resize: vertical; min-height: 56px; }
 @media (max-width: 480px) {
   .auth-page--split .auth-card { padding: var(--space-4); }
 }
+
+/* ===========================================================================
+   Email + Google authentication additions
+   Additive only — nothing above this line is modified. Reuses existing
+   tokens (--color-*, --space-*) and the .field/.input/.btn/.alert system
+   already defined above, so these forms are visually consistent with the
+   original User-ID forms without duplicating their styling.
+   =========================================================================== */
+
+/* "Continue with Google" button: built on .btn-outline, with room for the
+   Google "G" mark (inline SVG, passed as a child element — see the HTML). */
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-google svg { flex: none; width: 18px; height: 18px; }
+
+/* Divider between "Continue with Google" and the email/password form. */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 12px);
+  margin: var(--space-4, 16px) 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-border, rgba(255, 255, 255, 0.12));
+}
+
+/* "Sign in with User ID instead" / "Use email instead" toggle link, and the
+   legacy User-ID form it reveals. Same visual weight as .auth-alt. */
+.auth-method-toggle {
+  text-align: center;
+  margin-top: var(--space-3, 12px);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+.auth-method-toggle button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 500;
+  color: var(--color-accent-600, inherit);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.auth-method-toggle button:hover { color: var(--color-accent-700, inherit); }
+
+/* Simple status page (verify-email.html, reset-password.html confirmation
+   states): centered icon + message, reusing the auth-card shell. */
+.auth-status {
+  text-align: center;
+  padding: var(--space-4, 16px) 0;
+}
+.auth-status .auth-status-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--space-4, 16px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+}
+.auth-status-icon--pending { background: var(--color-surface-alt); color: var(--color-text-muted); }
+.auth-status-icon--success { background: var(--color-accent-100); color: var(--color-accent-700); }
+.auth-status-icon--error   { background: rgba(248, 113, 113, 0.14); color: #fca5a5; }
+.auth-status p.lead { margin-top: var(--space-2, 8px); }
+
+/* Legacy User-ID form nested inside login.html, collapsed by default. */
+.auth-legacy-form[hidden] { display: none; }

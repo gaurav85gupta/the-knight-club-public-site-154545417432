@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-48.png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <title>Complete your profile — The Knight Club</title>
+  <meta name="description" content="Complete your The Knight Club student profile." />
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+</head>
+<body class="auth-page auth-page--split">
+
+  <main class="auth-main">
+    <div class="auth-scene" id="auth-scene" data-active="complete-profile">
+
+      <a href="../index.html" class="auth-logo" aria-label="The Knight Club — home">
+        <img class="auth-logo-mark" src="../assets/images/knight-emblem-512.png" width="48" height="48" alt="" aria-hidden="true" />
+        <span class="auth-logo-text">The <span>Knight Club</span></span>
+      </a>
+
+      <div class="auth-card" id="auth-card">
+        <section class="auth-face" id="auth-face-complete" aria-labelledby="complete-title">
+          <h1 id="complete-title">Just one more step</h1>
+          <p class="lead">A couple of details to finish setting up your account.</p>
+
+          <div id="form-alert-complete" class="alert" role="alert" hidden></div>
+
+          <form id="complete-profile-form" novalidate autocomplete="on">
+            <div class="form-grid">
+
+              <div class="field">
+                <label for="cp-mobile">Mobile number</label>
+                <input class="input" id="cp-mobile" name="mobile" type="tel" inputmode="numeric"
+                       autocomplete="tel-national" maxlength="20" placeholder="98765 43210" required
+                       aria-describedby="cp-mobile-error" />
+                <p class="field-error" id="cp-mobile-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="cp-state">State</label>
+                <input class="input" id="cp-state" name="state" type="text" autocomplete="address-level1"
+                       maxlength="60" required aria-describedby="cp-state-error" />
+                <p class="field-error" id="cp-state-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <button class="btn btn-primary btn-block" id="complete-submit-btn" type="submit">
+                  <span class="spinner" aria-hidden="true"></span>
+                  <span class="label">Continue</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/complete-profile.js"></script>
+</body>
+</html>

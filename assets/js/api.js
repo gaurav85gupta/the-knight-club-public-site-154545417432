@@ -78,6 +78,15 @@ const Api = (() => {
     '/auth/register',
     '/auth/refresh',
     '/auth/logout',
+    // Email + Google auth: a 401 from any of these means "wrong credentials"
+    // or "invalid/expired token", never "session expired" — there is no
+    // session yet for these calls to refresh.
+    '/auth/login-email',
+    '/auth/register-email',
+    '/auth/verify-email',
+    '/auth/forgot-password',
+    '/auth/reset-password',
+    '/auth/google',
   ]);
 
   let refreshInFlight = null;

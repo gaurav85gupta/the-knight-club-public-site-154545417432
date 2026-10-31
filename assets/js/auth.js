@@ -214,6 +214,80 @@ const Auth = (() => {
     return Api.post('/auth/change-password', { currentPassword, newPassword, confirmNewPassword });
   }
 
+  // =========================================================================
+  // EMAIL + GOOGLE AUTHENTICATION — additive, same conventions as above.
+  // =========================================================================
+
+  /**
+   * Registers via email + password. Mirrors register(): does NOT sign the
+   * student in — the account is also unverified until the emailed link is
+   * clicked, so logging in would fail anyway even if attempted.
+   * @returns {Promise<object>} the safe user profile (isEmailVerified: false)
+   */
+  async function registerWithEmail(fields) {
+    const data = await Api.post('/auth/register-email', fields);
+    return data.user;
+  }
+
+  /**
+   * Completes email verification using the token from the emailed link.
+   * Does NOT sign the student in (mirrors the backend: verifying proves
+   * control of the inbox, not the password) — the caller sends them to sign in next.
+   */
+  async function verifyEmail(token) {
+    const data = await Api.post('/auth/verify-email', { token });
+    return data.user;
+  }
+
+  /** Signs in with email + password, then loads the profile. */
+  async function loginWithEmail({ email, password }) {
+    const data = await Api.post('/auth/login-email', { email, password });
+    setUser(data.user);
+    bootstrapped = true;
+    return data.user;
+  }
+
+  /**
+   * Requests a password-reset email. ALWAYS resolves the same way regardless
+   * of whether the address is registered — this mirrors the backend's
+   * enumeration-resistant response, so the UI must show one generic message
+   * for every outcome of this call and never branch on it.
+   */
+  async function forgotPassword(email) {
+    return Api.post('/auth/forgot-password', { email });
+  }
+
+  /** Completes a password reset using the token from the emailed link. */
+  async function resetPassword({ token, newPassword, confirmNewPassword }) {
+    return Api.post('/auth/reset-password', { token, newPassword, confirmNewPassword });
+  }
+
+  /**
+   * Signs in (or signs up, on first use) with a Google ID token obtained
+   * from Google Identity Services on the page (see google-signin.js).
+   * @returns {Promise<{user: object, isNewAccount: boolean}>}
+   */
+  async function googleAuth(idToken) {
+    const data = await Api.post('/auth/google', { idToken });
+    setUser(data.user);
+    bootstrapped = true;
+    return { user: data.user, isNewAccount: Boolean(data.isNewAccount) };
+  }
+
+  /** Completes profile (mobile, state) after a first Google sign-in. Authenticated. */
+  async function completeProfile({ mobile, state }) {
+    const data = await Api.post('/auth/complete-profile', { mobile, state });
+    updateUser(data.user);
+    return data.user;
+  }
+
+  /** Lets a signed-in legacy (User-ID) student add an email address. Authenticated. */
+  async function addEmail(email) {
+    const data = await Api.post('/auth/add-email', { email });
+    updateUser(data.user);
+    return data.user;
+  }
+
   /**
    * Merges a server-returned profile into the in-memory user and notifies
    * listeners (StudentShell's avatar, any open onChange subscriber). Used
@@ -377,5 +451,15 @@ const Auth = (() => {
     setNotice,
     consumeNotice,
     guardBfcache,
+
+    // Email + Google auth
+    registerWithEmail,
+    verifyEmail,
+    loginWithEmail,
+    forgotPassword,
+    resetPassword,
+    googleAuth,
+    completeProfile,
+    addEmail,
   };
 })();

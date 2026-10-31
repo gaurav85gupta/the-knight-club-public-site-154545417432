@@ -1,19 +1,19 @@
 /**
- * Signup page controller.
+ * Signup page controller (email + password + Google).
  *
- * Flow:  client-side checks  ->  POST /auth/register  ->  Sign In face.
+ * Flow:  client-side checks  ->  POST /auth/register-email  ->  "check your
+ *        email" message in place of the form (account is created but
+ *        UNVERIFIED — the student cannot sign in until they click the
+ *        emailed link; see verify-email.html).
  *
- * Registration deliberately does NOT sign the user in (backend design). Both
- * the Sign In and Create Account forms live on the same page (see
- * login.html / signup.html), so on success this switches to the Sign In
- * tab in place (via auth-tabs.js) and shows an "account created" notice
- * there, rather than navigating. If auth-tabs.js is unavailable for any
- * reason, it falls back to the original cross-page notice + navigation to
- * login.html.
+ * Google: GoogleSignIn.render() wires the button; a successful Google
+ * sign-in signs the student in immediately (Google already verifies the
+ * email) and redirects straight to the dashboard or the profile-completion
+ * step — see the onSuccess callback below.
  *
  * `confirmPassword` is sent to the server ONLY because the backend validator
- * requires it in order to compare the two values; the backend discards it. It
- * is never kept in JS state, storage or logs here.
+ * requires it to compare the two values; it is never kept in JS state,
+ * storage or logs here.
  */
 
 (function initSignupPage() {
@@ -22,21 +22,36 @@
 
   const alertEl = document.getElementById('form-alert-signup');
   const submitBtn = document.getElementById('signup-submit-btn');
+  const cardSection = document.getElementById('auth-face-signup');
 
   Forms.initPasswordToggles(form);
 
   // Already signed in? Skip the signup page.
   Auth.redirectIfAuthenticated();
 
+  // ---- Google Sign-In ------------------------------------------------------
+  GoogleSignIn.render({
+    container: document.getElementById('google-signup-btn'),
+    onStart: () => Forms.hideAlert(alertEl),
+    onSuccess: (user, isNewAccount) => {
+      if (isNewAccount && user.needsProfileCompletion) {
+        window.location.replace('complete-profile.html');
+      } else {
+        window.location.replace(Auth.safeNext(new URLSearchParams(window.location.search).get('next')));
+      }
+    },
+    onError: (message) => Forms.showAlert(alertEl, message),
+  });
+
   // ---- Client-side validation (feedback only; the server re-validates) ----
   const validators = {
-    userId: (f) => Forms.check.userId(f.userId.value),
     fullName: (f) => {
       const v = f.fullName.value.trim();
       if (v.length < 2) return 'Please provide your full name.';
       if (!/\p{L}/u.test(v)) return 'Please provide your full name.';
       return '';
     },
+    email: (f) => Forms.check.email(f.email.value),
     mobile: (f) => Forms.check.mobile(f.mobile.value),
     state: (f) => (f.state.value.trim().length >= 2 ? '' : 'Please provide your state.'),
     password: (f) => Forms.check.password(f.password.value),
@@ -72,7 +87,7 @@
     input.addEventListener('input', () => {
       if (input.closest('.field').classList.contains('has-error')) validateField(name);
       // Editing password changes whether the confirmation matches.
-      if (name === 'password' && form.confirmPassword.value) validateField('confirmPassword');
+      if (name === 'password' && form.elements.confirmPassword.value) validateField('confirmPassword');
     });
   }
 
@@ -83,15 +98,34 @@
    */
   function showConflict(err) {
     const msg = err.message || '';
-    if (/user id/i.test(msg)) {
-      Forms.setFieldError(form.userId, 'This User ID is already taken. Please choose another.');
-      form.userId.focus();
+    if (/email/i.test(msg)) {
+      Forms.setFieldError(form.elements.email, 'An account with this email already exists. Try signing in instead.');
+      form.elements.email.focus();
     } else if (/mobile/i.test(msg)) {
-      Forms.setFieldError(form.mobile, 'An account with this mobile number already exists. Try signing in instead.');
-      form.mobile.focus();
+      Forms.setFieldError(form.elements.mobile, 'An account with this mobile number already exists. Try signing in instead.');
+      form.elements.mobile.focus();
     } else {
       Forms.showAlert(alertEl, msg || 'An account with these details already exists.', 'error');
     }
+  }
+
+  /**
+   * Replaces the form with a "check your email" confirmation — the account
+   * exists but cannot sign in until the emailed link is clicked. This
+   * mirrors how the original flow flipped to the Sign In face in place,
+   * but here there is nowhere useful to flip TO (signing in would just
+   * fail as unverified), so a static confirmation is clearer.
+   */
+  function showCheckEmail(email) {
+    cardSection.innerHTML = `
+      <div class="auth-status">
+        <div class="auth-status-icon auth-status-icon--pending" aria-hidden="true">&#9993;</div>
+        <h1>Check your email</h1>
+        <p class="lead">We've sent a verification link to <strong>${Forms.escapeForHtml(email)}</strong>.
+        Click the link to activate your account, then sign in.</p>
+      </div>
+      <p class="auth-alt"><a href="login.html">Go to sign in</a></p>
+    `;
   }
 
   form.addEventListener('submit', async (event) => {
@@ -105,30 +139,18 @@
     // Explicit allow-list of what we send — never `Object.fromEntries(new FormData(form))`,
     // so a stray or injected form control can't ride along.
     const payload = {
-      fullName: form.fullName.value,
-      mobile: form.mobile.value,
-      userId: form.userId.value,
-      state: form.state.value,
-      password: form.password.value,
-      confirmPassword: form.confirmPassword.value,
+      fullName: form.elements.fullName.value,
+      email: form.elements.email.value,
+      mobile: form.elements.mobile.value,
+      state: form.elements.state.value,
+      password: form.elements.password.value,
+      confirmPassword: form.elements.confirmPassword.value,
     };
 
     Forms.setLoading(submitBtn, true, 'Creating account…');
     try {
-      await Auth.register(payload);
-      // Both faces live on one page now: flip to Sign In in place instead
-      // of a full navigation, and show the success notice right there.
-      const loginAlert = document.getElementById('form-alert');
-      if (window.AuthFlip && loginAlert) {
-        form.reset();
-        Forms.setLoading(submitBtn, false);
-        window.AuthFlip.setActive('login');
-        Forms.showAlert(loginAlert, 'Account created! Sign in with your User ID and password.', 'success');
-        loginAlert.focus && loginAlert.focus();
-      } else {
-        Auth.setNotice('Account created! Sign in with your User ID and password.', 'success');
-        window.location.replace('login.html');
-      }
+      const user = await Auth.registerWithEmail(payload);
+      showCheckEmail(user.email);
     } catch (err) {
       Forms.setLoading(submitBtn, false);
       if (!(err instanceof ApiError)) {

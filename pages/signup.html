@@ -8,9 +8,9 @@
   <link rel="icon" type="image/png" href="../assets/images/favicon-48.png" sizes="48x48" />
   <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
   <title>Create your account — The Knight Club</title>
-  <meta name="description" content="Create your The Knight Club student account with a User ID and password." />
+  <meta name="description" content="Create your The Knight Club student account." />
   <meta name="robots" content="noindex" />
-    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
@@ -31,78 +31,33 @@
         <span class="auth-logo-text">The <span>Knight Club</span></span>
       </a>
 
-      <div class="auth-switch" role="tablist" aria-label="Choose Sign in or Create account">
-        <button type="button" id="switch-login" role="tab" aria-selected="false" aria-controls="auth-face-login">Sign In</button>
-        <button type="button" id="switch-signup" role="tab" aria-selected="true" aria-controls="auth-face-signup">Create Account</button>
-      </div>
-
       <div class="auth-card" id="auth-card">
 
-        <!-- Sign In -->
-        <section class="auth-face" id="auth-face-login" aria-labelledby="login-title" aria-hidden="true" hidden>
-          <h1 id="login-title">Welcome back</h1>
-          <p class="lead">Sign in with your User ID and password.</p>
-
-          <div id="form-alert" class="alert" role="alert" hidden></div>
-
-          <form id="login-form" novalidate autocomplete="on">
-            <div class="form-grid">
-
-              <div class="field">
-                <label for="userId">User ID</label>
-                <input class="input" id="userId" name="userId" type="text" inputmode="text"
-                       autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"
-                       maxlength="100" required aria-describedby="userId-error" />
-                <p class="field-error" id="userId-error" aria-live="polite"></p>
-              </div>
-
-              <div class="field">
-                <label for="password">Password</label>
-                <div class="password-wrap">
-                  <input class="input" id="password" name="password" type="password"
-                         autocomplete="current-password" maxlength="128" required
-                         aria-describedby="password-error" />
-                  <button type="button" class="toggle-password" aria-pressed="false" aria-label="Show or hide password">Show</button>
-                </div>
-                <p class="field-error" id="password-error" aria-live="polite"></p>
-              </div>
-
-              <div class="field">
-                <button class="btn btn-primary btn-block" id="submit-btn" type="submit">
-                  <span class="spinner" aria-hidden="true"></span>
-                  <span class="label">Sign in</span>
-                </button>
-              </div>
-            </div>
-          </form>
-
-          <p class="auth-alt">New here? <a href="signup.html" data-auth-switch="signup">Create an account</a></p>
-        </section>
-
-        <!-- Create Account -->
         <section class="auth-face" id="auth-face-signup" aria-labelledby="signup-title">
           <h1 id="signup-title">Create your account</h1>
           <p class="lead">Join The Knight Club and start learning today.</p>
 
           <div id="form-alert-signup" class="alert" role="alert" hidden></div>
 
+          <div id="google-signup-btn" style="display:flex; justify-content:center;"></div>
+          <div class="auth-divider">or sign up with email</div>
+
           <form id="signup-form" novalidate autocomplete="on">
             <div class="form-grid">
-
-              <div class="field field-full">
-                <label for="su-userId">User ID</label>
-                <input class="input" id="su-userId" name="userId" type="text" inputmode="text"
-                       autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"
-                       maxlength="40" placeholder="e.g. student_01" required aria-describedby="su-userId-hint su-userId-error" />
-                <p class="hint" id="su-userId-hint">4-20 characters: letters, numbers, underscore.</p>
-                <p class="field-error" id="su-userId-error" aria-live="polite"></p>
-              </div>
 
               <div class="field">
                 <label for="su-fullName">Full name</label>
                 <input class="input" id="su-fullName" name="fullName" type="text" autocomplete="name"
                        maxlength="80" placeholder="Your full name" required aria-describedby="su-fullName-error" />
                 <p class="field-error" id="su-fullName-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="su-email">Email address</label>
+                <input class="input" id="su-email" name="email" type="email" inputmode="email"
+                       autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false"
+                       maxlength="254" placeholder="you@example.com" required aria-describedby="su-email-error" />
+                <p class="field-error" id="su-email-error" aria-live="polite"></p>
               </div>
 
               <div class="field">
@@ -113,7 +68,7 @@
                 <p class="field-error" id="su-mobile-error" aria-live="polite"></p>
               </div>
 
-              <div class="field field-full">
+              <div class="field">
                 <label for="su-state">State</label>
                 <input class="input" id="su-state" name="state" type="text" autocomplete="address-level1"
                        maxlength="60" required aria-describedby="su-state-error" />
@@ -152,7 +107,7 @@
             </div>
           </form>
 
-          <p class="auth-alt">Already have an account? <a href="login.html" data-auth-switch="login">Sign in</a></p>
+          <p class="auth-alt">Already have an account? <a href="login.html">Sign in</a></p>
         </section>
 
       </div>
@@ -163,8 +118,7 @@
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/forms.js"></script>
-  <script src="../assets/js/auth-tabs.js"></script>
-  <script src="../assets/js/login.js"></script>
+  <script src="../assets/js/google-signin.js"></script>
   <script src="../assets/js/signup.js"></script>
 </body>
 </html>

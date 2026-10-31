@@ -50,6 +50,38 @@
         </div>
       </section>
 
+      <!-- ==================== ADD YOUR EMAIL BANNER ====================
+           Shown only for a legacy (User-ID) student with no email on file
+           (Student.toSafeStudent().needsEmail — see dashboard.js). Hidden
+           for everyone else, including a student who dismissed it earlier
+           in THIS browser (see dashboard.js dismissal note). Not shown at
+           all once the student has added an email, regardless of
+           verification status — the point of this banner is only to get
+           the email ON the account; verifying it is a separate step
+           handled by the emailed link, with its own "check your email"
+           state (see showEmailBannerSent in dashboard.js). -->
+      <section class="section-block" id="dash-email-banner" hidden aria-labelledby="dash-email-banner-title">
+        <div class="order-status-banner is-warning" role="status" style="display:flex; align-items:center; justify-content:space-between; gap: var(--space-4); flex-wrap: wrap;">
+          <div style="flex: 1 1 260px;">
+            <strong id="dash-email-banner-title">Add your email to your account</strong>
+            <p style="margin: var(--space-1) 0 0; font-weight: 400;">Get sign-in with email and password, and the ability to reset your password yourself.</p>
+          </div>
+          <form id="dash-email-form" novalidate style="display:flex; gap:var(--space-2); align-items:flex-start; flex-wrap:wrap;">
+            <div class="field" style="margin:0; min-width:220px;">
+              <input class="input" id="dash-email-input" name="email" type="email" inputmode="email"
+                     autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false"
+                     maxlength="254" placeholder="you@example.com" aria-label="Email address" aria-describedby="dash-email-error" />
+              <p class="field-error" id="dash-email-error" aria-live="polite"></p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="dash-email-submit" type="submit">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="label">Add email</span>
+            </button>
+          </form>
+          <button type="button" id="dash-email-dismiss" class="btn-icon-plain" aria-label="Dismiss" style="background:none; border:none; cursor:pointer; font-size:1.1rem; line-height:1; padding:4px; color:inherit; opacity:0.7;">&times;</button>
+        </div>
+      </section>
+
       <!-- ==================== PRE-BOOKING RESUME BANNER (Phase 3) ====================
            Hidden by default; shown only when dashboard.membershipBooking is
            non-null (the student has an open 1% Club pre-booking). Never
@@ -158,6 +190,7 @@
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/forms.js"></script>
   <script src="../assets/js/format.js"></script>
   <script src="../assets/js/theme-toggle.js"></script>
   <script src="../assets/js/cart.js"></script>

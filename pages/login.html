@@ -10,7 +10,7 @@
   <title>Sign in — The Knight Club</title>
   <meta name="description" content="Sign in to your The Knight Club student account." />
   <meta name="robots" content="noindex" />
-    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
@@ -31,33 +31,34 @@
         <span class="auth-logo-text">The <span>Knight Club</span></span>
       </a>
 
-      <div class="auth-switch" role="tablist" aria-label="Choose Sign in or Create account">
-        <button type="button" id="switch-login" role="tab" aria-selected="true" aria-controls="auth-face-login">Sign In</button>
-        <button type="button" id="switch-signup" role="tab" aria-selected="false" aria-controls="auth-face-signup">Create Account</button>
-      </div>
-
       <div class="auth-card" id="auth-card">
 
-        <!-- Sign In -->
         <section class="auth-face" id="auth-face-login" aria-labelledby="login-title">
           <h1 id="login-title">Welcome back</h1>
-          <p class="lead">Sign in with your User ID and password.</p>
+          <p class="lead">Sign in to continue learning.</p>
 
           <div id="form-alert" class="alert" role="alert" hidden></div>
 
+          <div id="google-login-btn" style="display:flex; justify-content:center;"></div>
+          <div class="auth-divider">or sign in with email</div>
+
+          <!-- Email + password sign-in (default) -->
           <form id="login-form" novalidate autocomplete="on">
             <div class="form-grid">
 
               <div class="field">
-                <label for="userId">User ID</label>
-                <input class="input" id="userId" name="userId" type="text" inputmode="text"
-                       autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"
-                       maxlength="100" required aria-describedby="userId-error" />
-                <p class="field-error" id="userId-error" aria-live="polite"></p>
+                <label for="email">Email address</label>
+                <input class="input" id="email" name="email" type="email" inputmode="email"
+                       autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false"
+                       maxlength="254" placeholder="you@example.com" required aria-describedby="email-error" />
+                <p class="field-error" id="email-error" aria-live="polite"></p>
               </div>
 
               <div class="field">
-                <label for="password">Password</label>
+                <div class="field-label-row" style="display:flex; justify-content:space-between; align-items:baseline;">
+                  <label for="password">Password</label>
+                  <a href="forgot-password.html" class="hint" style="margin:0;">Forgot password?</a>
+                </div>
                 <div class="password-wrap">
                   <input class="input" id="password" name="password" type="password"
                          autocomplete="current-password" maxlength="128" required
@@ -76,83 +77,47 @@
             </div>
           </form>
 
-          <p class="auth-alt">New here? <a href="signup.html" data-auth-switch="signup">Create an account</a></p>
-        </section>
+          <p class="auth-method-toggle">
+            <button type="button" id="toggle-legacy-login">Sign in with User ID instead</button>
+          </p>
 
-        <!-- Create Account -->
-        <section class="auth-face" id="auth-face-signup" aria-labelledby="signup-title" aria-hidden="true" hidden>
-          <h1 id="signup-title">Create your account</h1>
-          <p class="lead">Join The Knight Club and start learning today.</p>
-
-          <div id="form-alert-signup" class="alert" role="alert" hidden></div>
-
-          <form id="signup-form" novalidate autocomplete="on">
+          <!-- Legacy User-ID sign-in, collapsed by default. Unchanged logic
+               from the original single-page login — only presentation moved. -->
+          <form id="legacy-login-form" class="auth-legacy-form" novalidate autocomplete="on" hidden>
             <div class="form-grid">
 
-              <div class="field field-full">
-                <label for="su-userId">User ID</label>
-                <input class="input" id="su-userId" name="userId" type="text" inputmode="text"
+              <div class="field">
+                <label for="userId">User ID</label>
+                <input class="input" id="userId" name="userId" type="text" inputmode="text"
                        autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"
-                       maxlength="40" placeholder="e.g. student_01" required aria-describedby="su-userId-hint su-userId-error" />
-                <p class="hint" id="su-userId-hint">4-20 characters: letters, numbers, underscore.</p>
-                <p class="field-error" id="su-userId-error" aria-live="polite"></p>
+                       maxlength="100" aria-describedby="userId-error" />
+                <p class="field-error" id="userId-error" aria-live="polite"></p>
               </div>
 
               <div class="field">
-                <label for="su-fullName">Full name</label>
-                <input class="input" id="su-fullName" name="fullName" type="text" autocomplete="name"
-                       maxlength="80" placeholder="Your full name" required aria-describedby="su-fullName-error" />
-                <p class="field-error" id="su-fullName-error" aria-live="polite"></p>
-              </div>
-
-              <div class="field">
-                <label for="su-mobile">Mobile number</label>
-                <input class="input" id="su-mobile" name="mobile" type="tel" inputmode="numeric"
-                       autocomplete="tel-national" maxlength="20" placeholder="98765 43210" required
-                       aria-describedby="su-mobile-error" />
-                <p class="field-error" id="su-mobile-error" aria-live="polite"></p>
-              </div>
-
-              <div class="field field-full">
-                <label for="su-state">State</label>
-                <input class="input" id="su-state" name="state" type="text" autocomplete="address-level1"
-                       maxlength="60" required aria-describedby="su-state-error" />
-                <p class="field-error" id="su-state-error" aria-live="polite"></p>
-              </div>
-
-              <div class="field">
-                <label for="su-password">Password</label>
+                <label for="legacy-password">Password</label>
                 <div class="password-wrap">
-                  <input class="input" id="su-password" name="password" type="password"
-                         autocomplete="new-password" maxlength="128" required
-                         aria-describedby="su-password-error" />
+                  <input class="input" id="legacy-password" name="password" type="password"
+                         autocomplete="current-password" maxlength="128"
+                         aria-describedby="legacy-password-error" />
                   <button type="button" class="toggle-password" aria-pressed="false" aria-label="Show or hide password">Show</button>
                 </div>
-                <p class="field-error" id="su-password-error" aria-live="polite"></p>
+                <p class="field-error" id="legacy-password-error" aria-live="polite"></p>
               </div>
 
               <div class="field">
-                <label for="su-confirmPassword">Confirm password</label>
-                <div class="password-wrap">
-                  <input class="input" id="su-confirmPassword" name="confirmPassword" type="password"
-                         autocomplete="new-password" maxlength="128" required aria-describedby="su-confirmPassword-error" />
-                  <button type="button" class="toggle-password" aria-pressed="false" aria-label="Show or hide confirmation">Show</button>
-                </div>
-                <p class="field-error" id="su-confirmPassword-error" aria-live="polite"></p>
-              </div>
-
-              <p class="hint" style="grid-column: 1 / -1; margin-top: -4px;">Password: at least 8 characters.</p>
-
-              <div class="field field-full">
-                <button class="btn btn-primary btn-block" id="signup-submit-btn" type="submit">
+                <button class="btn btn-primary btn-block" id="legacy-submit-btn" type="submit">
                   <span class="spinner" aria-hidden="true"></span>
-                  <span class="label">Create account</span>
+                  <span class="label">Sign in</span>
                 </button>
               </div>
             </div>
           </form>
+          <p class="auth-method-toggle auth-legacy-form" id="toggle-email-wrap" hidden>
+            <button type="button" id="toggle-email-login">Use email instead</button>
+          </p>
 
-          <p class="auth-alt">Already have an account? <a href="login.html" data-auth-switch="login">Sign in</a></p>
+          <p class="auth-alt">New here? <a href="signup.html">Create an account</a></p>
         </section>
 
       </div>
@@ -163,8 +128,7 @@
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/forms.js"></script>
-  <script src="../assets/js/auth-tabs.js"></script>
+  <script src="../assets/js/google-signin.js"></script>
   <script src="../assets/js/login.js"></script>
-  <script src="../assets/js/signup.js"></script>
 </body>
 </html>

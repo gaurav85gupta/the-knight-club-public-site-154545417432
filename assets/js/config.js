@@ -16,4 +16,9 @@ const CONFIG = Object.freeze({
       ? 'http://localhost:5000/api/v1'
       : 'https://api.theknightclub.in/api/v1';
   })(),
+
+  // Google OAuth Client ID. Public by design — see google-signin.js. This
+  // is the SAME Client ID configured as GOOGLE_CLIENT_ID on the backend;
+  // the two must match or Google Sign-In will fail to initialize.
+  GOOGLE_CLIENT_ID: '540064222194-sur9ceqdc0onko1ih801oo21ath5fr27.apps.googleusercontent.com',
 });

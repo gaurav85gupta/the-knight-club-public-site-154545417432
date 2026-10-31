@@ -19,6 +19,9 @@ const Forms = (() => {
   const MOBILE_REGEX = /^[6-9]\d{9}$/;
   const PASSWORD_MIN = 8;
   const PASSWORD_MAX = 128;
+  // Mirrors backend/src/utils/normalize.js EMAIL_REGEX / EMAIL_MAX exactly.
+  const EMAIL_MAX = 254;
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   /** Same normalization as the backend, so what the user sees matches what is checked. */
   function normalizeUserId(v) {
@@ -34,6 +37,22 @@ const Forms = (() => {
     if (s.startsWith('91') && s.length === 12) return s.slice(2);
     if (s.startsWith('0') && s.length === 11) return s.slice(1);
     return s;
+  }
+
+  function normalizeEmail(v) {
+    return String(v || '').normalize('NFKC').trim().toLowerCase();
+  }
+
+  /**
+   * Escapes text for the rare case a value must go through innerHTML (a
+   * status page built from a template string — see verify-email.js /
+   * reset-password.js). Every OTHER place in this app sets text via
+   * textContent/setFieldError/showAlert and never needs this. Named
+   * distinctly so a reviewer immediately sees any call site is the
+   * exception, not the rule.
+   */
+  function escapeForHtml(v) {
+    return String(v).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   }
 
   // ---- DOM helpers --------------------------------------------------------
@@ -138,6 +157,12 @@ const Forms = (() => {
     mobile(v) {
       return MOBILE_REGEX.test(normalizeMobile(v)) ? '' : 'Please provide a valid 10-digit Indian mobile number.';
     },
+    email(v) {
+      const n = normalizeEmail(v);
+      if (!n) return 'Please provide your email address.';
+      if (n.length > EMAIL_MAX || !EMAIL_REGEX.test(n)) return 'Please provide a valid email address.';
+      return '';
+    },
     password(v) {
       if (!v) return 'Please provide a password.';
       if (v.length < PASSWORD_MIN) return `Password must be at least ${PASSWORD_MIN} characters.`;
@@ -154,6 +179,8 @@ const Forms = (() => {
   return {
     normalizeUserId,
     normalizeMobile,
+    normalizeEmail,
+    escapeForHtml,
     check,
     setFieldError,
     clearFieldError,
@@ -165,5 +192,6 @@ const Forms = (() => {
     applyServerErrors,
     PASSWORD_MIN,
     PASSWORD_MAX,
+    EMAIL_MAX,
   };
 })();
