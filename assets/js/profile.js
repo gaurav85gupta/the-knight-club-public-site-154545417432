@@ -29,9 +29,11 @@
 
   const { el } = StudentUI;
 
-  document.getElementById('profile-avatar').textContent = StudentShell.initial(user);
   document.getElementById('profile-name').textContent = StudentShell.displayName(user);
-  document.getElementById('profile-userid').textContent = `User ID: ${user.userId}`;
+  document.getElementById('profile-userid').textContent = user.userId ? `User ID: ${user.userId}` : (user.email || '');
+
+  const verifiedBadge = document.getElementById('profile-verified');
+  verifiedBadge.hidden = !user.isEmailVerified;
   // 1% Club badge — best-effort; /auth/me does not carry membership, /students/me does.
   Api.get('/students/me')
     .then((me) => {
@@ -45,13 +47,16 @@
   role.textContent = user.role || '';
   role.hidden = !user.role;
 
+  // User ID only exists for legacy/no-email accounts; omit the row entirely
+  // for Google or email-signup students rather than showing a bare dash.
   const rows = [
     ['Full name', user.fullName],
-    ['User ID', user.userId],
+    user.userId ? ['User ID', user.userId] : null,
+    user.email ? ['Email', user.email] : null,
     ['Mobile', user.mobile],
     ['State', user.state],
     ['Account status', user.status],
-  ];
+  ].filter(Boolean);
 
   const list = document.getElementById('profile-list');
   const frag = document.createDocumentFragment();
@@ -83,8 +88,9 @@
  * never by the locally-chosen File object once a real server response has
  * come back. A local object URL is used ONLY for the brief instant between
  * "file chosen" and "upload finished/failed", so what's on screen always
- * matches what's actually saved. This does NOT touch #profile-avatar (the
- * big header circle), which intentionally always shows initials.
+ * matches what's actually saved. The preview avatar lives directly in the
+ * profile hero header (one avatar, with a small edit button overlaid),
+ * rather than a separate "profile photo" card lower on the page.
  */
 function initProfilePhoto(initialUser) {
   const MAX_BYTES = 10 * 1024 * 1024; // mirrors the backend's documented default (10 MB)

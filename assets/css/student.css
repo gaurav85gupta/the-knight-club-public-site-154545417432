@@ -541,6 +541,13 @@ body.drawer-open { overflow: hidden; }
 .kv-row:last-child { border-bottom: 0; }
 .kv-row dt { color: var(--color-text-muted); flex-shrink: 0; }
 .kv-row dd { margin: 0; font-weight: 500; text-align: right; word-break: break-word; min-width: 0; }
+
+/* Two-column layout once there's room — each row stays label-left/value-right,
+   just arranged in a grid instead of one long stacked list. */
+@media (min-width: 640px) {
+  .kv--grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-6); }
+  .kv--grid .kv-row:nth-last-child(2) { border-bottom: 0; }
+}
 .kv-row.is-total { padding-top: var(--space-4); font-size: var(--font-size-base); }
 .kv-row.is-total dd { font-size: 1.375rem; font-weight: 600; letter-spacing: -0.02em; }
 .kv-row.is-discount dd { color: var(--color-success); }
@@ -552,7 +559,23 @@ body.drawer-open { overflow: hidden; }
 .profile-header-info { min-width: 0; }
 .profile-name { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 var(--space-1); letter-spacing: -0.02em; overflow-wrap: anywhere; }
 .profile-sub { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); align-items: center; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.badge--verified { background: rgba(34, 211, 153, 0.14); color: #4ade80; border: 1px solid rgba(34, 211, 153, 0.3); }
+.profile-header-actions { margin-top: var(--space-3); }
 @media (max-width: 480px) { .profile-header { flex-direction: column; text-align: center; padding: var(--space-6); } .profile-sub { justify-content: center; } }
+
+/* ---- Profile header photo (hero-embedded editor) -------------------------------------- */
+
+.photo-preview-wrap--hero { width: 88px; height: 88px; flex-shrink: 0; }
+.photo-preview-wrap--hero .avatar { width: 100%; height: 100%; }
+.photo-edit-btn {
+  position: absolute; right: -2px; bottom: -2px; width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; border: 2px solid var(--color-surface); background: var(--color-accent-500);
+  color: var(--color-text-on-accent); cursor: pointer; transition: background 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.photo-edit-btn:hover { background: var(--color-accent-600); transform: scale(1.06); }
+.photo-edit-btn:focus-visible { outline: 2px solid var(--color-accent-700); outline-offset: 2px; }
+.photo-row.is-uploading .photo-edit-btn { pointer-events: none; opacity: 0.6; }
 
 /* ---- Profile photo section ------------------------------------------------------------ */
 

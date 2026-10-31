@@ -37,47 +37,36 @@
 
       <a href="dashboard.html" class="back-link"><span aria-hidden="true">&larr;</span> Back to Dashboard</a>
 
-      <header class="profile-header" aria-labelledby="profile-name">
-        <span class="avatar avatar-lg" id="profile-avatar" aria-hidden="true"></span>
+      <header class="profile-header profile-header--editable" aria-labelledby="profile-name">
+        <div class="photo-preview-wrap photo-preview-wrap--hero" id="photo-row">
+          <span class="avatar avatar-lg" id="photo-preview" aria-hidden="true"></span>
+          <span class="photo-progress-ring" aria-hidden="true"></span>
+          <button type="button" class="photo-edit-btn" id="photo-choose-btn" aria-label="Change profile photo">
+            <svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><path d="M13.5 2.5l4 4L7 17H3v-4L13.5 2.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
+          </button>
+          <input type="file" class="photo-input" id="photo-input" accept="image/jpeg,image/jpg,image/png,image/webp" aria-label="Choose a profile photo" />
+        </div>
         <div class="profile-header-info">
           <h1 class="profile-name" id="profile-name"></h1>
           <div class="profile-sub">
             <span id="profile-userid"></span>
             <span class="badge" id="profile-role"></span>
+            <span class="badge badge--verified" id="profile-verified" hidden>Verified</span>
+          </div>
+          <div class="profile-header-actions">
+            <button type="button" class="btn btn-outline btn-sm" id="photo-remove-btn" hidden>
+              <span class="label">Remove photo</span>
+            </button>
           </div>
         </div>
       </header>
 
-      <section class="s-card" aria-labelledby="profile-photo-title">
-        <h2 class="s-card-title" id="profile-photo-title">Profile photo</h2>
-        <p class="s-card-desc">Shown on your account and anywhere your name appears.</p>
-
-        <div id="photo-alert" class="alert" role="alert" hidden></div>
-
-        <div class="photo-row" id="photo-row">
-          <div class="photo-preview-wrap">
-            <span class="avatar avatar-lg" id="photo-preview" aria-hidden="true"></span>
-            <span class="photo-progress-ring" aria-hidden="true"></span>
-          </div>
-          <div class="photo-actions">
-            <div class="photo-actions-buttons">
-              <button type="button" class="btn btn-outline btn-sm" id="photo-choose-btn">
-                <span class="label">Choose photo</span>
-              </button>
-              <button type="button" class="btn btn-outline btn-sm" id="photo-remove-btn" hidden>
-                <span class="label">Remove photo</span>
-              </button>
-            </div>
-            <p class="photo-hint">JPEG, PNG or WebP. Up to 10&nbsp;MB.</p>
-            <input type="file" class="photo-input" id="photo-input" accept="image/jpeg,image/jpg,image/png,image/webp" aria-label="Choose a profile photo" />
-          </div>
-        </div>
-      </section>
+      <div id="photo-alert" class="alert" role="alert" hidden></div>
 
       <section class="s-card" aria-labelledby="profile-info-title">
         <h2 class="s-card-title" id="profile-info-title">Personal information</h2>
-        <p class="s-card-desc">The details on your Knight Club account.</p>
-        <dl class="kv" id="profile-list"></dl>
+        <p class="s-card-desc">The details on your Knight Club account. JPEG, PNG or WebP photos up to 10&nbsp;MB.</p>
+        <dl class="kv kv--grid" id="profile-list"></dl>
       </section>
 
       <p style="margin-top:var(--space-6)" class="text-muted">
