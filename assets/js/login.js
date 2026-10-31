@@ -38,6 +38,54 @@
   const toggleToLegacyBtn = document.getElementById('toggle-legacy-login');
   const toggleToEmailBtn = document.getElementById('toggle-email-login');
   const toggleEmailWrap = document.getElementById('toggle-email-wrap');
+  const cardSection = document.getElementById('auth-face-login');
+
+  /**
+   * Shown when "Continue with Google" on the LOGIN page resolves to
+   * `pendingSignup: true` — i.e. no account exists for this Google email.
+   * Google sign-in previously created an account silently in this exact
+   * situation, which is confusing on a page the visitor opened to sign
+   * IN: picking the wrong/an unexpected Google account here used to mean
+   * quietly becoming signed up instead, with no chance to back out (and,
+   * before the ghost-account fix, leaving a stray row even if they then
+   * abandoned the profile step). This screen makes that fork explicit
+   * instead of silent, mirroring the "Account created with Google."
+   * messaging on the signup page's equivalent moment.
+   *
+   * Nothing has been written to the database yet at this point — see
+   * auth.service.js#googleAuthenticate — so "Cancel" has nothing to undo;
+   * it simply abandons the pending-signup cookie (it is either overwritten
+   * by the next Google attempt or expires unused in 15 minutes).
+   */
+  function showNoAccountFound(fullName, email) {
+    cardSection.innerHTML = `
+      <div class="auth-status">
+        <div class="auth-status-icon auth-status-icon--pending" aria-hidden="true">&#128100;</div>
+        <h1>No account found</h1>
+        <p class="lead">There's no The Knight Club account for <strong>${Forms.escapeForHtml(email)}</strong> yet.
+        Would you like to create one?</p>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <button type="button" class="btn btn-primary btn-block" id="confirm-google-signup-btn">Create account</button>
+        </div>
+        <div class="field">
+          <button type="button" class="btn btn-outline btn-block" id="cancel-google-signup-btn">Cancel</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('confirm-google-signup-btn').addEventListener('click', () => {
+      Auth.stashPendingSignupPreview(fullName, email);
+      window.location.replace('complete-profile.html');
+    });
+    document.getElementById('cancel-google-signup-btn').addEventListener('click', () => {
+      // A full reload (rather than restoring the old innerHTML) is
+      // deliberate: it re-attaches every event listener this IIFE wired up
+      // on the original form elements, which a bare innerHTML swap would
+      // silently lose.
+      window.location.reload();
+    });
+  }
 
   Forms.initPasswordToggles(emailForm);
   Forms.initPasswordToggles(legacyForm);
@@ -60,9 +108,11 @@
   GoogleSignIn.render({
     container: document.getElementById('google-login-btn'),
     onStart: () => Forms.hideAlert(alertEl),
-    onSuccess: (user, isNewAccount) => {
-      if (isNewAccount && user.needsProfileCompletion) {
-        window.location.replace('complete-profile.html');
+    onSuccess: (result) => {
+      if (result.pendingSignup) {
+        // No account exists for this Google identity — ask before
+        // treating a login attempt as a signup (see showNoAccountFound).
+        showNoAccountFound(result.fullName, result.email);
       } else {
         window.location.replace(destination());
       }

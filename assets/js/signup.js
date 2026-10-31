@@ -33,8 +33,13 @@
   GoogleSignIn.render({
     container: document.getElementById('google-signup-btn'),
     onStart: () => Forms.hideAlert(alertEl),
-    onSuccess: (user, isNewAccount) => {
-      if (isNewAccount && user.needsProfileCompletion) {
+    onSuccess: (result) => {
+      if (result.pendingSignup) {
+        // Brand-new Google identity: nothing has been created yet. The
+        // name/email are carried via sessionStorage, read only once, so
+        // complete-profile.js can pre-fill the name field without needing
+        // a session (none exists until that form is submitted).
+        Auth.stashPendingSignupPreview(result.fullName, result.email);
         window.location.replace('complete-profile.html');
       } else {
         window.location.replace(Auth.safeNext(new URLSearchParams(window.location.search).get('next')));

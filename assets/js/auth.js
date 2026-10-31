@@ -97,6 +97,35 @@ const Auth = (() => {
     emit();
   }
 
+  const PENDING_SIGNUP_PREVIEW_KEY = 'tnc_pending_signup_preview'; // one-shot, read by complete-profile.html
+
+  /**
+   * Stashes the name/email a brand-new Google signup can be previewed
+   * with on complete-profile.html, for the one case where no session
+   * exists yet to fetch them from (see Auth.googleAuth's pendingSignup
+   * outcome). sessionStorage only — cleared on read, and gone the moment
+   * the tab closes either way; the server-side pending-signup cookie is
+   * what actually authorizes the account creation, this is display-only.
+   */
+  function stashPendingSignupPreview(fullName, email) {
+    try {
+      sessionStorage.setItem(PENDING_SIGNUP_PREVIEW_KEY, JSON.stringify({ fullName, email }));
+    } catch {
+      /* storage disabled (private mode): the page falls back to no prefill */
+    }
+  }
+
+  /** Reads and clears the one-shot pending-signup preview, if any. */
+  function consumePendingSignupPreview() {
+    try {
+      const raw = sessionStorage.getItem(PENDING_SIGNUP_PREVIEW_KEY);
+      sessionStorage.removeItem(PENDING_SIGNUP_PREVIEW_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
   /** Stores a one-shot notice for the next page (e.g. login) to display. */
   function setNotice(message, kind = 'info') {
     try {
@@ -263,18 +292,50 @@ const Auth = (() => {
   }
 
   /**
-   * Signs in (or signs up, on first use) with a Google ID token obtained
-   * from Google Identity Services on the page (see google-signin.js).
-   * @returns {Promise<{user: object, isNewAccount: boolean}>}
+   * Signs in (or begins sign-up, on first use) with a Google ID token
+   * obtained from Google Identity Services on the page (see
+   * google-signin.js).
+   *
+   * TWO OUTCOMES, told apart by `pendingSignup`:
+   *  - Existing account: signed in immediately, `user` is set, exactly as
+   *    before.
+   *  - Brand-new Google identity: NOTHING is created on the server yet
+   *    (see auth.service.js#googleAuthenticate). The server has set a
+   *    short-lived pending-signup cookie; the caller must send the visitor
+   *    to the complete-profile page, which — only once they actually
+   *    submit mobile+state — is what creates the account
+   *    (Auth.completeProfile below). If they never finish that form,
+   *    nothing is left behind.
+   *
+   * @returns {Promise<{pendingSignup: true, fullName: string, email: string}
+   *                  | {pendingSignup: false, user: object, isNewAccount: false}>}
    */
   async function googleAuth(idToken) {
     const data = await Api.post('/auth/google', { idToken });
+
+    if (data.pendingSignup) {
+      // No account exists yet — do not touch currentUser/bootstrapped.
+      return { pendingSignup: true, fullName: data.fullName, email: data.email };
+    }
+
     setUser(data.user);
     bootstrapped = true;
-    return { user: data.user, isNewAccount: Boolean(data.isNewAccount) };
+    return { pendingSignup: false, user: data.user, isNewAccount: false };
   }
 
-  /** Completes profile (mobile, state) after a first Google sign-in. Authenticated. */
+  /**
+   * Completes profile (mobile, state).
+   *
+   * Covers two callers transparently (the server tells them apart by
+   * cookie — see auth.controller.js#completeProfile):
+   *  - A brand-new Google signup finishing the form for the first time:
+   *    this call is what actually creates the account and signs the
+   *    student in. No prior Auth.requireAuth()/session is needed for this
+   *    case; the pending-signup cookie set by googleAuth() above is what
+   *    authorizes it.
+   *  - An existing (pre-fix) incomplete account completing its profile the
+   *    original way, authenticated normally.
+   */
   async function completeProfile({ fullName, mobile, state }) {
     const payload = { mobile, state };
     // Optional: only send fullName if the student actually typed something,
@@ -283,7 +344,15 @@ const Auth = (() => {
       payload.fullName = fullName.trim();
     }
     const data = await Api.post('/auth/complete-profile', payload);
-    updateUser(data.user);
+    if (data.isNewAccount) {
+      // First time this identity has ever had a session — establish it
+      // the same way a normal sign-in does, rather than patching a user
+      // object that was never set.
+      setUser(data.user);
+      bootstrapped = true;
+    } else {
+      updateUser(data.user);
+    }
     return data.user;
   }
 
@@ -456,6 +525,8 @@ const Auth = (() => {
     onChange,
     setNotice,
     consumeNotice,
+    stashPendingSignupPreview,
+    consumePendingSignupPreview,
     guardBfcache,
 
     // Email + Google auth

@@ -42,11 +42,18 @@ const GoogleSignIn = (() => {
 
   /**
    * Renders a Google Sign-In button into `container` and wires it end to
-   * end: click -> Google credential -> Auth.googleAuth() -> onSuccess(user, isNewAccount).
+   * end: click -> Google credential -> Auth.googleAuth() -> onSuccess(result).
+   *
+   * `result` is EXACTLY what Auth.googleAuth() resolves with (see auth.js):
+   * either `{ pendingSignup: true, fullName, email }` for a brand-new
+   * Google identity (nothing created yet — the page must route to
+   * complete-profile.html, which is what actually creates the account), or
+   * `{ pendingSignup: false, user, isNewAccount: false }` for an existing
+   * account that just signed in.
    *
    * @param {object} opts
    * @param {HTMLElement} opts.container   element to render the button into
-   * @param {(user: object, isNewAccount: boolean) => void} opts.onSuccess
+   * @param {(result: object) => void} opts.onSuccess
    * @param {(message: string) => void} opts.onError
    * @param {() => void} [opts.onStart]    called right before the backend call, so the page can show a loading state
    */
@@ -73,8 +80,8 @@ const GoogleSignIn = (() => {
       callback: async (response) => {
         try {
           if (onStart) onStart();
-          const { user, isNewAccount } = await Auth.googleAuth(response.credential);
-          if (onSuccess) onSuccess(user, isNewAccount);
+          const result = await Auth.googleAuth(response.credential);
+          if (onSuccess) onSuccess(result);
         } catch (err) {
           const message =
             err instanceof ApiError
