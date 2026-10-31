@@ -91,6 +91,13 @@
     });
   }
 
+  // Digit-only guard on mobile: strips anything that isn't 0-9 as the
+  // student types or pastes, in addition to the maxlength="10" on the input.
+  form.elements.mobile.addEventListener('input', () => {
+    const digitsOnly = form.elements.mobile.value.replace(/\D/g, '').slice(0, 10);
+    if (digitsOnly !== form.elements.mobile.value) form.elements.mobile.value = digitsOnly;
+  });
+
   /**
    * The backend answers a duplicate with 409 and a MESSAGE (not a field
    * name), so route it to the right input by message. Anything not

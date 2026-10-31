@@ -41,9 +41,17 @@
             <div class="form-grid">
 
               <div class="field">
+                <label for="cp-fullname">Full name</label>
+                <input class="input" id="cp-fullname" name="fullName" type="text" autocomplete="name"
+                       maxlength="80" placeholder="Your full name"
+                       aria-describedby="cp-fullname-error" />
+                <p class="field-error" id="cp-fullname-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
                 <label for="cp-mobile">Mobile number</label>
                 <input class="input" id="cp-mobile" name="mobile" type="tel" inputmode="numeric"
-                       autocomplete="tel-national" maxlength="20" placeholder="98765 43210" required
+                       autocomplete="tel-national" maxlength="10" placeholder="9876543210" required
                        aria-describedby="cp-mobile-error" />
                 <p class="field-error" id="cp-mobile-error" aria-live="polite"></p>
               </div>

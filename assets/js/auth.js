@@ -275,8 +275,14 @@ const Auth = (() => {
   }
 
   /** Completes profile (mobile, state) after a first Google sign-in. Authenticated. */
-  async function completeProfile({ mobile, state }) {
-    const data = await Api.post('/auth/complete-profile', { mobile, state });
+  async function completeProfile({ fullName, mobile, state }) {
+    const payload = { mobile, state };
+    // Optional: only send fullName if the student actually typed something,
+    // so an empty field never overwrites the name Google already provided.
+    if (typeof fullName === 'string' && fullName.trim().length > 0) {
+      payload.fullName = fullName.trim();
+    }
+    const data = await Api.post('/auth/complete-profile', payload);
     updateUser(data.user);
     return data.user;
   }

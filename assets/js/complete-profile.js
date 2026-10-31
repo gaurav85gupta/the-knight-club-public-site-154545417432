@@ -25,10 +25,18 @@
   Auth.requireAuth().then((user) => {
     if (!user.needsProfileCompletion) {
       window.location.replace(Auth.urlFor(Auth.PATHS.dashboard));
+      return;
     }
+    // Pre-fill with the name Google gave us; the student can edit it if
+    // it's wrong, incomplete, or a nickname.
+    if (user.fullName) form.elements.fullName.value = user.fullName;
   });
 
+  // Digit-only guard: strips anything that isn't 0-9 as the student types
+  // or pastes, in addition to the maxlength="10" on the input itself.
   form.elements.mobile.addEventListener('input', () => {
+    const digitsOnly = form.elements.mobile.value.replace(/\D/g, '').slice(0, 10);
+    if (digitsOnly !== form.elements.mobile.value) form.elements.mobile.value = digitsOnly;
     if (form.elements.mobile.closest('.field').classList.contains('has-error')) Forms.clearFieldError(form.elements.mobile);
   });
   form.elements.state.addEventListener('input', () => {
@@ -59,7 +67,11 @@
 
     Forms.setLoading(submitBtn, true, 'Saving…');
     try {
-      await Auth.completeProfile({ mobile: form.elements.mobile.value, state: form.elements.state.value });
+      await Auth.completeProfile({
+        fullName: form.elements.fullName.value,
+        mobile: form.elements.mobile.value,
+        state: form.elements.state.value,
+      });
       window.location.replace(Auth.urlFor(Auth.PATHS.dashboard));
     } catch (err) {
       Forms.setLoading(submitBtn, false);
