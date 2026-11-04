@@ -1,14 +1,20 @@
 /* ============================================================
    DIWALI SEASONAL THEME — temporary, self-contained
    ------------------------------------------------------------
-   Purpose : Festive decoration for the HOME HERO section only.
+   Purpose : Festive decoration for the HOME HERO section ONLY.
+             Kept deliberately simple: two diya (lamp) images in
+             the hero's bottom corners with a soft warm glow
+             beneath them, plus a small floating-spark layer and
+             the "Happy Diwali" badge pill. No other section on
+             the page carries any festive decoration.
    Removal : Delete the single <link> to this file from
-             index.html (and the .diwali-badge markup block,
-             if added) — nothing else on the site depends on
-             these rules. No other CSS file has been touched.
-   Scope   : Every selector below is prefixed with .diwali-*
-             or targets .hero.hero-v2 only on the home page,
-             so it cannot leak into other pages/components.
+             index.html (and the .diwali-badge markup block, the
+             two .diwali-hero-diya divs and the .diwali-sparkles
+             div in the hero) — nothing else on the site depends
+             on these rules. No other CSS file has been touched.
+   Scope   : Every selector below is prefixed with .diwali-* or
+             targets .hero.hero-v2 only on the home page, so it
+             cannot leak into other pages/components.
    ============================================================ */
 
 :root {
@@ -19,10 +25,7 @@
 }
 
 /* ----------------------------------------------------------------
-   Entrance state — diwali-effects.js adds .diwali-in on the hero
-   shortly after load (and immediately if JS is unavailable/blocked,
-   via the no-js fallback below) so copy/badge animate in once
-   rather than being invisible if JS fails. */
+   Entrance state — copy/badge/stats animate in once on load. */
 .diwali-active .diwali-badge,
 .diwali-active .hero-v2-tag,
 .diwali-active .hero-v2-title,
@@ -44,65 +47,36 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* No-JS fallback: if diwali-effects.js never runs, content must still
-   show (not stay invisible) — detected via the absence of .diwali-in,
-   handled with a plain CSS animation-fill so it always lands visible
-   even without the class toggle; this block is just documentation,
-   the forwards fill above already guarantees visibility. */
-
-/* 1. Hero photo backdrop — sits in the same image layer the hero
-      already uses (.hero.hero-v2::after), just swapped for the
-      festive artwork, with a soft dark scrim so the headline
-      text above stays readable.
+/* 1. Hero photo backdrop removed — hero uses the site's normal dark
+      background; the two diya images + soft glow (below) are the
+      hero's only festive decoration.
       !important + the html[data-site-theme] prefix are needed here
       because theme-futuristic.css / site.css declare the dark/light
-      hero background on that same ::after pseudo-element at equal
-      or higher specificity (they key off html:not([data-site-theme=
-      "light"]) / html[data-site-theme="light"]), so a plain override
-      would lose depending on which theme is active. */
+      hero background on this same ::after pseudo-element at equal
+      or higher specificity. */
 html .home-page .hero.hero-v2.diwali-active::after {
-  background-image:
-    /* No dark wash over the photo itself — the image must show at full
-       brightness/vividness. This artwork already has a naturally dark,
-       mostly-empty purple-blue sky on the left (exactly where the
-       headline/copy sits), so text contrast comes from the photo's own
-       composition rather than from a scrim dimming it down. Only a very
-       thin edge gradient is kept, purely to soften the hard crop line at
-       the very left/bottom edge of the frame — it is almost fully
-       transparent and does not reduce the image's overall brightness. */
-    linear-gradient(90deg, rgba(8, 3, 16, 0.22) 0%, rgba(8, 3, 16, 0.06) 18%, transparent 38%),
-    linear-gradient(0deg, rgba(8, 3, 16, 0.20) 0%, transparent 22%),
-    url('../images/diwali-hero-bg.jpg') !important;
-  /* Image's focal decoration (lanterns, gifts, rangoli, diyas) sits on
-     the right/bottom; the open sky band runs along the left — keep that
-     band behind the copy. */
-  background-position: center 42% !important;
-  background-size: cover !important;
+  background-image: none !important;
   background-color: transparent !important;
   opacity: 1 !important;
-  /* Gentle parallax + zoom tied to the same --hero-scroll progress value
-     hero-scroll-fx.js already writes on this element (0 -> 1 across the
-     hero's own height) — no second scroll listener needed. Scaled down
-     from the site's own dark-mode cinematic values so it reads as a
-     slow photo drift rather than a heavy blur. */
-  transform: scale(calc(1.02 + var(--hero-scroll, 0) * 0.12)) translateY(calc(var(--hero-scroll, 0) * -22px)) !important;
-  transition: transform 0.05s linear;
 }
 
-/* 2. Warm festive glow wash, above the photo, below the content.
-      theme-futuristic.css sets display:none on this pseudo-element
-      in dark mode, so it must be forced back on here. */
+/* 2. Warm festive glow wash, above the background, below the content.
+      theme-futuristic.css sets display:none on this pseudo-element in
+      dark mode, so it must be forced back on here. Glow pools in the
+      bottom corners, right where the two diyas sit, like candlelight
+      spilling onto the floor beneath them. */
 html .home-page .hero.hero-v2.diwali-active::before {
   display: block !important;
   background-image:
-    radial-gradient(ellipse at 15% 85%, rgba(255, 185, 77, 0.22) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 15%, rgba(255, 61, 141, 0.16) 0%, transparent 50%) !important;
+    radial-gradient(ellipse 480px 320px at 4% 100%, rgba(255, 170, 60, 0.30) 0%, transparent 70%),
+    radial-gradient(ellipse 480px 320px at 96% 100%, rgba(255, 170, 60, 0.30) 0%, transparent 70%),
+    radial-gradient(ellipse at 85% 15%, rgba(255, 61, 141, 0.12) 0%, transparent 50%) !important;
   mix-blend-mode: screen;
 }
 
-/* 3. Floating diya / sparkle corner flourishes — pure CSS, no extra images.
-      Drifts slightly opposite the background parallax (via --hero-scroll)
-      so the whole layer feels like it has depth, not just a flat overlay. */
+/* 3. Floating spark flourishes — pure CSS, no extra images. Drifts
+      slightly opposite the background parallax (via --hero-scroll) so
+      the layer feels like it has depth. */
 .diwali-sparkles {
   position: absolute;
   inset: 0;
@@ -173,101 +147,80 @@ html .home-page .hero.hero-v2.diwali-active::before {
   flex: none;
 }
 
-/* 5. Mobile: home.css switches the whole ::after/::before image layer off
-      below 640px (it was sized for the desktop orbit backdrop). Bring it
-      back for the Diwali photo so the festive background still shows on
-      phones — same !important pattern as above, same reason. */
-@media (max-width: 640px) {
-  .diwali-badge { font-size: 12px; padding: 6px 13px; }
-
-  html .home-page .hero.hero-v2.diwali-active::after,
-  html .home-page .hero.hero-v2.diwali-active::before {
-    display: block !important;
-  }
-  html .home-page .hero.hero-v2.diwali-active::after {
-    /* This photo is a wide landscape shot (~1.78:1) with its decoration —
-       lanterns, rangoli, diyas, fireworks — concentrated on the right
-       side; the left is mostly empty sky. On a narrow/tall mobile
-       viewport, background-size: cover crops hard left-right, so
-       "center" framing cut off most of that decoration. Anchoring near
-       the right edge keeps the lanterns/rangoli in frame instead. */
-    background-position: 78% 55% !important;
-    /* The desktop scrim above was tuned for the calm empty-sky crop;
-       this busier crop needs a bit more darkening so the centered
-       headline/badge text stays readable against the lanterns/rangoli. */
-    background-image:
-      linear-gradient(180deg, rgba(8, 3, 16, 0.35) 0%, rgba(8, 3, 16, 0.5) 45%, rgba(8, 3, 16, 0.3) 100%),
-      url('../images/diwali-hero-bg.jpg') !important;
-  }
-  .diwali-sparkles { display: none; } /* keep mobile hero calm/legible */
-}
-
 /* ============================================================
-   6. SITE-WIDE SECTION DECORATION — mandala + diya motifs
+   5. HERO DIYAS — the only decoration on the whole home page.
    ------------------------------------------------------------
-   Applied via .diwali-decor on each <section> (added only on the
-   home page). Two lightweight, low-opacity PNG corner ornaments
-   per section plus an optional small diya beside section eyebrows/
-   titles. Kept subtle (low opacity, no layout shift — all
-   absolutely positioned, pointer-events: none) so it reads as a
-   premium seasonal touch rather than clutter on top of real
-   content, and never interferes with clicks/taps underneath.
+   One diya sits in each bottom corner of the hero, flame-side up,
+   each with its own soft warm glow pooling beneath it (the ::before
+   gradients above). Simple, calm, matches the reference: no rangoli,
+   no spinning mandala, no per-section ornaments anywhere else.
    ============================================================ */
 
-.diwali-decor {
-  position: relative;
-  isolation: isolate;
-}
-
-.diwali-corner {
+.diwali-hero-diya {
   position: absolute;
-  z-index: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 128px;
   pointer-events: none;
-  opacity: 0.16;
-  filter: drop-shadow(0 0 18px rgba(255, 170, 60, 0.18));
   user-select: none;
+  filter: drop-shadow(0 0 22px rgba(255, 160, 50, 0.45))
+          drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
+  animation: diwali-flicker 2.6s ease-in-out infinite;
 }
 
-.diwali-corner img {
+.diwali-hero-diya img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: auto;
 }
 
-/* Rangoli/mandala — the only one that slowly rotates; it reads naturally
-   as a spinning rangoli pattern. Sized up so it's clearly visible as the
-   section's corner motif rather than a faint texture. */
-.diwali-corner--tr {
-  top: -60px;
-  right: -60px;
-  width: 280px;
-  height: 280px;
-  animation: diwali-spin-slow 90s linear infinite;
+.diwali-hero-diya--left  { left: 2%; animation-delay: 0s; }
+.diwali-hero-diya--right { right: 2%; animation-delay: 1.1s; }
+
+@keyframes diwali-flicker {
+  0%, 100% { filter: drop-shadow(0 0 22px rgba(255, 160, 50, 0.45)) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35)); }
+  50%      { filter: drop-shadow(0 0 32px rgba(255, 180, 70, 0.65)) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35)); }
 }
 
-/* Diya — stays put, no rotation (a spinning oil lamp reads as a visual
-   bug, not a flourish), fixed in its corner. */
-.diwali-corner--bl {
-  bottom: -30px;
-  left: -30px;
-  width: 150px;
-  height: 150px;
+@media (min-width: 900px) {
+  .diwali-hero-diya { width: 150px; }
 }
 
-@keyframes diwali-spin-slow {
-  to { transform: rotate(360deg); }
+@media (max-width: 640px) {
+  /* The mobile hero (see home.css §640px) is a natural-height block with
+     overflow:hidden, not the fixed-viewport flex box used on desktop —
+     so bottom:-34px (used below 640px previously) sat past the hero's
+     own edge and got clipped by that overflow:hidden, making the diyas
+     invisible. Pin them to the hero's real bottom edge instead, small
+     enough and low-opacity-glow enough to sit quietly behind the
+     centered stats row rather than under it. */
+  .diwali-hero-diya {
+    width: 52px;
+    bottom: 10px;
+    opacity: 0.85;
+  }
+  .diwali-hero-diya--left  { left: 4%; }
+  .diwali-hero-diya--right { right: 4%; }
+  .diwali-badge { font-size: 12px; padding: 6px 13px; }
+  .diwali-sparkles { display: none; } /* keep the small-screen hero calm/legible */
+
+  html .home-page .hero.hero-v2.diwali-active::before {
+    background-image:
+      radial-gradient(ellipse 160px 120px at 4% 100%, rgba(255, 170, 60, 0.22) 0%, transparent 70%),
+      radial-gradient(ellipse 160px 120px at 96% 100%, rgba(255, 170, 60, 0.22) 0%, transparent 70%) !important;
+  }
 }
 
-/* Keep every section's real content above the ornament layer */
-.diwali-decor > .container,
-.diwali-decor > .faq-container {
-  position: relative;
-  z-index: 1;
+@media (prefers-reduced-motion: reduce) {
+  .diwali-hero-diya { animation: none; }
 }
 
-/* Small diya glyph beside an eyebrow/label — a quiet festive accent
-   next to the section's own existing label text, not replacing it. */
+/* ----------------------------------------------------------------
+   6. Small diya glyph beside a section eyebrow/label — a quiet,
+      text-sized festive accent next to the existing label, used
+      sparingly across the page (never a corner image, never
+      oversized — this is the only trace of the theme outside the
+      hero). */
 .diwali-eyebrow-diya {
   display: inline-block;
   flex: none;
@@ -275,43 +228,6 @@ html .home-page .hero.hero-v2.diwali-active::before {
   height: 16px;
   background: url('../images/diwali-diya.png') center / contain no-repeat;
   filter: drop-shadow(0 0 5px rgba(255, 170, 60, 0.45));
-}
-
-/* Hero gets a slightly larger, more visible mandala watermark behind the
-   copy (desktop only — mobile keeps the hero calm/legible per the
-   sparkle rule above). Sits well below the headline/content z-index. */
-@media (min-width: 900px) {
-  .hero.hero-v2.diwali-active .diwali-corner--tr {
-    width: 420px;
-    height: 420px;
-    top: -70px;
-    right: 4%;
-    opacity: 0.14;
-  }
-}
-
-/* Tighter, lower-opacity corners on narrow screens so nothing crowds
-   stacked single-column content. */
-@media (max-width: 640px) {
-  .diwali-corner--tr { width: 160px; height: 160px; top: -32px; right: -32px; opacity: 0.14; }
-  .diwali-corner--bl { width: 90px;  height: 90px;  bottom: -22px; left: -22px; opacity: 0.12; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .diwali-corner--tr { animation: none; }
-}
-
-/* The 1% Club teaser and the final CTA are the two "premium" panels on
-   the page — give their corner ornaments a touch more presence than the
-   quieter informational sections. */
-#club.diwali-decor .diwali-corner,
-#cta.diwali-decor .diwali-corner {
-  opacity: 0.24;
-}
-#club.diwali-decor .diwali-corner--tr,
-#cta.diwali-decor .diwali-corner--tr {
-  width: 320px;
-  height: 320px;
 }
 
 /* Respect reduced-motion preference */
@@ -328,7 +244,6 @@ html .home-page .hero.hero-v2.diwali-active::before {
     opacity: 1;
     transform: none;
   }
-  html .home-page .hero.hero-v2.diwali-active::after,
   .diwali-sparkles {
     transform: none !important;
   }
