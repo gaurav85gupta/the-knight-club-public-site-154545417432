@@ -1,0 +1,19 @@
+/* ==========================================================================
+   H1 display font — Oswald (Google Fonts)
+   Used site-wide for all headings via var(--font-family-h1), defined in
+   assets/css/tokens.css.
+
+   Originally this file self-hosted a "Coolvetica" @font-face, but the
+   actual .woff2/.woff font files were never added to assets/fonts/, so
+   every h1 on the site was silently falling back to the generic
+   'Helvetica Condensed'/'Arial Narrow' stack. Replaced with Staatliches,
+   a free condensed display font loaded straight from Google Fonts — no
+   font files to host, same bold condensed look as the original design
+   intent.
+
+   If a licensed copy of Coolvetica is obtained later, this file can be
+   swapped back to a self-hosted @font-face block (see git history) and
+   tokens.css's --font-family-h1 updated to reference 'Coolvetica' again.
+   ========================================================================== */
+
+/* Oswald is now loaded via the <link> to Google Fonts in each page head (no @import chain). */300;400;500;600&display=swap');

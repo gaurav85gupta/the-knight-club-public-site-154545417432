@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-48.png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <title>Create your account — The Knight Club</title>
+  <meta name="description" content="Create your The Knight Club student account." />
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="preload" as="image" href="../assets/images/auth-background.jpg" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+</head>
+<body class="auth-page auth-page--split">
+
+  <main class="auth-main">
+    <div class="auth-scene" id="auth-scene" data-active="signup">
+
+      <a href="../index.html" class="auth-logo" aria-label="The Knight Club — home">
+        <img class="auth-logo-mark" src="../assets/images/knight-emblem-512.png" width="48" height="48" alt="" aria-hidden="true" />
+        <span class="auth-logo-text">The <span>Knight Club</span></span>
+      </a>
+
+      <div class="auth-card" id="auth-card">
+
+        <section class="auth-face" id="auth-face-signup" aria-labelledby="signup-title">
+          <h1 id="signup-title">Create your account</h1>
+          <p class="lead">Join The Knight Club and start learning today.</p>
+
+          <div id="form-alert-signup" class="alert" role="alert" hidden></div>
+
+          <div id="google-signup-btn" style="display:flex; justify-content:center;"></div>
+          <div class="auth-divider">or sign up with email</div>
+
+          <form id="signup-form" novalidate autocomplete="on">
+            <div class="form-grid">
+
+              <div class="field">
+                <label for="su-fullName">Full name</label>
+                <input class="input" id="su-fullName" name="fullName" type="text" autocomplete="name"
+                       maxlength="80" placeholder="Your full name" required aria-describedby="su-fullName-error" />
+                <p class="field-error" id="su-fullName-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="su-email">Email address</label>
+                <input class="input" id="su-email" name="email" type="email" inputmode="email"
+                       autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false"
+                       maxlength="254" placeholder="you@example.com" required aria-describedby="su-email-error" />
+                <p class="field-error" id="su-email-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="su-mobile">Mobile number</label>
+                <input class="input" id="su-mobile" name="mobile" type="tel" inputmode="numeric"
+                       autocomplete="tel-national" maxlength="10" placeholder="9876543210" required
+                       aria-describedby="su-mobile-error" />
+                <p class="field-error" id="su-mobile-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="su-state">State</label>
+                <input class="input" id="su-state" name="state" type="text" autocomplete="address-level1"
+                       maxlength="60" required aria-describedby="su-state-error" />
+                <p class="field-error" id="su-state-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="su-password">Password</label>
+                <div class="password-wrap">
+                  <input class="input" id="su-password" name="password" type="password"
+                         autocomplete="new-password" maxlength="128" required
+                         aria-describedby="su-password-error" />
+                  <button type="button" class="toggle-password" aria-pressed="false" aria-label="Show or hide password">Show</button>
+                </div>
+                <p class="field-error" id="su-password-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="su-confirmPassword">Confirm password</label>
+                <div class="password-wrap">
+                  <input class="input" id="su-confirmPassword" name="confirmPassword" type="password"
+                         autocomplete="new-password" maxlength="128" required aria-describedby="su-confirmPassword-error" />
+                  <button type="button" class="toggle-password" aria-pressed="false" aria-label="Show or hide confirmation">Show</button>
+                </div>
+                <p class="field-error" id="su-confirmPassword-error" aria-live="polite"></p>
+              </div>
+
+              <p class="hint" style="grid-column: 1 / -1; margin-top: -4px;">Password: at least 8 characters.</p>
+
+              <div class="field field-full">
+                <button class="btn btn-primary btn-block" id="signup-submit-btn" type="submit">
+                  <span class="spinner" aria-hidden="true"></span>
+                  <span class="label">Create account</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <p class="auth-alt">Already have an account? <a href="login.html">Sign in</a></p>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/google-signin.js"></script>
+  <script src="../assets/js/signup.js"></script>
+</body>
+</html>

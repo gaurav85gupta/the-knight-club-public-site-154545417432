@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-48.png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <script src="../assets/js/site-theme-init.js"></script>
+  <title>1% Club Membership | The Knight Club</title>
+  <meta name="description" content="The 1% Club is The Knight Club's premium membership: choose your courses and get founder mentorship, AI agent support, live Q&amp;A and a career roadmap." />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="canonical" href="https://theknightclub.in/pages/one-percent-club.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The Knight Club 1% Club | Premium Membership" />
+  <meta property="og:description" content="The 1% Club premium membership: choose your courses, get mentorship, community, and structured support." />
+  <meta property="og:url" content="https://theknightclub.in/pages/one-percent-club.html" />
+  <meta property="og:image" content="https://theknightclub.in/assets/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:image" content="https://theknightclub.in/assets/images/og-image.jpg" />
+  <meta name="theme-color" content="#0a0714" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the 1% Club?","acceptedAnswer":{"@type":"Answer","text":"The Knight Club's premium membership. You choose courses from the current offering and get founder mentorship, AI agent support, a WhatsApp community, live Q&A sessions, 1-on-1 calls and a career roadmap."}},{"@type":"Question","name":"How does course selection work?","acceptedAnswer":{"@type":"Answer","text":"The course picker on this page lets you choose your courses from the current membership offering. The number you can select is shown on the page and is set by the membership plan — it updates automatically."}},{"@type":"Question","name":"Can I use a coupon code?","acceptedAnswer":{"@type":"Answer","text":"Yes. Coupon codes are entered on the checkout step (the next step after selecting your courses). They are validated server-side and the discount is calculated there."}},{"@type":"Question","name":"Is the 1% Club different from buying a course?","acceptedAnswer":{"@type":"Answer","text":"Yes. A course is focused learning on one topic. The membership pairs chosen courses with the mentorship, support and community described above."}}]}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/1-base/scroll.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/public.css" />
+  <link rel="stylesheet" href="../assets/css/one-percent.css" />
+  <!-- "What Members Say" on this page reuses the testimonials page's
+       .tm-card / .tm-video-embed / .tm-quote / .tm-author markup (see
+       one-percent.js renderTestimonials) so it needs the same stylesheet,
+       otherwise those cards fall back to plain, unstyled HTML. -->
+  <link rel="stylesheet" href="../assets/css/testimonials.css?v=vid2" />
+  <link rel="stylesheet" href="../assets/css/theme-futuristic.css" />
+  <link rel="stylesheet" href="../assets/css/site-theme.css" />
+  <link rel="stylesheet" href="../assets/css/faq.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <link rel="stylesheet" href="../assets/css/cart.css" />
+  <noscript><style>.faq-answer{grid-template-rows:1fr !important;visibility:visible !important}.faq-icon{display:none}</style></noscript>
+</head>
+<body class="pub-page club-page">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="pub-header-wrap">
+    <div id="pub-header-root" data-from-pages="true"><nav aria-label="Primary" hidden><a href="../index.html">Home</a> <a href="courses.html">Courses</a> <a href="one-percent-club.html">1% Club</a> <a href="about.html">About</a> <a href="testimonials.html">Testimonials</a> <a href="contact.html">Contact</a></nav></div>
+  </div>
+
+  <main id="main">
+
+    <!-- ====================================================================
+         VIEW: LOADING
+         Shown while the plan API call is in flight.
+         ==================================================================== -->
+    <div id="oc-view-loading" class="oc-view-loading" aria-live="polite" aria-label="Loading membership details">
+      <div class="oc-spinner-wrap">
+        <div class="oc-spinner" aria-hidden="true"></div>
+        <p class="oc-spinner-label">Loading membership details&hellip;</p>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         VIEW: ERROR
+         Shown when the plan API fails or plan is inactive.
+         ==================================================================== -->
+    <div id="oc-view-error" class="oc-view-error" hidden aria-live="polite" role="alert">
+      <div class="container oc-error-wrap">
+        <div class="oc-error-icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h2 id="oc-error-title" class="oc-error-title">Something went wrong</h2>
+        <p id="oc-error-msg" class="oc-error-msg">We couldn&#8217;t load the 1% Club details. Please check your connection and try again.</p>
+        <button id="oc-error-retry" class="btn btn-primary btn-lg" type="button" hidden>Try again</button>
+        <a href="contact.html" class="btn btn-outline btn-lg">Contact us</a>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         VIEW: EXISTING MEMBER
+         Shown when the student already has an active membership.
+         ==================================================================== -->
+    <div id="oc-view-member" class="oc-view-member" hidden aria-live="polite">
+      <div class="container oc-member-wrap">
+        <div class="oc-member-icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h2 class="oc-member-title">You&#8217;re already a 1% Club member</h2>
+        <p class="oc-member-lead">Your membership is active. Your selected courses are available in My Learning.</p>
+        <div class="oc-actions" style="justify-content:center; margin-top: var(--space-8);">
+          <a href="dashboard.html" class="btn btn-primary btn-lg">Go to My Learning</a>
+          <a href="orders.html" class="btn btn-ghost btn-lg">View Orders</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         VIEW: REVIEW
+         Summary of selected membership before checkout.
+         Shown after the student completes selection and is authenticated.
+         ==================================================================== -->
+    <div id="oc-view-review" class="oc-view-review" hidden>
+      <section class="oc-review-hero" aria-labelledby="review-title">
+        <div class="oc-hero-bg" aria-hidden="true"></div>
+        <div class="container oc-review-hero-in">
+          <p class="oc-kicker">Almost there</p>
+          <h2 id="review-title" class="oc-review-heading">Review your 1% Club membership</h2>
+          <p class="oc-lead">Check your selected courses and price, then continue to checkout.</p>
+        </div>
+      </section>
+
+      <section class="oc-sec" aria-labelledby="review-content-title">
+        <div class="container oc-review-layout">
+
+          <!-- Left: selected courses -->
+          <div class="oc-review-courses-col">
+            <h2 id="review-content-title" class="oc-review-section-title">Your selected courses</h2>
+            <p id="oc-review-sel-info" class="oc-review-sel-info"></p>
+            <ul id="oc-review-courses" class="oc-review-courses" aria-label="Selected courses" role="list"></ul>
+          </div>
+
+          <!-- Right: summary + CTA -->
+          <div class="oc-review-summary">
+            <div class="oc-review-summary-inner">
+              <h2 class="oc-review-summary-title">Order Summary</h2>
+
+              <div class="oc-review-plan">
+                <span class="oc-review-plan-label" data-oc-plan-name>1% Club</span>
+                <span class="oc-review-plan-tag">Premium Membership</span>
+              </div>
+
+              <div class="oc-review-price-row">
+                <span class="oc-review-price-label">Membership price</span>
+                <div class="oc-review-price-val">
+                  <s id="oc-review-compare-price" class="oc-review-compare" hidden></s>
+                  <strong id="oc-review-price" class="oc-review-main-price"></strong>
+                </div>
+              </div>
+
+              <p class="oc-review-coupon-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Coupon codes can be applied on the next step
+              </p>
+
+              <p id="oc-review-error" class="oc-review-error" hidden role="alert"></p>
+
+              <div class="oc-review-actions">
+                <button id="oc-review-proceed" class="btn btn-primary btn-lg oc-btn-with-spinner" type="button">
+                  <span class="oc-btn-spinner" hidden aria-hidden="true"></span>
+                  <span class="oc-btn-label">Continue to Checkout</span>
+                </button>
+                <button id="oc-review-edit" class="btn btn-ghost btn-sm" type="button">
+                  &larr; Edit selection
+                </button>
+              </div>
+
+              <p class="oc-review-security">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Secure checkout powered by Razorpay
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <!-- ====================================================================
+         VIEW: SELECTION  (default public-facing view)
+         ==================================================================== -->
+    <div id="oc-view-selection" hidden>
+
+      <!-- A. Hero -->
+      <section class="pub-hero oc-hero" aria-labelledby="page-title">
+        <div class="oc-hero-bg" aria-hidden="true"></div>
+        <div class="container oc-hero-in oc-hero-in-center">
+
+          <span class="oc-flag-badge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.5 5.5L20 9l-4.5 4 1.2 6L12 16l-4.7 3 1.2-6L4 9l5.5-1.5L12 2z"/></svg>
+            The Knight Club &middot; Flagship Program
+          </span>
+
+          <h1 id="page-title" class="oc-h1-centered">
+            <span class="oc-h1-top">The 1% Club</span>
+            <span class="oc-h1-gradient">Membership</span>
+          </h1>
+
+          <p class="oc-lead oc-lead-centered">A private membership for students who don&rsquo;t just want to learn &mdash; they want mentorship, community and a real path to a 6-figure online income.</p>
+
+          <div class="oc-price-pill">
+            <s data-oc-compare-price class="oc-price-pill-compare" hidden></s>
+            <strong data-oc-price class="oc-price-pill-amount"></strong>
+            <span class="oc-price-pill-chip">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Limited Time Offer
+            </span>
+          </div>
+
+          <!-- ================================================================
+               Hero countdown timer. Entirely Super Admin controlled — no
+               label or deadline is hardcoded here. one-percent.js shows this
+               block only when the backend-confirmed plan.countdown.enabled
+               is true, and reads the label/deadline/expired-text live from
+               the plan API response. Hidden by default so the page never
+               flashes a countdown before data loads.
+               ================================================================ -->
+          <div class="oc-countdown" data-oc-countdown hidden>
+            <span class="oc-countdown-label" data-oc-countdown-label></span>
+            <div class="oc-countdown-timer" data-oc-countdown-timer role="timer" aria-live="off">
+              <div class="oc-countdown-unit">
+                <span class="oc-countdown-value" data-oc-cd-days>00</span>
+                <span class="oc-countdown-unit-label">Days</span>
+              </div>
+              <span class="oc-countdown-sep" aria-hidden="true">:</span>
+              <div class="oc-countdown-unit">
+                <span class="oc-countdown-value" data-oc-cd-hours>00</span>
+                <span class="oc-countdown-unit-label">Hrs</span>
+              </div>
+              <span class="oc-countdown-sep" aria-hidden="true">:</span>
+              <div class="oc-countdown-unit">
+                <span class="oc-countdown-value" data-oc-cd-minutes>00</span>
+                <span class="oc-countdown-unit-label">Min</span>
+              </div>
+              <span class="oc-countdown-sep" aria-hidden="true">:</span>
+              <div class="oc-countdown-unit">
+                <span class="oc-countdown-value" data-oc-cd-seconds>00</span>
+                <span class="oc-countdown-unit-label">Sec</span>
+              </div>
+            </div>
+            <p class="oc-countdown-expired" data-oc-countdown-expired hidden></p>
+          </div>
+
+          <div class="oc-actions oc-actions-centered">
+            <!-- Scrolls to the course picker — identical destination and
+                 wiring to the existing "Browse courses" link (oc-scroll-courses),
+                 just relabelled/restyled to read as the primary CTA up top.
+                 The REAL purchase action (#oc-cta below) keeps its own
+                 selection-state text/disabled logic untouched. -->
+            <a id="oc-scroll-courses" href="#choose" class="btn btn-primary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              Join the 1% Club
+              <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <div id="oc-prebook-row" class="oc-prebook-slot" hidden>
+              <button id="oc-prebook-cta" class="btn btn-gold btn-lg oc-btn-with-spinner" type="button">
+                <span class="oc-btn-spinner" hidden aria-hidden="true"></span>
+                <span class="oc-btn-label">Pre-Book Now</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               Pre-Booking entry point (Phase 3).
+               Hidden by default; one-percent.js reveals it only when the
+               backend-confirmed plan.preBooking.enabled is true (never
+               inferred from a frontend default — see spec "CTA rules").
+               A separate, secondary path alongside the direct-purchase CTA
+               above — clicking it never touches the course-selection state
+               that CTA depends on.
+               ================================================================ -->
+          <p class="oc-prebook-note">
+            Not ready to choose your courses yet? Reserve your seat now for
+            <strong id="oc-prebook-amount"></strong> and pick your courses later.
+          </p>
+
+          <div class="oc-watch-row">
+            <a id="oc-scroll-video" href="#watch-intro" class="btn btn-ghost btn-lg">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Watch intro
+            </a>
+          </div>
+
+          <!-- Real purchase-flow button: kept in the DOM (hidden) so
+               one-percent.js's selection-state wiring (updateSelectionUI)
+               keeps working untouched, but not shown in the hero visually —
+               matches the reference design, which has only two hero buttons. -->
+          <button id="oc-cta" class="oc-hero-real-cta" type="button" disabled aria-disabled="true" hidden>
+            Select <span data-oc-limit>&hellip;</span> courses to continue
+          </button>
+
+          <p class="oc-offer-note" data-oc-offer-note hidden>
+            Only available for a limited time. After the offer ends, the membership price will automatically become <span data-oc-compare-price-text></span>.
+          </p>
+
+        </div>
+      </section>
+
+      <!-- B. What Is the 1% Club -->
+      <section class="oc-sec" id="watch-intro" aria-labelledby="what-title">
+        <div class="container oc-what-center">
+          <p class="oc-eyebrow-gold">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.5 5.5L20 9l-4.5 4 1.2 6L12 16l-4.7 3 1.2-6L4 9l5.5-1.5L12 2z"/></svg>
+            Watch the intro
+          </p>
+          <!-- Phase 39: heading/description overridable by admin via plan.content.
+               JS sets these if the admin has configured them; otherwise the static
+               text below is shown unchanged. -->
+          <h2 id="what-title" data-phase39-heading="section2">What Is the 1% Club?</h2>
+          <p class="oc-p oc-p-center" id="oc-what-desc">Watch this short introduction to understand how the 1% Club works, what benefits you receive, and why it&rsquo;s designed to accelerate your learning and career growth.</p>
+        </div>
+
+        <!-- Phase 39: Section 2 intro video. Populated by one-percent.js from
+             plan.media.introVideo.
+             - #oc-intro-video-wrap: outer wrapper. one-percent.js sets
+               hidden = false only once a real embed has been injected into
+               #oc-intro-video-container — identical to the original behaviour.
+             - #oc-video-empty: the placeholder player shown whenever the
+               wrapper above stays hidden (no video configured yet). Exactly
+               one of the two is visible at a time; see applyMediaConfig(). -->
+        <div class="container oc-video-outer">
+          <div class="oc-video-box">
+
+            <div class="oc-video-container-wrap" id="oc-intro-video-wrap" hidden>
+              <div class="oc-video-container" id="oc-intro-video-container">
+                <!-- iframe injected here by one-percent.js when a video is configured -->
+              </div>
+            </div>
+
+            <div class="oc-video-empty" id="oc-video-empty">
+              <button type="button" class="oc-video-play" aria-label="Intro video not yet available" disabled>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+
+            <div class="oc-video-caption">
+              <strong>The 1% Club &middot; Membership</strong>
+              <span id="oc-video-caption-sub">Intro video will appear here once the owner adds it from the Admin Panel.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- C. Course Selection -->
+      <section class="oc-sec oc-alt" id="choose" aria-labelledby="choose-title">
+        <div class="container oc-choose-head">
+          <p class="oc-eyebrow-gold oc-eyebrow-center">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20l-5.5-5.5a2.5 2.5 0 010-3.5L9 5"/><path d="M15 4l5.5 5.5a2.5 2.5 0 010 3.5L15 19"/></svg>
+            Choose your path
+          </p>
+          <h2 id="choose-title">Choose Your Courses</h2>
+          <p class="oc-p oc-narrow oc-p-center" data-oc-selection-text>Choose your courses from the membership offering.</p>
+
+          <!-- Selection progress bar -->
+          <div class="oc-picker-bar" role="group" aria-label="Course selection">
+            <p class="oc-count" id="oc-count" aria-live="polite">0 of <span data-oc-limit>…</span> selected</p>
+            <div class="oc-picker-right">
+              <button id="oc-section-cta" class="btn btn-primary btn-sm" type="button" disabled aria-disabled="true">
+                Select <span data-oc-limit>…</span> more courses
+              </button>
+            </div>
+          </div>
+
+          <!-- Course grid: filled by one-percent.js -->
+          <div id="oc-courses" class="oc-courses" aria-live="polite">
+            <p class="oc-state">Loading courses&hellip;</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- D. What You Get — 9 static benefit cards (hardcoded by request,
+           matching the reference design's icon-grid). Founder mentorship
+           keeps its photo as a compact highlight directly beneath the grid
+           instead of a large side-by-side portrait, since the grid is now
+           the section's main visual. The dynamic plan.benefits block is
+           unchanged and still renders beneath as a supplementary list. -->
+      <section class="oc-sec" aria-labelledby="more-title">
+        <div class="container oc-what-center">
+          <p class="oc-eyebrow-gold oc-eyebrow-center">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+            What you get
+          </p>
+          <h2 id="more-title">Everything you need to actually win</h2>
+          <p class="oc-p oc-narrow oc-p-center">A course teaches you a topic. What tends to be missing is someone to ask, people to learn beside and a sense of what comes next. The membership puts those around the courses you choose.</p>
+        </div>
+
+        <div class="container">
+          <ul class="oc-benefit-grid" aria-label="What the 1% Club includes">
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 4.5-9 4.5-9-4.5L12 2z"/><path d="M3 11.5l9 4.5 9-4.5"/><path d="M3 16.5l9 4.5 9-4.5"/></svg></span>
+              <h3>Choose Any 4 Courses</h3>
+              <p>Pick any 4 of the 7 Knight Club courses &mdash; swap categories freely.</p>
+            </li>
+            <li class="oc-bcard" id="oc-founder-card">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5 5.6.5-4.2 3.8 1.3 5.4L12 14l-5.1 2.7 1.3-5.4L4 7.5l5.6-.5L12 2z"/></svg></span>
+              <h3>Founder Mentorship</h3>
+              <p>Direct guidance from Aditya to sharpen your journey and unblock growth.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1.5"/></svg></span>
+              <h3>AI Agent Support</h3>
+              <p>Your own AI agent that answers questions and helps you ship faster.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 14h6l-1 8L19 10h-6l0-8z"/></svg></span>
+              <h3>AI Automation Guidance</h3>
+              <p>Build automations that save hours every week across content and ops.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l4-4 3 3 5-6 4 4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span>
+              <h3>Portfolio Building Support</h3>
+              <p>We help you build a portfolio that gets premium clients to say yes.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></span>
+              <h3>Resume &amp; Document Templates</h3>
+              <p>Client-tested proposal, resume and pitch templates you can copy.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+              <h3>WhatsApp Community</h3>
+              <p>A high-signal group of ambitious peers, alumni and mentors.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="15" height="10" rx="2"/><path d="M17 10l5-2v8l-5-2z"/></svg></span>
+              <h3>Live Q&amp;A Sessions</h3>
+              <p>Weekly live sessions to review your work and answer questions.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></span>
+              <h3>Appointment-Based 1-on-1 Calls</h3>
+              <p>Book personal calls with mentors on the milestones that matter.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 014-4h6a4 4 0 014 4v2"/><circle cx="17" cy="7" r="3"/><path d="M22 21v-2a4 4 0 00-3-3.87"/></svg></span>
+              <h3>Premium Community Access</h3>
+              <p>Access to a curated inner circle of top-percentile creators &amp; founders.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 010 20M2 12h20"/></svg></span>
+              <h3>Career Roadmap</h3>
+              <p>A personalised, week-by-week roadmap from beginner to first &#8377;1L/mo.</p>
+            </li>
+            <li class="oc-bcard">
+              <span class="oc-bicon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg></span>
+              <h3>Priority Support</h3>
+              <p>Faster replies and dedicated support so you&rsquo;re never stuck for long.</p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Founder highlight: small photo + name beneath the grid, anchored
+             to the "Founder Mentorship" card above via the shared heading. -->
+        <div class="container">
+          <div class="oc-founder-strip">
+            <img
+              id="oc-founder-img"
+              class="oc-founder-strip-img"
+              src="../assets/images/founder-aditya.jpg"
+              alt="Aditya Srivastava, founder of The Knight Club"
+              width="160"
+              height="160"
+              loading="lazy"
+              decoding="async"
+            />
+            <p>Mentorship comes directly from <strong>Aditya Srivastava</strong>, founder of The Knight Club.</p>
+          </div>
+
+          <!-- Dynamic benefits from API (shown if plan.benefits is populated) -->
+          <div data-oc-benefits hidden class="oc-benefits-dynamic">
+            <h3 class="oc-benefits-heading">Also included</h3>
+            <ul id="oc-benefits-list" class="oc-benefits-list" aria-label="Additional membership benefits"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- E. Course vs Membership comparison -->
+      <section class="oc-sec" aria-labelledby="vs-title">
+        <div class="container oc-what-center">
+          <p class="oc-eyebrow-gold oc-eyebrow-center">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Individual course vs 1% Club
+          </p>
+          <h2 id="vs-title">See the real difference</h2>
+          <p class="oc-p oc-narrow oc-p-center">An individual course is focused learning around one topic. The 1% Club is several chosen courses plus the components below. Both are valid; it depends on what you need. <a href="courses.html">Browse individual courses</a>.</p>
+        </div>
+        <div class="container">
+          <div class="oc-tbl-wrap">
+            <table class="oc-tbl">
+              <thead>
+                <tr>
+                  <th scope="col">Feature</th>
+                  <th scope="col">
+                    Individual course
+                    <span class="oc-tbl-price">&#8377;1,499</span>
+                  </th>
+                  <th scope="col" class="oc-tbl-top">
+                    <span class="oc-tbl-ribbon">Top Pick</span>
+                    1% Club
+                    <span class="oc-tbl-price" data-oc-price>&hellip;</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Choose multiple courses</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">Founder mentorship</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">AI agent support</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">WhatsApp community</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">Live Q&amp;A sessions</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">1-on-1 appointment calls</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">Portfolio &amp; career roadmap</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">Resume &amp; pitch templates</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+                <tr><th scope="row">Priority support</th><td><span class="oc-no" aria-label="Not included"></span></td><td class="oc-tbl-top"><span class="oc-yes" aria-label="Included"></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- F. Who is it for + how it works -->
+      <section class="oc-sec oc-alt" aria-labelledby="who-title">
+        <div class="container">
+          <h2 id="who-title">Who Is It For?</h2>
+          <p class="oc-p oc-narrow">People who want structure, guidance and company on top of practical courses &mdash; students, freelancers, creators, career switchers and future digital professionals. If you only need one specific skill, a single course may fit better.</p>
+          <ol class="oc-steps oc-steps-3">
+            <li><h3>Choose your courses</h3><p>Pick from the current offering above.</p></li>
+            <li><h3>Review &amp; checkout</h3><p>Review your selection, apply a coupon if you have one, and pay securely via Razorpay.</p></li>
+            <li><h3>Access your courses</h3><p>Your selected courses appear immediately in My Learning after payment confirmation.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- G. Testimonials -->
+      <section class="oc-sec oc-alt" aria-labelledby="proof-title">
+        <div class="container">
+          <h2 id="proof-title">What Members Say</h2>
+          <div id="oc-proof" class="oc-proof"></div>
+          <p class="oc-note">Shared by members and not independently verified; experiences vary. <a href="testimonials.html">See more learner experiences</a>.</p>
+        </div>
+      </section>
+
+      <!-- H. FAQ -->
+      <section class="oc-sec faq-section" aria-labelledby="faq-title">
+        <div class="container faq-container">
+          <header class="faq-header">
+            <p class="faq-eyebrow">1% Club FAQ</p>
+            <h2 id="faq-title" class="faq-title">Frequently Asked Questions</h2>
+            <p class="faq-lede">What the membership includes and how it works.</p>
+          </header>
+          <div class="faq-list" data-faq>
+            <div class="faq-item">
+              <h3 class="faq-heading">
+                <button type="button" class="faq-question" aria-expanded="false">
+                  <span class="faq-number" aria-hidden="true"></span>
+                  <span class="faq-text">What is the 1% Club?</span>
+                  <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq-answer" role="region">
+                <div class="faq-answer-inner"><p>The Knight Club&#x27;s premium membership. You choose courses from the current offering and get founder mentorship, AI agent support, a WhatsApp community, live Q&amp;A sessions, 1-on-1 calls and a career roadmap.</p></div>
+              </div>
+            </div>
+            <div class="faq-item">
+              <h3 class="faq-heading">
+                <button type="button" class="faq-question" aria-expanded="false">
+                  <span class="faq-number" aria-hidden="true"></span>
+                  <span class="faq-text">How does course selection work?</span>
+                  <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq-answer" role="region">
+                <div class="faq-answer-inner"><p>The course picker on this page lets you choose your courses from the current membership offering. The number you can select is shown on the page and is set by the membership plan — it updates automatically.</p></div>
+              </div>
+            </div>
+            <div class="faq-item">
+              <h3 class="faq-heading">
+                <button type="button" class="faq-question" aria-expanded="false">
+                  <span class="faq-number" aria-hidden="true"></span>
+                  <span class="faq-text">Can I use a coupon code?</span>
+                  <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq-answer" role="region">
+                <div class="faq-answer-inner"><p>Yes. Coupon codes are entered on the checkout step (the next step after selecting your courses). They are validated server-side and the discount is calculated there.</p></div>
+              </div>
+            </div>
+            <div class="faq-item">
+              <h3 class="faq-heading">
+                <button type="button" class="faq-question" aria-expanded="false">
+                  <span class="faq-number" aria-hidden="true"></span>
+                  <span class="faq-text">Is the 1% Club different from buying a course?</span>
+                  <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq-answer" role="region">
+                <div class="faq-answer-inner"><p>Yes. A course is focused learning on one topic. The membership pairs chosen courses with the mentorship, support and community described above.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- I. Final CTA -->
+      <section class="oc-final" aria-labelledby="cta-title">
+        <div class="container">
+          <h2 id="cta-title">Join the 1% Club</h2>
+          <p class="oc-lead">Build your own learning path: choose your courses, get mentorship, support, community and a direction to follow.</p>
+          <div class="oc-hero-meta" style="justify-content:center; margin-bottom: var(--space-8);">
+            <div class="oc-hero-price-wrap">
+              <span class="oc-hero-price-label">Membership</span>
+              <div class="oc-hero-price-group">
+                <s data-oc-compare-price class="oc-hero-compare-price" hidden></s>
+                <strong data-oc-price class="oc-hero-price"></strong>
+              </div>
+            </div>
+            <div class="oc-hero-divider" aria-hidden="true"></div>
+            <div class="oc-hero-rule-wrap">
+              <span class="oc-hero-rule-label">Selection</span>
+              <strong data-oc-selection-text class="oc-hero-rule"></strong>
+            </div>
+          </div>
+          <div class="oc-actions" style="justify-content:center;">
+            <a href="#choose" class="btn btn-primary btn-lg">
+              Choose your courses
+              <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="courses.html" class="btn btn-ghost btn-lg">Explore individual courses</a>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /oc-view-selection -->
+
+    <!-- ====================================================================
+         STICKY SELECTION BAR
+         Follows the student as they scroll through course cards.
+         Shown only when the selection view is active.
+         ==================================================================== -->
+    <div class="oc-sticky" id="oc-sticky" aria-label="Selection progress" aria-live="polite">
+      <div class="oc-sticky-left">
+        <span class="oc-sticky-label">Selected</span>
+        <span id="oc-sticky-count">0 of … selected</span>
+      </div>
+      <button id="oc-sticky-cta" class="btn btn-primary btn-sm oc-sticky-btn" type="button" disabled aria-disabled="true">
+        Continue to Checkout
+      </button>
+    </div>
+
+
+  </main>
+
+  <div id="pub-footer-root" data-from-pages="true"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/catalog-api.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/vendor/lenis/lenis.min.js"></script>
+  <script src="../assets/js/core/smooth-scroll.js"></script>
+  <script src="../assets/js/public-shell.js"></script>
+  <script>PublicShell.mount({ active: 'one-percent' });</script>
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/site-theme-toggle.js" defer></script>
+  <script src="../assets/js/faq.js" defer></script>
+  <script src="../assets/js/one-percent.js?v=noauto1" defer></script>
+  <script src="../assets/js/analytics.js" defer></script>
+</body>
+</html>

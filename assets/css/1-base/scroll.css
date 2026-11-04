@@ -1,0 +1,42 @@
+/* ==========================================================================
+   SCROLL — single source of truth for page scrolling
+   Loaded on every public page right after base.css.
+   Do NOT put `scroll-behavior`, header scroll offsets or html/body overflow
+   rules in page stylesheets; change them here.
+   ========================================================================== */
+
+/* Anchor / scrollTo offset so targets never hide under the sticky header.
+   assets/js/core/smooth-scroll.js reads this same value for its own scrolls. */
+html {
+  scroll-padding-top: var(--pub-header-height, 84px);
+}
+
+/* `html { overflow-x: clip }` — the actual fix for sitewide horizontal
+   "sliding" on mobile — lives in base.css, not here, because this file
+   (and Lenis) is only loaded on the public marketing pages, while base.css
+   is the one stylesheet every page on the site includes. See base.css for
+   the full rationale. */
+
+/* Native smooth scrolling = fallback only (used when Lenis is not active:
+   library missing, reduced-motion, etc.). Lenis switches it off below. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ---- Lenis required rules (same as the library's own lenis.css) ---- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}

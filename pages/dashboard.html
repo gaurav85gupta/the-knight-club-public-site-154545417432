@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="../assets/images/favicon-48.png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png" />
+  <!-- Theme: applied synchronously BEFORE the stylesheets so first paint is already
+       the saved Day/Night theme (no flash). Student pages only. -->
+  <script src="../assets/js/theme-init.js"></script>
+  <title>Dashboard — The Knight Club</title>
+  <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="../assets/fonts/coolvetica.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=Poppins:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="../assets/css/tokens.css" />
+  <link rel="stylesheet" href="../assets/css/theme.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link rel="stylesheet" href="../assets/css/site.css" />
+  <link rel="stylesheet" href="../assets/css/orders.css" />
+  <link rel="stylesheet" href="../assets/css/student.css" />
+  <link rel="stylesheet" href="../assets/css/student-theme.css" />
+  <link rel="stylesheet" href="../assets/css/buttons.css" />
+  <!-- Protected shell: hidden until the SERVER confirms the session, so an
+       unauthenticated visitor never sees a flash of protected UI. -->
+  <style>html.auth-pending body { visibility: hidden; }</style>
+  <script>document.documentElement.classList.add('auth-pending');</script>
+</head>
+<body class="student-page">
+
+  <div id="student-header"></div>
+
+  <main class="student-main" id="main">
+    <div class="student-container">
+
+      <!-- ==================== HERO ==================== -->
+      <section class="hero-card" aria-labelledby="dash-title">
+        <p class="eyebrow" id="dash-eyebrow">Dashboard</p>
+        <h1 class="page-title" id="dash-title">Welcome</h1>
+        <p class="page-sub" id="dash-subtitle">Continue your learning journey.</p>
+        <div class="hero-actions-row">
+          <a class="btn btn-primary btn-lg" id="hero-cta" href="learning.html">
+            <span id="hero-cta-label">My Learning</span><span class="btn-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="btn btn-outline btn-lg" href="courses.html">Browse Courses</a>
+        </div>
+      </section>
+
+      <!-- ==================== ADD YOUR EMAIL BANNER ====================
+           Shown only for a legacy (User-ID) student with no email on file
+           (Student.toSafeStudent().needsEmail — see dashboard.js). Hidden
+           for everyone else, including a student who dismissed it earlier
+           in THIS browser (see dashboard.js dismissal note). Not shown at
+           all once the student has added an email, regardless of
+           verification status — the point of this banner is only to get
+           the email ON the account; verifying it is a separate step
+           handled by the emailed link, with its own "check your email"
+           state (see showEmailBannerSent in dashboard.js). -->
+      <section class="section-block" id="dash-email-banner" hidden aria-labelledby="dash-email-banner-title">
+        <div class="order-status-banner is-warning" role="status" style="display:flex; align-items:center; justify-content:space-between; gap: var(--space-4); flex-wrap: wrap;">
+          <div style="flex: 1 1 260px;">
+            <strong id="dash-email-banner-title">Add your email to your account</strong>
+            <p style="margin: var(--space-1) 0 0; font-weight: 400;">Get sign-in with email and password, and the ability to reset your password yourself.</p>
+          </div>
+          <form id="dash-email-form" novalidate style="display:flex; gap:var(--space-2); align-items:flex-start; flex-wrap:wrap;">
+            <div class="field" style="margin:0; min-width:220px;">
+              <input class="input" id="dash-email-input" name="email" type="email" inputmode="email"
+                     autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false"
+                     maxlength="254" placeholder="you@example.com" aria-label="Email address" aria-describedby="dash-email-error" />
+              <p class="field-error" id="dash-email-error" aria-live="polite"></p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="dash-email-submit" type="submit">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="label">Add email</span>
+            </button>
+          </form>
+          <button type="button" id="dash-email-dismiss" class="btn-icon-plain" aria-label="Dismiss" style="background:none; border:none; cursor:pointer; font-size:1.1rem; line-height:1; padding:4px; color:inherit; opacity:0.7;">&times;</button>
+        </div>
+      </section>
+
+      <!-- ==================== PRE-BOOKING RESUME BANNER (Phase 3) ====================
+           Hidden by default; shown only when dashboard.membershipBooking is
+           non-null (the student has an open 1% Club pre-booking). Never
+           shown for an already-active membership — that state has no open
+           booking to resume and dashboard.student.isMember covers it via the
+           existing member badge above. -->
+      <section class="section-block" id="dash-booking-banner" hidden aria-labelledby="dash-booking-title">
+        <div class="order-status-banner is-warning" role="status" style="display:flex; align-items:center; justify-content:space-between; gap: var(--space-4); flex-wrap: wrap;">
+          <div>
+            <strong id="dash-booking-title">You have an open 1% Club pre-booking</strong>
+            <p id="dash-booking-sub" style="margin: var(--space-1) 0 0; font-weight: 400;"></p>
+          </div>
+          <a id="dash-booking-resume" href="#" class="btn btn-primary btn-sm">Resume booking</a>
+        </div>
+      </section>
+
+      <!-- ==================== STATS ==================== -->
+      <section class="section-block" aria-label="Learning summary">
+        <div class="stat-grid" id="stat-grid">
+          <div class="stat-card">
+            <span class="stat-label">Total Courses</span>
+            <span class="stat-value" id="summary-total">&mdash;</span>
+            <span class="stat-note" id="summary-total-note"></span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">In Progress</span>
+            <span class="stat-value" id="summary-in-progress">&mdash;</span>
+            <span class="stat-note" id="summary-in-progress-note"></span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Completed</span>
+            <span class="stat-value" id="summary-completed">&mdash;</span>
+            <span class="stat-note" id="summary-completed-note"></span>
+          </div>
+          <div class="stat-card" id="stat-overall-card" hidden>
+            <span class="stat-label">Overall Progress</span>
+            <span class="stat-value" id="summary-overall">&mdash;</span>
+            <span class="stat-note" id="summary-overall-note">Average across your courses</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== CONTINUE LEARNING ==================== -->
+      <section class="section-block" aria-labelledby="continue-title">
+        <div class="section-bar">
+          <h2 id="continue-title" class="section-title">Continue Learning</h2>
+          <a href="learning.html" class="text-link">View all <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div aria-live="polite">
+          <div id="continue-loading" class="skeleton skeleton-block" aria-hidden="true"></div>
+          <div id="continue-empty" class="empty-state" hidden>
+            <span class="empty-state-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>
+            </span>
+            <h3 id="continue-empty-title">You haven't started any courses yet.</h3>
+            <p id="continue-empty-message">Browse the catalog and start learning something new.</p>
+            <a class="btn btn-primary" href="courses.html">Browse Courses</a>
+          </div>
+          <div id="continue-error" class="empty-state is-error" hidden>
+            <span class="empty-state-icon" aria-hidden="true">!</span>
+            <h3>We couldn't load your dashboard.</h3>
+            <p id="continue-error-message">Please try again in a moment.</p>
+            <button class="btn btn-outline" id="dash-retry" type="button">Try again</button>
+          </div>
+          <div id="continue-card" hidden></div>
+        </div>
+      </section>
+
+      <!-- ==================== RECENT ACTIVITY + SHORTCUTS ==================== -->
+      <section class="section-block two-up">
+        <div class="s-card" aria-labelledby="activity-title">
+          <div class="section-bar" style="margin-bottom:var(--space-2)">
+            <h2 id="activity-title" class="s-card-title" style="margin:0">Recent Activity</h2>
+          </div>
+          <div aria-live="polite">
+            <div id="activity-loading" class="skeleton skeleton-row" aria-hidden="true"></div>
+            <div id="activity-empty" class="empty-state is-compact" hidden>
+              <h3 style="font-size:var(--font-size-lg)">No recent activity.</h3>
+              <p>Your learning and purchases will show up here.</p>
+            </div>
+            <ul id="activity-list" class="activity-list" hidden></ul>
+          </div>
+        </div>
+
+        <div class="stack" aria-label="Shortcuts">
+          <a class="s-card is-interactive shortcut" href="learning.html">
+            <span class="shortcut-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg></span>
+            <span><p class="shortcut-title">My Learning</p><p class="shortcut-sub">All your courses</p></span>
+          </a>
+          <a class="s-card is-interactive shortcut" href="orders.html">
+            <span class="shortcut-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></span>
+            <span><p class="shortcut-title">My Orders</p><p class="shortcut-sub">Purchases &amp; payments</p></span>
+          </a>
+          <a class="s-card is-interactive shortcut" href="profile.html">
+            <span class="shortcut-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+            <span><p class="shortcut-title">View Profile</p><p class="shortcut-sub">Your personal details</p></span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="student-footer"></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/forms.js"></script>
+  <script src="../assets/js/format.js"></script>
+  <script src="../assets/js/theme-toggle.js"></script>
+  <script src="../assets/js/cart.js"></script>
+  <script src="../assets/js/student-shell.js"></script>
+  <script src="../assets/js/student-ui.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+</body>
+</html>
