@@ -185,7 +185,19 @@ html .home-page .hero.hero-v2.diwali-active::before {
     display: block !important;
   }
   html .home-page .hero.hero-v2.diwali-active::after {
-    background-position: center 40% !important;
+    /* This photo is a wide landscape shot (~1.78:1) with its decoration —
+       lanterns, rangoli, diyas, fireworks — concentrated on the right
+       side; the left is mostly empty sky. On a narrow/tall mobile
+       viewport, background-size: cover crops hard left-right, so
+       "center" framing cut off most of that decoration. Anchoring near
+       the right edge keeps the lanterns/rangoli in frame instead. */
+    background-position: 78% 55% !important;
+    /* The desktop scrim above was tuned for the calm empty-sky crop;
+       this busier crop needs a bit more darkening so the centered
+       headline/badge text stays readable against the lanterns/rangoli. */
+    background-image:
+      linear-gradient(180deg, rgba(8, 3, 16, 0.35) 0%, rgba(8, 3, 16, 0.5) 45%, rgba(8, 3, 16, 0.3) 100%),
+      url('../images/diwali-hero-bg.jpg') !important;
   }
   .diwali-sparkles { display: none; } /* keep mobile hero calm/legible */
 }
