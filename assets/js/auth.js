@@ -249,9 +249,9 @@ const Auth = (() => {
 
   /**
    * Registers via email + password. Mirrors register(): does NOT sign the
-   * student in — the account is also unverified until the emailed link is
-   * clicked, so logging in would fail anyway even if attempted.
-   * @returns {Promise<object>} the safe user profile (isEmailVerified: false)
+   * student in. No email verification is required — the caller sends them
+   * to the login page and they can sign in immediately.
+   * @returns {Promise<object>} the safe user profile
    */
   async function registerWithEmail(fields) {
     const data = await Api.post('/auth/register-email', fields);

@@ -1,10 +1,9 @@
 /**
  * Signup page controller (email + password + Google).
  *
- * Flow:  client-side checks  ->  POST /auth/register-email  ->  "check your
- *        email" message in place of the form (account is created but
- *        UNVERIFIED — the student cannot sign in until they click the
- *        emailed link; see verify-email.html).
+ * Flow:  client-side checks  ->  POST /auth/register-email  ->  success
+ *        message -> redirect to the login page. No email verification: the
+ *        account is usable immediately with the email + password entered.
  *
  * Google: GoogleSignIn.render() wires the button; a successful Google
  * sign-in signs the student in immediately (Google already verifies the
@@ -122,22 +121,20 @@
   }
 
   /**
-   * Replaces the form with a "check your email" confirmation — the account
-   * exists but cannot sign in until the emailed link is clicked. This
-   * mirrors how the original flow flipped to the Sign In face in place,
-   * but here there is nowhere useful to flip TO (signing in would just
-   * fail as unverified), so a static confirmation is clearer.
+   * Replaces the form with an "account created" confirmation and sends the
+   * student to the login page. No verification email is involved — they can
+   * sign in straight away with the email + password they just registered.
    */
-  function showCheckEmail(email) {
+  function showAccountCreated() {
     cardSection.innerHTML = `
       <div class="auth-status">
-        <div class="auth-status-icon auth-status-icon--pending" aria-hidden="true">&#9993;</div>
-        <h1>Check your email</h1>
-        <p class="lead">We've sent a verification link to <strong>${Forms.escapeForHtml(email)}</strong>.
-        Click the link to activate your account, then sign in.</p>
+        <div class="auth-status-icon" aria-hidden="true">&#10003;</div>
+        <h1>Account created</h1>
+        <p class="lead">Your account is ready. Redirecting you to sign in…</p>
       </div>
-      <p class="auth-alt"><a href="login.html">Go to sign in</a></p>
+      <p class="auth-alt"><a href="login.html">Go to sign in now</a></p>
     `;
+    setTimeout(() => window.location.replace('login.html'), 1500);
   }
 
   form.addEventListener('submit', async (event) => {
@@ -161,8 +158,8 @@
 
     Forms.setLoading(submitBtn, true, 'Creating account…');
     try {
-      const user = await Auth.registerWithEmail(payload);
-      showCheckEmail(user.email);
+      await Auth.registerWithEmail(payload);
+      showAccountCreated();
     } catch (err) {
       Forms.setLoading(submitBtn, false);
       if (!(err instanceof ApiError)) {
